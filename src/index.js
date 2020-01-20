@@ -6,8 +6,10 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const mySQLStore = require('express-mysql-session')
 const {database} = require('./keys')
+const passport = require('passport')
 //inicialzaciones
 const app = express()
+require('./lib/passport')
 
 //Configuracion
 app.set('PORT', process.env.PORT || 4000)
@@ -31,6 +33,8 @@ app.use(flash())
 app.use(morgan('dev'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(passport.initialize())
+app.use(passport.session())
 //Variables globales
 
 app.use((req, res, next)=>{
