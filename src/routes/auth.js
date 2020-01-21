@@ -1,18 +1,44 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-router.get('/signup', (req, res)=>{
+const {isLoggedIn, isNotLoggedIn} = require('../lib/auth')
+
+router.get('/signup', isNotLoggedIn, (req, res) => {
     res.render('auth/signup')
 })
 
-router.post('/signup', passport.authenticate('local.signup',{
+router.post('/signup', isNotLoggedIn, passport.authenticate('local.signup', {
     successRedirect: '/profile',
     failureRedirect: '/signup',
     failureFlash: true
 }))
 
-router.get('/profile', (req, res)=>{
-    res.send('Login completo')
+router.get('/signin', isNotLoggedIn, (req, res) => {
+    res.render('auth/signin')
+})
+
+router.post('/signin', isNotLoggedIn, (req, res, next) => {
+    passport.authenticate('local.signin', {
+        successRedirect: '/profile',
+        failureRedirect: '/signin',
+        failureFlash: true
+    })(req, res, next)
+})
+
+router.get('/profile', isLoggedIn, (req, res) => {
+    // PERMISOS DE ADM 
+    if(req.user.cedula === "1234"){
+        console.log('funciona')
+        // RENDERIZAR DE LA CARPERA ADM Y RUTAS DEL ADM.
+    } else {
+        console.log('no funciona')
+    }
+    res.render('profile/perfil')
+})
+
+router.get('/logout', isLoggedIn, (req, res)=> {
+    req.logOut()
+    res.redirect('/signin')
 })
 
 module.exports = router

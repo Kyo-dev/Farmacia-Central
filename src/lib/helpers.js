@@ -9,7 +9,7 @@ helpers.encryptingPass = async (clave) => {
 
 helpers.decryptingPass = async (clave, storedPass) => {
     try {
-        await bcrypt.compare(clave, storedPass )
+        return await bcrypt.compare(clave, storedPass )
     } catch (err) {
         console.log(err)
     }
