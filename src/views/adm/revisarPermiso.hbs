@@ -1,0 +1,39 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Información del permiso</h2>
+                    <br>
+                    <h4>Nombre del empleado:</h4>
+                    <p><span>{{data.cedula}}</span></p>
+                    <h4>Motivo del permiso:</h4>
+                    <p><span>{{data.descripcion}}</span></p>
+                    <h4>Fecha en que solicitó el permiso:</h4>
+                    <p><span>{{data.fecha_solicitud}}</span></p>
+                    <h4>Fecha del permiso</h4>
+                    <p><span>{{data.fecha_salida}}</span></p>
+                    <h3>Revision del permiso</h3>
+                    <form action="/adm/permiso/editar/{{data.id}}" method="POST">
+                        <div class="form-group">
+                            <input type="radio" name="estado_permiso" value="1"> Pendiente<br>
+                            <input type="radio" name="estado_permiso" value="2"> Aprobado<br>
+                            <input type="radio" name="estado_permiso" value="3"> Rechazado<br>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" value="{{data.costo_salarial}}" class="form-control"
+                                name="costo_salarial" placeholder="Costo salarial del permiso">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" value="{{data.informacion_estado}}" class="form-control"
+                                name="informacion_estado" placeholder="Información adicional">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

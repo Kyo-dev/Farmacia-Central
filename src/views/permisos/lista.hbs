@@ -2,13 +2,16 @@
     <div class="row">
         {{#each data}}
         <div class="col-md-3">
-            <div class="card text-center">
+            <div class="card ">
                 <div class="card-body">
-                    <h3 class="card-title text-uppercase text-info">
+                    <h3 class="card-title text-center text-uppercase text-info">
                         {{titulo}}
                     </h3>
-                    <p class="m-4">{{descripcion}}</p>
-                    <p>{{timesago fecha}}</p>
+                    <p>Motivo: <span>{{descripcion}}</span></p>
+                    <P>{{informacion_estado}}</P>
+                    <p>Fecha de salida: <span>{{fecha}}</span></p>
+                    <p>Permiso: {{estado_permiso}}</p>
+                    <p>Permiso solicitado: {{timesago fecha_solicitud}}</p>
                     <a href="/permisos/editar/{{id}}" class="btn btn-info">Editar</a>
                     <a href="/permisos/borrar/{{id}}" class="btn btn-danger">Borrar</a>
                 </div>
