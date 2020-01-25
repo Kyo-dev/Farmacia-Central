@@ -48,6 +48,7 @@ app.use((req, res, next)=>{
 app.use(require('./routes/'))
 app.use(require('./routes/auth'))
 app.use('/permisos', require('./routes/permisos'))
+app.use('/perfil', require('./routes/usuarios'))
 app.use('/adm', require('./routes/adm'))
 
 //navegador

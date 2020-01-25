@@ -1,0 +1,55 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Informacion adicional</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/perfil/nuevaInfromacion" method="POST">
+                    <div class="form-group">
+                        <p class="text-left" >Tipo de teléfono</p>
+                            <select  name="tipo_telefono">
+                                <option value="1">Celular</option>
+                                <option value="2">Casa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" name="numero" class="form-control" placeholder="Número de teléfono" class="form-control" required autofocus>
+                        </div>
+                       <div class="form-group">
+                        <p class="text-left" >Provincia</p>
+                            <select  name="codigo_provincia" required>
+                                {{#each provincia}}
+                                <option value="{{codigo_provincia}}">{{nombre_provincia}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                        <p class="text-left" >Canton</p>
+                            <select  name="codigo_canton" required>
+                                {{#each canton}}
+                                <option value="{{codigo_canton}}">{{nombre_canton}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                        <p class="text-left" >Distrito</p>
+                            <select  name="codigo_distrito" required>
+                                {{#each distrito}}
+                                <option value="{{codigo_distrito}}">{{nombre_distrito}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="direccion" class="form-control" placeholder="Dirección" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">Actualizar datos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div  >
+</div>

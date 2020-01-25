@@ -18,7 +18,14 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/profile">Perfil</a>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false"> Perfil</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/profile">Perfil</a>
+           <a class="dropdown-item" href="/perfil/editar">Editar perfil</a>
+            <div class="dropdown-divider"></div>
+          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/logout">Cerrar sesion</a>
@@ -35,3 +42,7 @@
     </div>
   </div>
 </nav>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    

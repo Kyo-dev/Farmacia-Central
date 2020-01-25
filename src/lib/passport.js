@@ -8,15 +8,20 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'clave',
     passReqToCallback: true
 }, async (req, correo, clave, done) => {
-    const { cedula } = req.body
+    console.log(req.body)
+    const { cedula, nombre, p_apellido, s_apellido } = req.body
     const newUser = {
         correo,
         clave,
-        cedula
+        cedula,
+        nombre,
+        p_apellido,
+        s_apellido,
     };
     newUser.clave = await helpers.encryptingPass(clave)
     const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
     newUser.id = result.insertId
+    req.flash('success', 'Gracias por registrarte ' + newUser.nombre + '. Por favor completa el resto de la información de tu perfil')
     return done(null, newUser)
 }))
 
@@ -26,18 +31,21 @@ passport.use('local.signin', new LocalStrategy({
     passReqToCallback: true
 }, async (req, correo, clave, done) => {
     // INFORMACION CON LA QUE SE CARGA EL USUARIO
-    const data = await pool.query('Select * From empleados where correo = ?', [correo])
+    const data = await pool.query(`Select a.nombre, a.p_apellido, a.s_apellido, a.correo, a.fecha_contrato, a.cedula, a.id, b.nombre_cargo as cargo, a.clave
+                            From empleados a
+                            INNER JOIN tipo_empleados b
+                            ON a.tipo_empleado = b.id 
+                            where a.correo = ?`, [correo])
     if (data.length > 0) {
         const user = data[0]
-        console.log(user.clave)
         const pass = await helpers.decryptingPass(clave, user.clave)
         if (pass) {
-            done(null, user, req.flash('success','Bienvenido ' + user.nombre))
+            done(null, user, req.flash('success', 'Bienvenido ' + user.nombre))
         } else {
-            done(null, false, req.flash('message','Datos incorrectos'))
+            done(null, false, req.flash('message', 'Datos incorrectos'))
         }
     } else {
-        return done(null, false , req.flash('message','Usuario o clave incorrectos'))
+        return done(null, false, req.flash('message', 'Usuario o clave incorrectos'))
     }
 }))
 

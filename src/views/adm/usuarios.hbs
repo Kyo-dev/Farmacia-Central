@@ -1,0 +1,35 @@
+<div class="container p-4">
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Apellido</th>
+                    <th>Segundo Apellido</th>
+                    <th>Fecha de contrata</th>
+                    <th>Cargo</th>
+                    <th>Permanente</th>
+                    <th>Correo</th>
+                    <th>Direccion</th>
+                    <th>Revisar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+                <tr>
+                    <td>{{cedula}}</td>
+                    <td>{{primer_apellido}}</td>
+                    <td>{{segundo_apellido}}</td>
+                    <td>{{fecha_contrato}}</td>
+                    <td>{{tipo_empleado}}</td>
+                    <td>{{permanente}}</td>
+                    <td>{{correo}}</td>
+                    {{!-- <td><a href="/adm/permiso/editar/{{id}}" class="btn btn-info">Revisar</a></td> --}}
+                    {{!-- <td><a href="/adm/permiso/borrar/{{id}}" class="btn btn-danger">Revisar</a></td> --}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

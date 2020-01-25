@@ -9,7 +9,6 @@ router.get('/nuevo', isLoggedIn, (req, res)=>{
 
 router.post('/permisos/nuevo', isLoggedIn, async (req, res) => {
     const {_titulo, _descripcion, _fecha_salida} = req.body
-    console.log(_fecha_salida)
     const query =`
         SET @_empleado_id = ?;
         SET @_titulo = ?;
@@ -28,22 +27,18 @@ router.get('/', isLoggedIn, async (req, res)=>{
     id, estado_permiso, titulo,descripcion, fecha_solicitud,
     empleado_id , costo_salarial, informacion_estado, substr(fecha_salida, 1, 10) as fecha
     FROM permisos where empleado_id = ? and borrar = false`, [req.user.id])
-    console.log(data)
     res.render('permisos/lista', {data})
 })
 
 router.get('/borrar/:id', isLoggedIn, async (req, res)=>{
     const {id} = req.params
     const data = await pool.query('SELECT * FROM permisos WHERE id = ?', [id])
-    console.log(data)
     res.render('permisos/borrar', {data:data[0]})
-
 })
 
 router.get('/editar/:id', isLoggedIn, async(req, res)=>{
     const {id} = req.params
     const data = await pool.query(`SELECT * FROM permisos WHERE id = ?`, [id])
-    console.log({data:data[0]})
     res.render('permisos/editar', {data:data[0]})
 })
 
@@ -62,7 +57,7 @@ router.post('/editar/:id', isLoggedIn, async (req, res)=>{
         descripcion, 
         fecha_salida
     }
-    await pool.query('UPDATE permisos SET ? WHERE id = ?', [data, id])
+    await pool.query('UPDATE permisos SET ? WHERE id = ?;', [data, id])
     req.flash('success', 'Permiso actualizado satisfactoriamente')
     res.redirect('/permisos')
 })

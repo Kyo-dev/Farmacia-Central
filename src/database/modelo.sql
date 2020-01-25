@@ -32,14 +32,14 @@ create table empleados(
     cedula varchar(10) unique not null,
     farmacia tinyint default 1 not null,
     fecha_contrato datetime default now() not null,
-	tipo_empleado tinyint default 4 not null,
+	tipo_empleado tinyint default 5 not null,
     aprobado boolean default false not null,
     temporal boolean default false not null,
 	activo boolean default true not null,
-    -- fecha_nacimiento datetime not null,
-	-- nombre varchar(100) not null,
-    -- p_apellido varchar(100) not null,
-   -- s_apellido varchar(100) not null,
+    fecha_nacimiento datetime default '2000-01-10'  not null,
+	nombre varchar(100) not null,
+    p_apellido varchar(100) not null,
+    s_apellido varchar(100) not null,
 	correo varchar(200) not null unique,
     clave varchar(200) not null,
     constraint pk_empleados primary key(id)
@@ -59,41 +59,7 @@ create table fechas_empleado_temporal(
     constraint pk_fechas_emplado_temporal primary key (id),
     constraint fk_fechas_empleado_temporal_empleado foreign key(cedula) references empleados_temporales (cedula)
 );
-create table distrito(
-	id int auto_increment,
-    discrito varchar(100) not null,
-    constraint pk_distrito primary key (id)
-);
-create table canton(
-	id int auto_increment,
-    canton varchar(100) not null,
-    distrito_id int not null,
-    constraint fk_canton_distrito foreign key (distrito_id) references distrito(id),
-    constraint pk_canton primary key (id)
-);
-create table provincia(
-	id int auto_increment,
-    provincia varchar(100) not null,
-    canton_id int not null,
-    distrito_id int not null,
-    constraint fk_provincia_canton foreign key(canton_id) references canton(id),
-    constraint fk_provincia_distrito foreign key (distrito_id) references distrito(id),
-    constraint pk_provincia primary key (id)
-);
-create table direccion (
-	id int auto_increment,
-    empleado_id int not null,
-    provincia_id int not null,
-    canton_id int not null,
-    distrito_id int not null,
-    descripcion varchar(300) not null,
-    activo boolean default true not null,
-    constraint fk_direccion_distrito foreign key(distrito_id) references distrito(id),
-    constraint fk_direccion_canton foreign key(canton_id) references canton(id),
-    constraint fk_direccion_provincia  foreign key(provincia_id) references provincia(id),
-    constraint fk_direccion_emplado  foreign key(empleado_id) references empleados(id),
-    constraint pk_direccion primary key(id)
-);
+
 create table despidos(
     id int auto_increment not null,
     cedula varchar(10) not null,
@@ -111,9 +77,9 @@ create table tipo_telefonos(
 
 create table telefonos(
 	id int auto_increment,
-    numero varchar(8) unique not null,
+    numero varchar(8) not null,
     cedula varchar(50) not null,
-    tipo_telefono tinyint not null,
+    tipo_telefono tinyint default 1 not null,
     activo boolean default true,
     constraint fk_telefonos_tipo_telefono foreign key(tipo_telefono) references tipo_telefonos(id),
     constraint fk_telefonos_empleados foreign key(cedula) references empleados(cedula),
@@ -233,10 +199,51 @@ create table fechas_vacaciones(
     constraint fk_vacaciones foreign key(cedula) references empleados(cedula)
 );
 
-INSERT INTO estado_permiso (estado)
-VALUES('pendiente');
-INSERT INTO estado_permiso (estado)
-VALUES('aprobado');
-INSERT INTO estado_permiso (estado)
-VALUES('rechazado');
+create table persona(
+	cedula varchar (30) not null,
+	ced_elec varchar(20) not null,
+	sexo varchar(5) not null,
+	fecha_caduc varchar(30) not null,
+	junta varchar(50) not null,
+	nombre varchar(100) not null,
+	primer_apellido varchar(100) not null,
+	segundo_apellido varchar(100) not null,
+    constraint pk_persona primary key (cedula)
+);
 
+CREATE TABLE provincia (
+  codigo_provincia smallint(5) NOT NULL AUTO_INCREMENT,
+  nombre_provincia varchar(45) NOT NULL,
+  constraint pk_provincia primary key (codigo_provincia)
+);
+
+CREATE TABLE canton (
+  codigo_canton smallint(5) NOT NULL,
+  codigo_provincia smallint(5)  NOT NULL,
+  nombre_canton varchar(45) NOT NULL,
+  constraint pk_canton primary key (codigo_canton),
+  constraint fk_canton_provincia foreign key (codigo_provincia) references provincia (codigo_provincia)
+);
+
+CREATE TABLE distrito (
+  codigo_distrito int(10)  NOT NULL,
+  codigo_canton smallint(5)  NOT NULL,
+  nombre_distrito varchar(45) NOT NULL,
+  constraint pk_distrito primary key(codigo_distrito),
+  constraint fk_distrito_canton foreign key(codigo_canton) references canton(codigo_canton)
+);
+
+create table direccion (
+	id int auto_increment,
+    cedula varchar(10) not null,
+    codigo_provincia smallint default 1 not null,
+    codigo_canton smallint default 114 not null,
+    codigo_distrito int default 11401 not null,
+    direccion varchar(300) default ' ' not null,
+    activo boolean default true not null,
+    constraint fk_direccion_distrito foreign key(codigo_distrito) references distrito(codigo_distrito),
+    constraint fk_direccion_canton foreign key(codigo_canton) references canton(codigo_canton),
+    constraint fk_direccion_provincia  foreign key(codigo_provincia) references provincia(codigo_provincia),
+    constraint fk_direccion_emplado  foreign key(cedula) references empleados(cedula),
+    constraint pk_direccion primary key(id)
+);
