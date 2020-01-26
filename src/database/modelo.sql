@@ -119,7 +119,7 @@ create table permisos(
 	informacion_estado varchar(300) default 'EL permiso no ha sido revisado' not null,
     constraint pk_permisos primary key(id),
     constraint fk_permisos_estado_permiso foreign key (estado_permiso) references estado_permiso (id),
-    constraint fk_empleados foreign key (empleado_id) references empleados(id)
+    constraint fk_permisos_empleados foreign key (empleado_id) references empleados(id)
 );
 create table registro_disciplinario(
 	id int auto_increment,
@@ -143,11 +143,11 @@ create table horas_extra(
 );
 create table salarios(
 	id int auto_increment,
-    cedula varchar(50) not null,
+    empleado_id int not null,
 	salario_hora decimal(10,2) not null,
     jornada decimal(4.2) not null,
     activo boolean default true not null,
-	constraint fk_salario_empleados foreign key(cedula) references empleados(cedula),
+	constraint fk_salarios_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_salario primary key(id)
 );
 create table aumento_salarial(

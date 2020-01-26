@@ -66,10 +66,73 @@ router.get('/permiso/eliminar/:id', isLoggedIn, async (req, res)=>{
 
 // USUARIOS
 // SECTION
+
+router.get('/usuarios-registrados', isLoggedIn, async(req, res)=>{
+    // USUARIOS APROBADOS
+    const data = await pool.query(`
+    Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo
+    From empleados a
+    INNER JOIN direccion b
+    ON a.cedula = b.cedula
+    INNER JOIN salarios c
+    ON a.id = c.empleado_id
+    INNER JOIN tipo_empleados d
+    ON a.tipo_empleado = d.id
+    WHERE a.aprobado = 1;
+    `)
+    console.log(data)
+    res.render('adm/usuariosAprobados', {data})
+})
+
 router.get('/usuarios', isLoggedIn, async(req, res)=>{
-    const data = await pool.query(`SELECT * FROM empleados`)
+    // USUARIOS NUEVOS
+    const data = await pool.query(`
+    SELECT a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato
+    FROM empleados a
+    WHERE a.aprobado = 0;
+    `)
     console.log(data)
     res.render('adm/usuarios', {data})
+})
+
+router.get('/infoUsuarios/:id', async (req, res)=>{
+    const {id} = req.params
+    const usuario = await pool.query('Select id from salarios where id = ?',[req.user.id])
+    const opcion = usuario.length
+    if(opcion === 0){
+        // USUARIO NUEVO
+        const data = await pool.query(`
+        SELECT id, nombre, p_apellido, s_apellido, cedula, substr(fecha_contrato, 1, 10) as fecha_contrato, TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) AS edad , correo 
+        FROM empleados  
+        WHERE id = ?;
+        `,[id])
+        console.log(data[0])
+        res.render('adm/usuarioNuevo', {data: data[0]})
+        console.log('1')
+    } else {
+        // ACTUALIZAR USUARIO
+        res.render('adm/actualizarUsuario')
+        console.log('2')
+    }
+})
+router.post('/infoUsuarios/:id', async (req, res)=>{
+    const {id} = req.params
+    const {tipo_empleado, salario_hora, jornada, temporal} = req.body
+    const dataEmpleado = {
+        tipo_empleado,
+        temporal,
+        aprobado: 1
+    }
+    const dataSalario = {
+        salario_hora,
+        jornada,
+        empleado_id: id
+    }
+    // console.log(dataSalario)
+    const queryEmpleados = await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
+    const querySalarios = await pool.query('INSERT INTO salarios SET ?', [dataSalario])
+    // UPDATE TABLA EMPLEADO PARA APROBARLO COMO TRABAJADOR
+    res.send('LLEGO')
 })
 // !SECTION 
 
