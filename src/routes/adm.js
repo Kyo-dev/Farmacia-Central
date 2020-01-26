@@ -3,8 +3,7 @@ const router = express.Router()
 const pool = require('../database')
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth')
 
-// PERMISOS
-// SECTION
+// SECTION PERMISOS
 
 router.get('/permisos', isLoggedIn, async (req, res) => {
     const data = await pool.query(`
@@ -64,16 +63,13 @@ router.get('/permiso/eliminar/:id', isLoggedIn, async (req, res)=>{
 
 // !SECTION 
 
-// USUARIOS
-// SECTION
 
+// SECTION USUARIOS
 router.get('/usuarios-registrados', isLoggedIn, async(req, res)=>{
     // USUARIOS APROBADOS
     const data = await pool.query(`
     Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo
     From empleados a
-    INNER JOIN direccion b
-    ON a.cedula = b.cedula
     INNER JOIN salarios c
     ON a.id = c.empleado_id
     INNER JOIN tipo_empleados d
@@ -115,6 +111,7 @@ router.get('/infoUsuarios/:id', async (req, res)=>{
         console.log('2')
     }
 })
+
 router.post('/infoUsuarios/:id', async (req, res)=>{
     const {id} = req.params
     const {tipo_empleado, salario_hora, jornada, temporal} = req.body
@@ -132,8 +129,43 @@ router.post('/infoUsuarios/:id', async (req, res)=>{
     const queryEmpleados = await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
     const querySalarios = await pool.query('INSERT INTO salarios SET ?', [dataSalario])
     // UPDATE TABLA EMPLEADO PARA APROBARLO COMO TRABAJADOR
-    res.send('LLEGO')
+    res.render('adm/inicio')
 })
 // !SECTION 
 
+// SECTION SALARIOS
+router.get('/salarios', async(req, res) =>{
+    const data = await pool.query(`
+    Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo
+    From empleados a
+    INNER JOIN salarios c
+    ON a.id = c.empleado_id
+    INNER JOIN tipo_empleados d
+    ON a.tipo_empleado = d.id
+    WHERE a.aprobado = 1;
+    `)
+    console.log(data)
+    res.render('adm/salarios', {data})
+})
+
+router.get('/aumento-retencion/:id', async(req, res) =>{
+    const {id} = req.params
+    const data = await pool.query(`
+    Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo
+    From empleados a
+    INNER JOIN salarios c
+    ON a.id = c.empleado_id
+    INNER JOIN tipo_empleados d
+    ON a.tipo_empleado = d.id
+    WHERE a.aprobado = 1 AND a.id = ?;`, [id])
+    console.log(data[0])
+    res.render('adm/salariosRetenciones', {data: data[0]})
+})
+
+// !SECTION 
+
+// PANTALLA DE INICO DEL ADM
+router.get('/inicio', async(req, res)=>{
+    res.send('HOME')
+})
 module.exports = router
