@@ -7,9 +7,18 @@ const session = require('express-session')
 const mySQLStore = require('express-mysql-session')
 const {database} = require('./keys')
 const passport = require('passport')
+const multer = require('multer')
+const uuid = require('uuid/v4')
 //inicialzaciones
 const app = express()
 require('./lib/passport')
+
+const storageMulter = multer.diskStorage({
+  destination: path.join(__dirname, 'public/uploads'),
+  filename: (req, file, cb) => {
+    cb(null, uuid() + path.extname(file.originalname).toLocaleLowerCase())
+  }
+})
 
 //Configuracion
 app.set('PORT', process.env.PORT || 4000)
@@ -35,6 +44,22 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(multer({
+  storage: storageMulter,
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter: (req, file, cb) =>{
+    const fileTypes = /pdf|docx/;
+    const mimetype = fileTypes.test(file.mimetype)
+    const extname = fileTypes.test(path.extname(file.originalname))
+    if(mimetype && extname){
+      return cb(null, true)
+    }
+    cb("Error: Archivo no soportado, solo se admiten .pdf o .docx")
+  },
+  dest: path.join(__dirname, 'public/uploads')
+}).single('retencion'))
 
 //Variables globales
 app.use((req, res, next)=>{
@@ -49,6 +74,7 @@ app.use(require('./routes/'))
 app.use(require('./routes/auth'))
 app.use('/permisos', require('./routes/permisos'))
 app.use('/perfil', require('./routes/usuarios'))
+app.use('/bonos', require('./routes/bonos'))
 app.use('/adm', require('./routes/adm'))
 
 //navegador

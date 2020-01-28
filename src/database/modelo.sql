@@ -41,6 +41,7 @@ create table empleados(
     p_apellido varchar(100) not null,
     s_apellido varchar(100) not null,
 	correo varchar(200) not null unique,
+    -- url_documento varchar(300) default 'No se ha registrado el resumen' not null,
     clave varchar(200) not null,
     constraint pk_empleados primary key(id)
 );
@@ -166,6 +167,7 @@ create table retencion_salarial(
 	retencion decimal(10,2) default 0 not null,
     fecha datetime default now() not null,
     descripcion varchar(300) not null,
+    url_documento varchar(300) not null,
     activo boolean default true not null,
     constraint fk_retencion_salarial_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_retencion_salarial primary key(id)
@@ -195,7 +197,7 @@ create table fechas_vacaciones(
     fecha_salida date not null,
     fecha_entrada date not null,
     activo boolean default true not null,
-    constraint fk_dias_disponibles_empleados foreign key (empleado_id) references empleados(id),
+    constraint fk_vacaciones_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_vacaciones primary key(id)
 );
 

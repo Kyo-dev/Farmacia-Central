@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <h3 class="text-center">Retención salarial</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card-body">
+                <div class="form-group">
+                    <h3>Información de aumentos salariales</h3>
+                    <a href="">Consultar</a>
+                    <h4>Nombre del trabajador:</h4>
+                    <P>{{user.nombre}} {{user.p_apellido}} {{user.s_apellido}}</P>
+                    <h4>Cargo que desempeña</h4>
+                    <p>{{user.nombre_cargo}}</p>
+                    <h4>Información salarial</h4>
+                    <p>Salario por hora: ₡ <span>{{user.salario_hora}}</span></p>
+                    <p>Jornada diaria: <span>{{user.jornada}}</span> horas</p>
+                    <h3>Realizar aumento salarial</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Realizar aumento salarial</h3>
+            <form action="../../adm/aumento/{{user.id}}" method="POST">
+                <div class="form-group">
+                    <input type="number" step="any" class="form-control" name="cantidad" placeholder="salario por hora"
+                        required>
+                </div>
+                <div class="form-group">
+                    {{!-- CONFIRMAR --}}
+                    <button type="button" class="btn btn-success btn-block" data-toggle="modal"
+                        data-target="#confirmarAumento">
+                        Aceptar
+                    </button>
+                    <div class="modal fade" id="confirmarAumento" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmarAumento" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">Importante
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Actualmente {{user.nombre}} {{user.p_apellido}} gana ₡
+                                    {{user.salario_hora}}
+                                    por hora,
+                                    estas a punto de <span class="text-danger"><b>sumar</b></span c> el valor
+                                    ingresado.
+                                    Esto afecta al salario actual por hora laboral. ¿Desea continuar?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- CONFIRMAR --}}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{!-- RETENCION --}}
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>Número de aumeto</th>
+                            <th>Fecha de registro</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{id}}</td>
+                            <td>{{fecha}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

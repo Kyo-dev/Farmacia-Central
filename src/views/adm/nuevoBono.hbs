@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <br>
+            <h3>Otorgar bono</h3>
+            <div class="card-body">
+                <h3>Nombre del trabajador:</h3>
+                <p><span>{{data.nombre}}</span> <span>{{data.p_apellido}}</span> <span>{{data.s_apellido}}</span></p>
+                <h3>Cargo que desempeña</h3>
+                <p><span>{{data.nombre_cargo}}</span></p>
+                <h3>Fecha de contratación</h3>
+                <p><span>{{data.fecha_contrato}}</span></p>
+                <h2>Otorgar un bono</h2>
+                <form action="../../bonos/nuevo/{{data.id}}" method="POST">
+                    <div class="form-group">
+                        <input type="text" step="any" class="form-control" name="motivo" placeholder="Motivo del bono"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" step="any" class="form-control" name="cantidad" placeholder="Cantidad"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        {{!-- CONFIRMAR --}}
+                        <button type="button" class="btn btn-success btn-block" data-toggle="modal"
+                            data-target="#confirmarAumento">
+                            Aceptar
+                        </button>
+                        <div class="modal fade" id="confirmarAumento" tabindex="-1" role="dialog"
+                            aria-labelledby="confirmarAumento" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger" id="exampleModalLongTitle">Importante
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Esta apunto de otorgar un bono al trabajador {{data.nombre}} {{data.p_apellido}}
+                                        lo cual <span class="text-danger"><b>suma</b></span> el valor
+                                        ingresado al pago de este mes. ¿Desea continuar?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- CONFIRMAR --}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

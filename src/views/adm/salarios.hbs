@@ -11,7 +11,8 @@
                     <th>Salario por hora</th>
                     <th>Jornada diaria</th>
                     <th>Cargo que desempeña</th>
-                    <th>Aumentos y retenciones</th>
+                    <th>Aumentos</th>
+                    <th>Retenciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,7 +25,8 @@
                     <td>{{salario_hora}}</td>
                     <td>{{jornada}}</td>
                     <td>{{nombre_cargo}}</td>
-                    <td><a href="/adm/aumento-retencion/{{id}}" class="btn btn-info btn-block">Buscar</a></td>
+                    <td><a href="/adm/salario-aumento/{{id}}" class="btn btn-info btn-block">Buscar</a></td>
+                    <td><a href="/adm/salario-retencion/{{id}}" class="btn btn-info btn-block">Buscar</a></td>
                 </tr>
                 {{/each}}
             </tbody>
