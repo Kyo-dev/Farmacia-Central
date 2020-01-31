@@ -55,11 +55,11 @@ app.use(multer({
     const extname = fileTypes.test(path.extname(file.originalname))
     if(mimetype && extname){
       return cb(null, true)
-    }
+    } 
     cb("Error: Archivo no soportado, solo se admiten .pdf o .docx")
   },
   dest: path.join(__dirname, 'public/uploads')
-}).single('retencion'))
+}).single('url_documento'))
 
 //Variables globales
 app.use((req, res, next)=>{
@@ -72,10 +72,14 @@ app.use((req, res, next)=>{
 //rutas del servidor
 app.use(require('./routes/'))
 app.use(require('./routes/auth'))
-app.use('/permisos', require('./routes/permisos'))
-app.use('/perfil', require('./routes/usuarios'))
-app.use('/bonos', require('./routes/bonos'))
-app.use('/adm', require('./routes/adm'))
+app.use('/overTime', require('./routes/overTime'))
+app.use('/permits', require('./routes/permits'))
+app.use('/salary', require('./routes/salary'))
+app.use('/bonus', require('./routes/bonus'))
+app.use('/users', require('./routes/users'))
+// app.use('/perfil', require('./routes/usuarios'))
+// app.use('/permisos', require('./routes/permisos'))
+// app.use('/bonos', require('./routes/bonos'))
 
 //navegador
 app.use(express.static(path.join(__dirname, 'public')))

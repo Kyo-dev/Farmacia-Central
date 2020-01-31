@@ -47,27 +47,29 @@ create table empleados(
 );
 create table empleados_temporales(
 	id tinyint auto_increment,
-    cedula varchar(50) not null,
+	empleado_id int not null,
     fecha datetime default now() not null,
     descripcion varchar(300) not null,
-    constraint fk_empleados_temporales_empleados foreign key(cedula) references empleados(cedula),
+	constraint fk_temporales_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_empleados_temporales primary key(id)
 );
 create table fechas_empleado_temporal(
 	id int auto_increment,
-	cedula varchar(10) not null,
+	empleado_id int not null,
     fecha datetime default now() not null,
+    descripcion varchar(200) not null,
+    activo boolean default true,
     constraint pk_fechas_emplado_temporal primary key (id),
-    constraint fk_fechas_empleado_temporal_empleado foreign key(cedula) references empleados_temporales (cedula)
+    constraint fk_fechas_temporales_empleados foreign key (empleado_id) references empleados(id)
 );
 
 create table despidos(
     id int auto_increment not null,
-    cedula varchar(10) not null,
+	empleado_id int not null,
     descripcion varchar(300),
     fecha_despido datetime default now() not null,
     activo boolean default true,
-    constraint fk_despidos_empleados foreign key (cedula) references empleados(cedula),
+    constraint fk_despidos_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_despidos primary key(id)
 );
 create table tipo_telefonos(
@@ -79,11 +81,11 @@ create table tipo_telefonos(
 create table telefonos(
 	id int auto_increment,
     numero varchar(8) not null,
-    cedula varchar(50) not null,
+	empleado_id int not null,
     tipo_telefono tinyint default 1 not null,
     activo boolean default true,
     constraint fk_telefonos_tipo_telefono foreign key(tipo_telefono) references tipo_telefonos(id),
-    constraint fk_telefonos_empleados foreign key(cedula) references empleados(cedula),
+    constraint fk_telefonos_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_telefonos primary key (id)
 );
 create table tareas(
@@ -124,22 +126,22 @@ create table permisos(
 );
 create table registro_disciplinario(
 	id int auto_increment,
-    cedula varchar(50) not null,
+    empleado_id int not null,
     descripcion varchar(300) not null,
     fecha datetime default now() not null,
     activo boolean default true not null,
-    constraint fk_registro_disciplinario_empleados foreign key(cedula) references empleados(cedula),
+    constraint fk_registro_disciplina_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_registro_disciplinario primary key(id)
 );
 create table horas_extra(
 	id int auto_increment,
-    cedula varchar(9) not null,
+    empleado_id int not null,
     cantidad_horas tinyint not null,
     motivo varchar(300) not null,
     fecha datetime default now() not null, 
     activo boolean default true not null,
     aprobado boolean default false not null,
-    constraint fk_horas_extra_empleados foreign key(cedula) references empleados(cedula),
+    constraint fk_horas_extra_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_horas_extra primary key(id)
 );
 create table salarios(
@@ -148,7 +150,7 @@ create table salarios(
 	salario_hora decimal(10,2) not null,
     jornada decimal(4.2) not null,
     activo boolean default true not null,
-	constraint fk_salarios_empleados foreign key (empleado_id) references empleados(id),
+    constraint fk_salarios_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_salario primary key(id)
 );
 create table aumento_salarial(
@@ -177,7 +179,7 @@ create table bonos(
     empleado_id int not null,
     motivo varchar(200) not null,
     cantidad decimal(10,2) not null,
-    fecha datetime not null, 
+    fecha datetime default now() not null, 
     activo boolean default true not null,
     constraint fk_bonos_empleados foreign key (empleado_id) references empleados(id),
     constraint ch_bonos check (cantidad >= 0),
@@ -225,7 +227,7 @@ CREATE TABLE distrito (
 
 create table direccion (
 	id int auto_increment,
-    cedula varchar(10) not null,
+    empleado_id int not null,
     codigo_provincia smallint default 1 not null,
     codigo_canton smallint default 114 not null,
     codigo_distrito int default 11401 not null,
@@ -234,6 +236,6 @@ create table direccion (
     constraint fk_direccion_distrito foreign key(codigo_distrito) references distrito(codigo_distrito),
     constraint fk_direccion_canton foreign key(codigo_canton) references canton(codigo_canton),
     constraint fk_direccion_provincia  foreign key(codigo_provincia) references provincia(codigo_provincia),
-    constraint fk_direccion_emplado  foreign key(cedula) references empleados(cedula),
+    constraint fk_direccion_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_direccion primary key(id)
 );

@@ -1,0 +1,31 @@
+<div class="container p-4">
+        <h1>Nuevos trabajadores pendientes de aprobación</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Primer apellido</th>
+                    <th>Segundo Apellido</th>
+                    <th>Fecha de registro</th>
+                    <th>Información adcional</th>
+                    <th>Aprobar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+                <tr>
+                    <td>{{cedula}}</td>
+                    <td>{{nombre}}</td>
+                    <td>{{p_apellido}}</td>
+                    <td>{{s_apellido}}</td>
+                    <td>{{fecha_contrato}}</td>
+                    <td>Usuario perdiente de aprobación</td>
+                    <td><a href="/users/admEditNewUser/{{id}}" class="btn btn-info">Revisar</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

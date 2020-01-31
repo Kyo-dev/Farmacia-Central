@@ -1,0 +1,35 @@
+<div class="container p-4">
+    <h1>Información salarial</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Primer apellido</th>
+                    <th>Segundo Apellido</th>
+                    <th>Salario por hora</th>
+                    <th>Jornada diaria</th>
+                    <th>Cargo que desempeña</th>
+                    <th>Aumentos</th>
+                    <th>Retenciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each dataSalary}}
+                <tr>
+                    <td>{{cedula}}</td>
+                    <td>{{nombre}}</td>
+                    <td>{{p_apellido}}</td>
+                    <td>{{s_apellido}}</td>
+                    <td>{{salario_hora}}</td>
+                    <td>{{jornada}}</td>
+                    <td>{{nombre_cargo}}</td>
+                    <td><a href="/salary/admIncrease/{{id}}" class="btn btn-info btn-block">Realizar</a></td>
+                    <td><a href="/salary/admTax/{{id}}" class="btn btn-info btn-block">Realizar</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="container p-4">
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Apellido</th>
+                    <th>Nombre</th>
+                    <th>Fecha del permiso</th>
+                    <th>Fstado</th>
+                    <th>Fecha de solicitud</th>
+                    <th>Motivo</th>
+                    <th>Rebaja salarial</th>
+                    <th>Revisar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+                <tr>
+                    <td>{{cedula}}</td>
+                    <td>{{p_apellido}}</td>
+                    <td>{{nombre}}</td>
+                    <td>{{fecha_salida}}</td>
+                    <td>{{estado_permiso}}</td>
+                    <td>{{fecha_solicitud}}</td>
+                    <td>{{descripcion}}</td>
+                    <td>{{costo_salarial}}</td>
+                    <td><a href="/permits/admCheck/{{id}}" class="btn btn-info">Revisar</a></td>
+                    <td><a href="/permits/admDelete/{{id}}" class="btn btn-danger">Revisar</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

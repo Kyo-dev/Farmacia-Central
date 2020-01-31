@@ -31,13 +31,14 @@ passport.use('local.signin', new LocalStrategy({
     passReqToCallback: true
 }, async (req, correo, clave, done) => {
     // INFORMACION CON LA QUE SE CARGA EL USUARIO
-    const data = await pool.query(`Select a.nombre, a.p_apellido, a.s_apellido, a.correo, a.fecha_contrato, a.cedula, a.id, b.nombre_cargo as cargo, a.clave
+    const data = await pool.query(`Select a.nombre, a.p_apellido, a.s_apellido, a.correo, a.fecha_contrato, a.cedula, a.id, b.nombre_cargo, a.clave
                             From empleados a
                             INNER JOIN tipo_empleados b
                             ON a.tipo_empleado = b.id 
                             where a.correo = ?`, [correo])
     if (data.length > 0) {
         const user = data[0]
+        console.log(user)
         const pass = await helpers.decryptingPass(clave, user.clave)
         if (pass) {
             done(null, user, req.flash('success', 'Bienvenido ' + user.nombre))

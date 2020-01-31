@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 mx-auto">
-            <h3 class="text-center">Retención sssalarial</h3>
+            <h3 class="text-center">Retención salarial</h3>
         </div>
     </div>
     <div class="row">
@@ -9,27 +9,27 @@
             <div class="card-body">
                 <div class="form-group">
                     <h4>Nombre del trabajador:</h4>
-                    <P>{{data.nombre}} {{data.p_apellido}} </P>
+                    <P>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</P>
                     <h4>Cargo que desempeña</h4>
-                    <p>{{data.nombre_cargo}}</p>
+                    <p>{{dataRole.nombre_cargo}}</p>
                     <h4>Información salarial</h4>
-                    <p>Salario por hora: ₡ <span>{{data.salario_hora}}</span></p>
-                    <p>Jornada diaria: <span>{{user.jornada}}</span> horas</p>
+                    <p>Salario por hora: ₡ <span>{{dataSalary.salario_hora}}</span></p>
+                    <p>Jornada diaria: <span>{{dataSalary.jornada}}</span> horas</p>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <h3>Realizar aumento salarial</h3>
-            <form action="../../adm/retencion/{{user.id}}" method="POST" enctype="multipart/form-data">
+            <form action="/salary/admTax/{{dataUser.id}}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="number" class="form-control" name="cantidad" placeholder="Monto a retener" required>
+                    <input type="number" class="form-control" name="retencion" placeholder="Monto a retener" required>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="descripcion" placeholder="Motido de la retención"
                         required>
                 </div>
                 <div class="form-group">
-                    <input type="file" class="form-control-file" name="retencion" placeholder="adjuntar un archivo"
+                    <input type="file" class="form-control-file" name="url_documento" placeholder="adjuntar un archivo"
                         required>
                 </div>
                 <div class="form-group">
