@@ -72,6 +72,7 @@ create table despidos(
     constraint fk_despidos_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_despidos primary key(id)
 );
+
 create table tipo_telefonos(
 	id tinyint auto_increment,
     nombre varchar(100) not null,
@@ -102,7 +103,7 @@ create table cargo_tareas(
     constraint fk_cargo_tareas_tareas foreign key(id_tarea) references tareas(id),
     constraint pk_cargo_tareas primary key (id_tipo_empleado, id_tarea)
 );
-create table estado_permiso(
+create table estados(
 	id tinyint auto_increment not null,
     estado varchar(20) not null,
     activo boolean default true,
@@ -110,7 +111,7 @@ create table estado_permiso(
 );
 create table permisos(
 	id int not null auto_increment,
-    estado_permiso tinyint default 1 not null,
+    estado tinyint default 1 not null,
     titulo varchar(100) not null,  	
     descripcion varchar(100) not null,
 	fecha_solicitud datetime default now() not null,
@@ -121,9 +122,20 @@ create table permisos(
     costo_salarial decimal(10,2) default 0 null,
 	informacion_estado varchar(300) default 'EL permiso no ha sido revisado' not null,
     constraint pk_permisos primary key(id),
-    constraint fk_permisos_estado_permiso foreign key (estado_permiso) references estado_permiso (id),
+    constraint fk_permisos_estado_permiso foreign key (estado) references estados (id),
     constraint fk_permisos_empleados foreign key (empleado_id) references empleados(id)
 );
+
+create table asistencia(
+	asistencia boolean default false,
+    aprobado boolean default false, 
+    fecha datetime default now(),
+    empleado_id int not null,
+    contador_dias int default 0 not null,
+    constraint fk_asistencia_empleados foreign key (empleado_id) references empleados(id),
+    constraint pk_asistencia primary key(empleado_id, fecha)
+);
+
 create table registro_disciplinario(
 	id int auto_increment,
     empleado_id int not null,
@@ -136,12 +148,16 @@ create table registro_disciplinario(
 create table horas_extra(
 	id int auto_increment,
     empleado_id int not null,
+	estado tinyint default 1 not null,
     cantidad_horas tinyint not null,
     motivo varchar(300) not null,
     fecha datetime default now() not null, 
     activo boolean default true not null,
-    aprobado boolean default false not null,
+    -- aprobado boolean default false not null,
+    informacion_estado varchar(300) default 'La solicitud no ha sido revisada' not null,
     constraint fk_horas_extra_empleados foreign key (empleado_id) references empleados(id),
+	constraint fk_horas_exta_estado_permiso foreign key (estado) references estados (id),
+    constraint ch_horas_extra check(cantidad_horas > 0),
     constraint pk_horas_extra primary key(id)
 );
 create table salarios(

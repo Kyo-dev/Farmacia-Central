@@ -4,7 +4,7 @@ const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
 
 router.get('/', isLoggedIn, async (req, res) => {
-    if(req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const dataUsuarios = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.nombre_cargo
         From empleados a
@@ -35,7 +35,7 @@ router.get('/', isLoggedIn, async (req, res) => {
 })
 
 router.get('/admRegister/:id', isLoggedIn, async(req, res)=>{
-    if(req.user.cedula === '123'){
+    if (req.user.tipo_empleado === 1) {
         const {id} = req.params
         const data = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.nombre_cargo
@@ -52,7 +52,7 @@ router.get('/admRegister/:id', isLoggedIn, async(req, res)=>{
 })
 
 router.post('/admRegister/:id', isLoggedIn, async (req, res)=>{
-    if(req.user.cedula === '123'){
+    if (req.user.tipo_empleado === 1) {
         const {id} = req.params
         const {motivo, cantidad} = req.body
         const data = {

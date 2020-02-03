@@ -1,10 +1,16 @@
 <div class="container p-4">
-    <h1>Información de los empleados actuales</h1>
-    <a href="/users/admNewUsers">nuevo empleados</a>
+     <div class="jumbotron">
+        <h1 class="display-4 text-center">Información de los trabajadores</h1>
+        <hr class="my-1">
+        {{#if dataNew}}
+        <p class="text-center"><a class="btn icono btn-info" href="/users/admNewUsers">Hay nuevos empleados disponibles</a></p>
+        {{/if}}
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
+                    <th>Asistencia</th>
                     <th>Cedula</th>
                     <th>Nombre</th>
                     <th>Primer apellido</th>
@@ -19,6 +25,13 @@
             <tbody>
                 {{#each data}}
                 <tr>
+
+                    {{#unless dataAssistance}}
+                    <td><a href="/users/admAssistance/{{id}}" class="btn btn-info"><i class="material-icons">
+                                search
+                            </i></a></td>
+                            {{else}}
+                    {{/unless}}
                     <td>{{cedula}}</td>
                     <td>{{nombre}}</td>
                     <td>{{p_apellido}}</td>
@@ -27,7 +40,9 @@
                     <td>{{nombre_cargo}}</td>
                     <td>{{salario_hora}}</td>
                     <td>{{jornada}}</td>
-                    <td><a href="/users/admMoreInfo/{{id}}" class="btn btn-info">Buscar</a></td>
+                    <td><a href="/users/admMoreInfo/{{id}}" class="btn btn-info"><i class="material-icons">
+                                search
+                            </i></a></td>
                 </tr>
                 {{/each}}
             </tbody>

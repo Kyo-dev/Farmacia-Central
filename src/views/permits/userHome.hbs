@@ -1,6 +1,8 @@
 <div class="container p-4">
     <div class="row">
+        {{#unless data}}
         <a href="/permits/userNewRegister">¿Necesitas un permiso?</a>
+        {{/unless}}
         {{#each data}}
         <div class="col-md-3">
             <div class="card ">

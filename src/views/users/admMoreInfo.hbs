@@ -1,1 +1,26 @@
-<h1>TODA LA INFORMACION DE UN UNICO EMPLEADO</h1>
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Información del trabajador</h2>
+                    <br>
+                    <h4>Número de cédula:</h4>
+                    <p><span>{{dataUser.cedula}}</span></p>
+                    <h4>Nombre completo:</h4>
+                    <p><span>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</span></p>
+                    <h4>Edad:</h4>
+                    <p><span>{{dataUser.edad}} años</span></p>
+                    <h4>Cargo que desempeña:</h4>
+                    <p><span>{{dataRole.nombre_cargo}}</span></p>
+                    <h4>Dirección: </h4>
+                    <p><span>{{dataAdress.nombre_distrito}},  {{dataAdress.nombre_canton}}, {{dataAdress.nombre_provincia}}. {{dataAdress.direccion}} </span></p>
+                    <h4>Número de teléfono: </h4>
+                    <p><span>{{dataPhone.numero}}</span></p>
+                    <h4>Correo electrónico: </h4>
+                    <p><span>{{dataUser.correo}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

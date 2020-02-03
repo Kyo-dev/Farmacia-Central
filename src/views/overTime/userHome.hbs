@@ -1,29 +1,36 @@
 <div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4 text-center">Horas Extra</h1>
+        <p class="lead text-center">Información relacionada con las horas extras laboradas</p>
+        <hr class="my-1">
+        {{#if data}}
+        <p class="text-center"><a href="/overTime/newRegister">¿Necesitas registrar nuevas horas extra laboradas?</a></p>
+        {{/if}}
+    </div>
     <div class="row">
-        <div class="col-md-12">
-            {{#each data}}
-            <div class="col-md-4">
-                <div class="card ">
-                    <div class="card-body">
-                        <h3 class="card-title text-center text-info">
-                            Información sobre mis horas extra laboradas
-                        </h3>
-                        <p>Fecha: <span>{{fecha}}</span></p>
-                        <p>Motivo: <span>{{motivo}}</span></p>
-                        <p>Estado {{aprobado}}</p>
-                        <a href="/permisos/borrar/{{id}}" class="btn btn-danger">Borrar</a>
-                    </div>
+        {{#each data}}
+        <div class="col-md-4">
+            <div class="card ">
+                <div class="card-body">
+                    <h3 class="card-title text-center text-info">
+                        Información sobre el registro
+                    </h3>
+                    <p>Fecha: <span>{{fecha}}</span></p>
+                    <p>Motivo: <span>{{motivo}}</span></p>
+                    <p>Estado: {{informacion_estado}}</p>
+                    <a href="/overTime/userDelete/{{id}}" class="btn btn-danger">Borrar</a>
                 </div>
             </div>
-            {{else}}
-            <div class="col-md-4 mx-auto">
-                <div class="card card-body text-center">
-                    <p>No hay horas extra registradas</p>
-                    <a href="/overTime/newRegister">¿Necesitas registras nuevas horas extra laboradas?</a>
-                </div>
-            </div>
-            {{/each}}
         </div>
+        {{else}}
+        <div class="col-md-4">
+            <div class="card card-body text-center">
+                <p>No hay horas extra registradas</p>
+                <a href="/overTime/newRegister">¿Necesitas registras nuevas horas extra laboradas?</a>
+            </div>
+        </div>
+        {{/each}}
+
     </div>
     <div class="row">
         <div class="col-md-12">

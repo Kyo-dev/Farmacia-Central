@@ -1,23 +1,37 @@
 <div class="container p-4">
+    <div class="jumbotron">
+        <h1 class="display-4 text-center">Información del perfil</h1>
+        <p class="lead text-center">Bienvenido {{user.nombre}}</p>
+        {{#unless dataAsistencia}}
+        <p class="lead text-center">Marcar asistencia<a href="/users/userAssistance/{{user.id}}"><i class="material-icons">done</i></a></p>
+        {{/unless}}
+
+        <hr class="my-1">
+        <p class="text-center"><a class="btn btn-info" href="/users/userEditMoreInfo">Editar mí información</a></p>
+    </div>
     <div class="row">
-        <div class="col-md-8 mx-auto">
+        <div class="col-md-6 mx-auto">
             <div class="card text-center">
                 <div class="card-body">
-                    <h3>Bienvenido {{user.nombre}}</h3>
-                    <br>
-                    <p class=" text-left">Nombre completo: <span>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</span></p>
-                    <p class="text-left">Cargo que desempeña <span>{{dataRole.nombre_cargo}}</span></p>
+                    <p class=" text-left">Nombre completo: <span>{{dataUser.nombre}} {{dataUser.p_apellido}}
+                            {{dataUser.s_apellido}}</span></p>
+                    <p class="text-left">Cargo que desempeña: <span>{{dataRole.nombre_cargo}}</span></p>
                     <p class="text-left">Correo electrónico: <span>{{dataUser.correo}}</span></p>
                     <p class="text-left">Fecha de contratación: <span>{{dataUser.fecha_contrato}}</span></p>
                     <p class="text-left">Precio por hora: <span>{{dataSalary.salario_hora}}</span></p>
                     <p class="text-left">Horas laborales: <span>{{dataSalary.jornada}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
                     <p class="text-left">Bonos otorgados: <span>{{dataBonus.motivo}}</span><br>
-                    <a class="btn btn-success" href="/bonus">Más información</a>
+                        <a class="btn btn-success" href="/bonus">Más información</a>
                     </p>
                     <p class="text-left">Sanciones disciplinarias: <span>{{dataConctas.descripcion}}</span><br>
-                    <a class="btn btn-success" href="/bonus">Más información CAMBIAR RUTA</a>
+                        <a class="btn btn-success" href="/bonus">Más información CAMBIAR RUTA</a>
                     </p>
-                    <a class="btn btn-info" href="/users/userEditMoreInfo">Editar mí informacion</a>
                 </div>
             </div>
         </div>

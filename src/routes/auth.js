@@ -21,7 +21,7 @@ router.get('/signup', isNotLoggedIn, async (req, res) => {
 })
 
 router.post('/signup', isNotLoggedIn, passport.authenticate('local.signup', {
-    successRedirect: '/profile',
+    successRedirect: '/users',
     failureRedirect: '/signup',
     failureFlash: true
 }))
@@ -38,16 +38,16 @@ router.post('/signin', isNotLoggedIn, (req, res, next) => {
     })(req, res, next)
 })
 
-router.get('/profile', isLoggedIn, (req, res) => {
-    // PERMISOS DE ADM 
-    if(req.user.cedula !== "1234"){
-        console.log('funciona')
-        // RENDERIZAR DE LA CARPERA ADM Y RUTAS DEL ADM.
-    } else {
-        console.log('no funciona')
-    }
-    res.render('profile/perfil')
-})
+// router.get('/profile', isLoggedIn, (req, res) => {
+//     // PERMISOS DE ADM 
+//     if(req.user.cedula !== "1234"){
+//         console.log('funciona')
+//         // RENDERIZAR DE LA CARPERA ADM Y RUTAS DEL ADM.
+//     } else {
+//         console.log('no funciona')
+//     }
+//     res.render('profile/perfil')
+// })
 
 router.get('/logout', isLoggedIn, (req, res)=> {
     req.logOut()

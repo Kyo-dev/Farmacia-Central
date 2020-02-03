@@ -4,7 +4,7 @@ const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
 
 router.get('/', isLoggedIn, async (req, res) => {
-    if (req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const dataSalary = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, 
         substr(a.fecha_contrato, 1, 10) as fecha_contrato,
@@ -49,7 +49,7 @@ router.get('/', isLoggedIn, async (req, res) => {
 
 //SECTION ADM
 router.get('/admIncrease/:id', isLoggedIn, async (req, res) => {
-    if (req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const { id } = req.params
         const dataSalary = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, 
@@ -68,7 +68,7 @@ router.get('/admIncrease/:id', isLoggedIn, async (req, res) => {
         INNER JOIN empleados b
         ON a.empleado_id = b.id 
         WHERE a.empleado_id = ?
-        `, [id])
+        order by id desc`, [id])
         res.render('salary/admIncrease', { dataSalary: dataSalary[0], data })
     } else {
         res.redirect('/salary')
@@ -76,7 +76,7 @@ router.get('/admIncrease/:id', isLoggedIn, async (req, res) => {
 })
 
 router.post('/admIncrease/:id', isLoggedIn, async (req, res) => {
-    if (req.user.cedula = '123') {
+    if (req.user.tipo_empleado === 1) {
         const { id } = req.params
         const { cantidad } = req.body
         const salarioActual = await pool.query('SELECT salario_hora FROM salarios WHERE empleado_id = ?', [id])
@@ -98,7 +98,7 @@ router.post('/admIncrease/:id', isLoggedIn, async (req, res) => {
 })
 
 router.get('/admTax/:id', isLoggedIn, async (req, res) => {
-    if (req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const { id } = req.params
         const dataUser = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, 
@@ -114,14 +114,19 @@ router.get('/admTax/:id', isLoggedIn, async (req, res) => {
         SELECT salario_hora, jornada
         FROM salarios
         WHERE empleado_id = ?`, [id])
-        res.render('salary/admTax', { dataUser: dataUser[0], dataRole: dataRole[0], dataSalary: dataSalary[0] })
+        const dataTax = await pool.query(`
+        select id, retencion, substr(fecha, 1, 10) as fecha, descripcion, url_documento
+        from retencion_salarial
+        where empleado_id = ? and activo = true;`, [id])
+        console.log(dataTax)
+        res.render('salary/admTax', { dataUser: dataUser[0], dataRole: dataRole[0], dataSalary: dataSalary[0], dataTax })
     } else {
         res.send('USER')
     }
 })
 
 router.post('/admTax/:id', isLoggedIn, async (req, res) => {
-    if (req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const { id } = req.params
         const { descripcion, retencion } = req.body
         const data = {
@@ -138,7 +143,6 @@ router.post('/admTax/:id', isLoggedIn, async (req, res) => {
             req.flash('message', `Por favor ingrese una descripcion`)
             res.redirect('/salary')
         }
-        console.log(data.url_documento.length)
         if (data.url_documento.length >= 0) {
             const query = await pool.query('INSERT INTO retencion_salarial SET ?;', [data])
             req.flash('success', `Registro realizado`)
@@ -147,15 +151,27 @@ router.post('/admTax/:id', isLoggedIn, async (req, res) => {
             req.flash('message', `Por favor ingrese el documento que detalla la retencion, en formato .pdf o docx`)
             res.redirect('/salary')
         }
-        res.redirect('/salary')
     } else {
         res.redirect('/salary')
     }
 })
 
+router.get('/admDeleteTax/:id', isLoggedIn, async (req, res) => {
+    if (req.user.tipo_empleado === 1) {
+        const {id} = req.params
+        const data = {
+            activo: false
+        }
+        const query = await pool.query(`UPDATE retencion_salarial SET ? WHERE id = ?;`,[data, id])
+        req.flash('success', 'Retención eliminada satisfactoriamente.')
+        res.redirect('/salary')
+    }
+})
 // !SECTION 
 
 // SECTION USER
+
+
 
 // !SECTION 
 

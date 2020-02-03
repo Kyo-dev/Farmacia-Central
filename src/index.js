@@ -56,7 +56,7 @@ app.use(multer({
     if(mimetype && extname){
       return cb(null, true)
     } 
-    cb("Error: Archivo no soportado, solo se admiten .pdf o .docx")
+    return cb(new Error("Solo se adminten archivos en formato .pdf y .docx"), false)
   },
   dest: path.join(__dirname, 'public/uploads')
 }).single('url_documento'))

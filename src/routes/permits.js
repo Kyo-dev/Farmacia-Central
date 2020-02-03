@@ -4,7 +4,7 @@ const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
 
 router.get('/', isLoggedIn, async (req, res) => {
-    if (req.user.cedula === '123') {
+    if (req.user.tipo_empleado === 1) {
         const data = await pool.query(`
         select a.id, b.nombre, b.p_apellido, b.cedula, a.estado_permiso, a.titulo, a.descripcion, substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
         a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado, substr(a.fecha_salida, 1, 10) as fecha_salida
@@ -85,47 +85,55 @@ router.post('/userDelete/:id', isLoggedIn, async (req, res) => {
 })
 
 router.get('/admCheck/:id', isLoggedIn, async (req, res) => {
-    const {id} = req.params
-    const data = await pool.query(`
-    select a.id, b.cedula, a.estado_permiso, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-    a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
-    from permisos a
-    inner join empleados b
-    on a.empleado_id = b.id
-    where a.id = ?;`,[id])
-    res.render('permits/admCheck', {data: data[0]})
+    if (req.user.tipo_empleado === 1) {
+        const {id} = req.params
+        const data = await pool.query(`
+        select a.id, b.cedula, a.estado_permiso, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
+        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
+        from permisos a
+        inner join empleados b
+        on a.empleado_id = b.id
+        where a.id = ?;`,[id])
+        res.render('permits/admCheck', {data: data[0]})
+    }
 })
 
 router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
-    const { id } = req.params
-    const { informacion_estado, estado_permiso, costo_salarial } = req.body
-    const data = {
-        informacion_estado, 
-        estado_permiso, 
-        costo_salarial
+    if (req.user.tipo_empleado === 1) {
+        const { id } = req.params
+        const { informacion_estado, estado_permiso, costo_salarial } = req.body
+        const data = {
+            informacion_estado, 
+            estado_permiso, 
+            costo_salarial
+        }
+        const query = await pool.query('UPDATE permisos SET ? WHERE id = ?', [data, id])
+        req.flash('success', 'Permiso actualizado satisfactoriamente')
+        res.redirect('/profile')
     }
-    const query = await pool.query('UPDATE permisos SET ? WHERE id = ?', [data, id])
-    req.flash('success', 'Permiso actualizado satisfactoriamente')
-    res.redirect('/profile')
 })
 
 router.get('/admDelete/:id', isLoggedIn, async (req, res) => {
-    const { id } = req.params
-    const data = await pool.query(`
-    select a.id, b.cedula, a.estado_permiso, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-    a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
-    from permisos a
-    inner join empleados b
-    on a.empleado_id = b.id
-    where a.id = ?;`,[id])
-    res.render('permits/admDelete', { data: data[0]})
+    if (req.user.tipo_empleado === 1) {
+        const { id } = req.params
+        const data = await pool.query(`
+        select a.id, b.cedula, a.estado_permiso, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
+        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
+        from permisos a
+        inner join empleados b
+        on a.empleado_id = b.id
+        where a.id = ?;`,[id])
+        res.render('permits/admDelete', { data: data[0]})
+    }
 })
 
 router.get('/admConfirmDelete/:id', isLoggedIn, async (req, res)=>{
-    const{id} = req.params
-    await pool.query('update permisos set activo = false where id = ?', [id])
-    req.flash('success', 'Permiso eliminado satisfactoriamente')
-    res.redirect('/profile')
+    if (req.user.tipo_empleado === 1) {
+        const{id} = req.params
+        await pool.query('update permisos set activo = false where id = ?', [id])
+        req.flash('success', 'Permiso eliminado satisfactoriamente')
+        res.redirect('/profile')
+    }
 })
 
 module.exports = router
