@@ -72,6 +72,7 @@ app.use((req, res, next)=>{
 //rutas del servidor
 app.use(require('./routes/'))
 app.use(require('./routes/auth'))
+app.use('/vacations', require('./routes/vacations'))
 app.use('/overTime', require('./routes/overTime'))
 app.use('/permits', require('./routes/permits'))
 app.use('/salary', require('./routes/salary'))

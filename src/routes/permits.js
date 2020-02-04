@@ -26,31 +26,31 @@ router.get('/userNewRegister', isLoggedIn, (req, res) => {
     res.render('permits/userNewRegister')
 })
 
-router.post('/userNewRegister', isLoggedIn, async (req, res) => {
-    const { titulo, descripcion, fecha_salida } = req.body
-    const data = {
-        titulo,
-        descripcion,
-        fecha_salida,
-        empleado_id: req.user.id
-    }
-    if(titulo.length <= 0){
-        req.flash('message', `Por favor ingrese un titulo`)
-        res.redirect('/profile')
-    }
-    if(descripcion.length <= 0){
-        req.flash('message', `Por favor ingrese una descripcion`)
-        res.redirect('/profile')
-    }
-    if(fecha_salida.length <= 0){
-        req.flash('message', `Por favor ingrese una fecha`)
-        res.redirect('/profile')
-    }
+// router.post('/userNewRegister', isLoggedIn, async (req, res) => {
+//     const { titulo, descripcion, fecha_salida } = req.body
+//     const data = {
+//         titulo,
+//         descripcion,
+//         fecha_salida,
+//         empleado_id: req.user.id
+//     }
+//     if(titulo.length <= 0){
+//         req.flash('message', `Por favor ingrese un titulo`)
+//         res.redirect('/profile')
+//     }
+//     if(descripcion.length <= 0){
+//         req.flash('message', `Por favor ingrese una descripcion`)
+//         res.redirect('/profile')
+//     }
+//     if(fecha_salida.length <= 0){
+//         req.flash('message', `Por favor ingrese una fecha`)
+//         res.redirect('/profile')
+//     }
     
-    const query = await pool.query('INSERT INTO permisos SET ?;', [data]);
-    req.flash('success', 'Permiso registrado y pendiente de revision')
-    res.redirect('/profile')
-})
+//     const query = await pool.query('INSERT INTO permisos SET ?;', [data]);
+//     req.flash('success', 'Permiso registrado y pendiente de revision')
+//     res.redirect('/profile')
+// })
 
 router.get('/userEdit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params

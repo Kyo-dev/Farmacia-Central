@@ -1,0 +1,54 @@
+<div class="container p-4">
+     <div class="jumbotron">
+        <h1 class="display-4 text-center">Registrar vacaciones</h1>
+        <p class="lead text-center">Días disponibles: {{out}}</p>
+        <hr class="my-1">
+    </div>
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/vacations/userNewRegister/{{dataUser.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="">Fecha de salida</label>
+                            <input type="date" class="form-control" name="fecha_salida" placeholder="descripcion">
+                        </div>
+                            <label for="">Fecha de entrada</label>
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="fecha_entrada" placeholder="descripcion">
+                        </div>
+                         {{!-- CONFIRMAR --}}
+                    <button type="button" class="btn btn-success btn-block" data-toggle="modal"
+                        data-target="#confirmarAumento">
+                        Aceptar
+                    </button>
+                    <div class="modal fade" id="confirmarAumento" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmarAumento" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">Importante
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    No puede sobre pasar los días disponibles, en caso de no haber o exceder estos, no se completará el proceso
+                                    ¿Desea continuar?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- CONFIRMAR --}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
