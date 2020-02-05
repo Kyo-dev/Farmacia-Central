@@ -1,5 +1,5 @@
 <div class="container p-4">
-    <div class="jumbotron">
+    <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Información del perfil</h1>
         <p class="lead text-center">Bienvenido {{user.nombre}}</p>
         {{#unless dataAsistencia}}
@@ -7,7 +7,7 @@
         {{/unless}}
 
         <hr class="my-1">
-        <p class="text-center"><a class="btn btn-info" href="/users/userEditMoreInfo">Editar mí información</a></p>
+        <p class="text-center"><a class="btn btn-principal" href="/users/userEditMoreInfo">Editar mí información</a></p>
     </div>
     <div class="row">
         <div class="col-md-6 mx-auto">
@@ -27,10 +27,10 @@
             <div class="card text-center">
                 <div class="card-body">
                     <p class="text-left">Bonos otorgados: <span>{{dataBonus.motivo}}</span><br>
-                        <a class="btn btn-success" href="/bonus">Más información</a>
+                        <a class="btn btn-principal" href="/bonus">Más información</a>
                     </p>
                     <p class="text-left">Sanciones disciplinarias: <span>{{dataConctas.descripcion}}</span><br>
-                        <a class="btn btn-success" href="/bonus">Más información CAMBIAR RUTA</a>
+                        <a class="btn btn-principal" href="/bonus">Más información CAMBIAR RUTA</a>
                     </p>
                 </div>
             </div>

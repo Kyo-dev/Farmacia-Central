@@ -2,19 +2,33 @@
     <div class="row">
         <div class="col-md-4 mx-auto">
             <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h1 class="text-center">Editar permiso</h1>
+                </div>
                 <div class="card-body">
                     <form action="/permits/userEdit/{{data.id}}" method="POST">
                         <div class="form-group">
+                            <label for="">Motivo del permiso</label>
                             <input type="text" value="{{data.titulo}}" class="form-control" name="titulo" placeholder="Titulo" autofocus>
                         </div>
                         <div class="form-group">
+                            <label for="">Información adicional</label>
                             <input type="text" value="{{data.descripcion}}" class="form-control" name="descripcion" placeholder="descripcion">
                         </div>
                         <div class="form-group">
-                            <input type="date" class="form-control" name="fecha_salida" placeholder="descripcion">
+                            <label for="">¿Cúanta horas requiere el permiso?</label>
+                            <input type="number" value="{{data.horas}}" class="form-control" name="horas" placeholder="horas">
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-success btn-block">Actualizar</button>
+                            <label for="">¿A qué hora se retira?</label>
+                            <input type="text" value="{{data.hora_salida}}" class="form-control" name="hora_salida" placeholder="am/pm">
+                        </div>
+                        <div class="form-group">
+                             <label for="">Fecha del permiso</label>
+                            <input type="date" value="{{data.fecha_salida}}" class="form-control" name="fecha_salida" placeholder="descripcion">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-principal btn-block">Actualizar</button>
                         </div>
                     </form>
                 </div>

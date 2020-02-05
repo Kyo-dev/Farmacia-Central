@@ -1,4 +1,8 @@
 <div class="container p-4">
+     <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Información de los trabajadores</h1>
+        <hr class="my-1">
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
@@ -26,8 +30,8 @@
                     <td>{{fecha_solicitud}}</td>
                     <td>{{descripcion}}</td>
                     <td>{{costo_salarial}}</td>
-                    <td><a href="/permits/admCheck/{{id}}" class="btn btn-info">Revisar</a></td>
-                    <td><a href="/permits/admDelete/{{id}}" class="btn btn-danger">Revisar</a></td>
+                    <td><a href="/permits/admCheck/{{id}}" class="btn btn-principal">Revisar</a></td>
+                    <td><a href="/permits/admDelete/{{id}}" class="btn btn-secondary">Revisar</a></td>
                 </tr>
                 {{/each}}
             </tbody>

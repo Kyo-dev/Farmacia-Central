@@ -1,24 +1,31 @@
 <div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Bonos</h1>
+        <hr class="my-1">
+        <p class="lead text-center">Información de los bonos recibidos</p>
+    </div>
     <div class="row">
         {{#each data}}
         <div class="col-md-3">
             <div class="card ">
+                <div class="card-title jumbo p-4">
+                        <h3 class="text-center">
+                            Información del bono recibido
+                        </h3>
+                    </div>
                 <div class="card-body">
-                    <h3 class="card-title text-center text-info">
-                        Información del bono
-                    </h3>
                     <p>Motivo: <span>{{motivo}}</span></p>
                     <P>Cantidad: {{cantidad}}</P>
-                    <p>Fecha de salida: <span>{{fecha_bono}}</span></p>
+                    <p>Fecha del bono: <span>{{fecha_bono}}</span></p>
                 </div>
             </div>
         </div>
         {{else}}
-            <div class="col-md-4 mx-auto">
-                <div class="card card-body text-center">
-                    <p>No existen bonos registrados</p>
-                </div>
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No existen bonos registrados</p>
             </div>
+        </div>
         {{/each}}
     </div>
 </div>

@@ -17,11 +17,11 @@ INSERT INTO tipo_empleados(nombre_cargo)
 VALUES('Mensajero');
 INSERT INTO tipo_empleados(nombre_cargo)
 VALUES('Sin asignar');
-INSERT INTO estado_permiso (estado)
+INSERT INTO estados (estado)
 VALUES('pendiente');
-INSERT INTO estado_permiso (estado)
+INSERT INTO estados (estado)
 VALUES('aprobado');
-INSERT INTO estado_permiso (estado)
+INSERT INTO estados (estado)
 VALUES('rechazado');
 
 INSERT INTO provincia (codigo_provincia,nombre_provincia) VALUES 

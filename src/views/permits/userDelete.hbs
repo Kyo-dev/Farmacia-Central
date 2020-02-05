@@ -2,23 +2,24 @@
     <div class="row">
         <div class="col-md-4 mx-auto">
             <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h1 class="text-center">Eliminar permiso</h1>
+                </div>
                 <div class="card-body">
-                    <h2>Borrar permiso</h2>
-                    <br>
-                    <h4>Nombre del empleado:</h4>
-                    <p><span>{{data.cedula}}</span></p>
                     <h4>Motivo del permiso:</h4>
                     <p><span>{{data.descripcion}}</span></p>
                     <h4>Fecha en que solicitó el permiso:</h4>
-                    <p><span>{{data.fecha_solicitud}}</span></p>
+                    <p><span>{{data.fecha_salida}}</span></p>
                     <h4>Fecha del permiso</h4>
                     <p><span>{{data.fecha_salida}}</span></p>
-                    <h1>ID</h1>
-                    <p>{{data.id}}</p>
+                    <h4>Tiempo que se retira:</h4>
+                    <p><span>{{data.horas}} horas</span></p>
+                    <h4>Hora de salida de la farmacia</h4>
+                    <p><span>{{hora_salida}} am/pm</span></p>
                     <h3>Importante</h3>
                     <p class="m-2">Esta apunto de borrar un permiso, sin embargo, el administrador aun tiene acceso a la información</p>
                     <form action="/permits/userDelete/{{data.id}}" method="POST">
-                    <button class= "btn btn-danger">Borrar</button>
+                    <button class= "btn btn-danger btn-block">Borrar</button>
                     </form>
                 </div>
             </div>

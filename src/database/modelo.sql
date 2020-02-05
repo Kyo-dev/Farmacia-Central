@@ -116,6 +116,8 @@ create table permisos(
     descripcion varchar(100) not null,
 	fecha_solicitud datetime default now() not null,
     fecha_salida datetime not null,
+    horas tinyint default 0 not null,
+    hora_salida varchar(20) default 0 not null,
     activo boolean default true,
     borrar boolean default false,
     empleado_id int not null,
@@ -149,7 +151,7 @@ create table horas_extra(
 	id int auto_increment,
     empleado_id int not null,
 	estado tinyint default 1 not null,
-    cantidad_horas tinyint not null,
+    cantidad_horas tinyint default 0 not null,
     motivo varchar(300) not null,
     fecha datetime default now() not null, 
     activo boolean default true not null,
@@ -160,6 +162,7 @@ create table horas_extra(
     constraint ch_horas_extra check(cantidad_horas > 0),
     constraint pk_horas_extra primary key(id)
 );
+
 create table salarios(
 	id int auto_increment,
     empleado_id int not null,
@@ -204,7 +207,7 @@ create table bonos(
 create table dias_disponibles(
     id int auto_increment,
     empleado_id int not null,
-    cantidad_dias_disponibles tinyint not null,
+    cantidad_dias_disponibles int default 0 not null,
     activo boolean default true not null,
     constraint fk_dias_disponibles_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_dias_disponibles primary key(id)

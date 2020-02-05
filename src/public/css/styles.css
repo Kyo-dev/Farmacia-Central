@@ -35,7 +35,25 @@ text-decoration:none;
 .masthead h3 {
     color: indianred;
 }
+.jumbo{
+    background: #02194B;
+    color: snow;
+}
+.btn-principal{
+    background-color:#95B754;
+    color: snow;
+}
+.btn-secomdary{
+    background-color:rgb(67, 68, 66);
+    color: snow;
+}
+.bg-dark{
+    background-color: #02194B!important;
+}
+.bg-dark{
+    color: snow!important;
 
+}
 
 @media (min-width: 992px) {
     .masthead h1 {

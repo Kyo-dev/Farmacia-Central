@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="jumbotron">
+<div class="container p-4">
+    <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Horas Extra</h1>
         <p class="lead text-center">Información relacionada con las horas extras laboradas</p>
         <hr class="my-1">
@@ -11,10 +11,11 @@
         {{#each data}}
         <div class="col-md-4">
             <div class="card ">
+                    <div class="card-title jumbo p-4">
+                        <h3 class="card-title text-center">Información sobre el registro</h3 >
+                    </div>
+                    
                 <div class="card-body">
-                    <h3 class="card-title text-center text-info">
-                        Información sobre el registro
-                    </h3>
                     <p>Fecha: <span>{{fecha}}</span></p>
                     <p>Motivo: <span>{{motivo}}</span></p>
                     <p>Estado: {{informacion_estado}}</p>

@@ -6,8 +6,19 @@ const moment = require('moment')
 
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
-        // ADM HOME
-        res.send('HOla adm')
+        const data = await pool.query(`
+        select a.nombre, a.cedula, a.p_apellido, a.s_apellido, b.nombre_cargo, TRUNCATE(c.cantidad_dias_disponibles/ 30, 0) as dias, substr(d.fecha_entrada, 1, 10) as fecha_entrada, substr(d.fecha_salida, 1, 10) as fecha_salida,  DATEDIFF( d.fecha_entrada, d.fecha_salida) as diferencia 
+        from empleados a
+        inner join tipo_empleados b
+        on b.id = a.tipo_empleado
+        inner join dias_disponibles c
+        on c.empleado_id = a.id
+        inner join fechas_vacaciones d
+        on d.empleado_id = a.id
+        order by d.id desc
+        `)
+        console.log(data)
+        res.render('vacations/admHome', {data})
     } else {
         // USER HOME
         const dataUser = await pool.query('SELECT id FROM empleados WHERE id = ?;', [req.user.id])
@@ -16,10 +27,10 @@ router.get('/', isLoggedIn, async (req, res) => {
         from dias_disponibles
         where empleado_id = ?;`, [req.user.id])
         const dataVacations = await pool.query(`
-        select empleado_id, id, fecha_salida, fecha_entrada
+        select empleado_id, id, substr(fecha_salida, 1, 10) as fecha_salida, substr(fecha_entrada, 1, 10) as fecha_entrada
         from fechas_vacaciones
         where empleado_id = ?;`, [req.user.id])
-        console.log({ dataDay, dataVacations })
+        // console.log({ dataDay, dataVacations })
         res.render('vacations/userHome', { dataDay: dataDay[0], dataUser: dataUser[0], dataVacations })
     }
 })
@@ -35,7 +46,9 @@ router.get('/userNewRegister/:id', isLoggedIn, async (req, res) => {
         select empleado_id, id, fecha_salida, fecha_entrada
         from fechas_vacaciones
         where empleado_id = ?;`, [id])
+        console.log(dataDay)
         const dataUser = await pool.query('SELECT id FROM empleados WHERE id = ?;', [req.user.id])
+        console.log(id)
         let days = (dataDay[0].cantidad_dias_disponibles)
         let out = ''
         if (days > 30) {
@@ -43,7 +56,7 @@ router.get('/userNewRegister/:id', isLoggedIn, async (req, res) => {
         } else {
             out = 'No hay dias disponibles'
         }
-        console.log(dataUser)
+        // console.log(dataUser)
         res.render('vacations/userNewRegister', { out, dataUser: dataUser[0] })
     }
 })

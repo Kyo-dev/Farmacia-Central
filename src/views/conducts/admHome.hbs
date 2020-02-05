@@ -1,0 +1,39 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Informacíon de conductas</h1>
+        <hr class="my-1">
+        {{#if dataExist}}
+        <p class="text-center"><a class="btn btn-principal" href="/conduct/admNewRegister">¿Necesitas registrar una
+                conducta inapropiada?</a></p>
+        {{/if}}
+    </div>
+    <div class="row">
+        {{#each dataConducts}}
+        <div class="col-md-3">
+            <div class="card ">
+                <div class="card-head jumbo p-4">
+                    <h3 class="card-title text-center">
+                        
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p>Nombre del empleado: <br>{{nombre}} {{p_apellido}} {{s_apellido}}</p>
+                    <p>Número de cédula: <span>{{cedula}}</span></p>
+                    <p>Motivo: <span>{{descripcion}}</span></p>
+                    <p>Fecha: <span>{{fecha}}</span></p>
+                    <p>El trabajador tiene acceso a la informacíon</p>
+                    <a href="/conduct/admEditRegister/{{id}}" class="btn btn-principal">Editar</a>
+                    <a href="/conduct/admDeleteRegister/{{id}}" class="btn btn-secondary">Borrar</a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No existen regsitros</p>
+                <a href="/conduct/admNewRegister">¿Necesitas realizar uno?</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

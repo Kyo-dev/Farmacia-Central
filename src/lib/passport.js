@@ -21,6 +21,11 @@ passport.use('local.signup', new LocalStrategy({
     newUser.clave = await helpers.encryptingPass(clave)
     const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
     newUser.id = result.insertId
+    const days = {
+        empleado_id: newUser.id,
+        cantidad_dias_disponibles: 0
+    }
+    await pool.query('INSERT INTO dias_disponibles SET ?;', [days])
     req.flash('success', 'Gracias por registrarte ' + newUser.nombre + '. Por favor completa el resto de la información de tu perfil')
     return done(null, newUser)
 }))
@@ -31,7 +36,7 @@ passport.use('local.signin', new LocalStrategy({
     passReqToCallback: true
 }, async (req, correo, clave, done) => {
     // INFORMACION CON LA QUE SE CARGA EL USUARIO
-    const data = await pool.query(`Select a.nombre, a.p_apellido, a.s_apellido, a.correo, a.fecha_contrato, a.cedula, a.id, b.nombre_cargo, a.clave
+    const data = await pool.query(`Select a.activo, a.nombre, a.p_apellido, a.s_apellido, a.correo, a.fecha_contrato, a.cedula, a.id, b.nombre_cargo, a.clave
                             From empleados a
                             INNER JOIN tipo_empleados b
                             ON a.tipo_empleado = b.id 

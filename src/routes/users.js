@@ -4,7 +4,7 @@ const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
 //SECTION USER
 router.get('/', isLoggedIn, async (req, res) => {
-    // SI SE HACE RESET DE LA DB COMENTAR EL IF JUNTO CON EL ELSE
+    // SI SE HACE RESET DE LA DB COMENTAR EL IF(EL CONTENIDO NO) JUNTO CON EL ELSE
     if (req.user.tipo_empleado === 1) {
         const data = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo
@@ -13,8 +13,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1;
-        `)
+        WHERE a.aprobado = 1 and tipo_empleado <> 1; 
+        `) // tipo_empleado <> 1 para no ver la data del adm
         const dataAssistance = await pool.query(`
         select aprobado 
         from asistencia;`)
@@ -63,7 +63,7 @@ router.get('/', isLoggedIn, async (req, res) => {
 })
 
 router.post('/userMoreInfo', isLoggedIn, async (req, res) => {
-    const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion } = req.body
+    const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion, fecha_nacimiento } = req.body
     console.log('nueva info')
     const newTelefono = {
         tipo_telefono,
@@ -77,8 +77,16 @@ router.post('/userMoreInfo', isLoggedIn, async (req, res) => {
         direccion,
         empleado_id: req.user.id
     }
-    const d1 = await pool.query('INSERT INTO telefonos SET ?;', [newTelefono])
-    const d2 = await pool.query('INSERT INTO direccion SET ?;', [newDireccion])
+    const newDate ={
+        fecha_nacimiento
+    }
+    try {
+        const d1 = await pool.query('INSERT INTO telefonos SET ?;', [newTelefono])
+        const d2 = await pool.query('INSERT INTO direccion SET ?;', [newDireccion])
+        const d3 = await pool.query('UPDATE empleados SET ? WHERE id = ?;', [newDate, req.user.id])
+    } catch (error) {
+        console.log(error)
+    }
     req.flash('success', 'Nueva información ingresada')
     res.redirect('../users')    
 })
@@ -89,39 +97,58 @@ router.get('/userEditMoreInfo', isLoggedIn, async(req, res)=>{
     const dataProvincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
     const dataCanton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton;`)
     const dataDistrito = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito;`)
-    res.render('users/userEditMoreInfo',{dataProvincia, dataCanton, dataDistrito, dataDireccion: dataDireccion[0], dataNumero: dataNumero[0] })
+    const dataUsuario = await pool.query(`SELECT fecha_nacimiento FROM empleados;`)
+    res.render('users/userEditMoreInfo',{dataProvincia, dataCanton, dataDistrito, dataDireccion: dataDireccion[0], dataNumero: dataNumero[0], dataUsuario: dataUsuario[0]})
 })
 
 router.post('/userEditMoreInfo', isLoggedIn, async (req, res) => {
     console.log(req.body)
-    const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion } = req.body
+    const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion, fecha_nacimiento } = req.body
     const dataTelefono = {
         tipo_telefono,
         numero,
-        empleado_id: req.user.id
+        // empleado_id: req.user.id
     }
     const dataDireccion = {
         codigo_provincia,
         codigo_canton,
         codigo_distrito,
         direccion,
-        empleado_id: req.user.id
+        // empleado_id: req.user.id
     }
-    const d1 = await pool.query('UPDATE telefonos SET ?;', [dataTelefono])
-    const d2 = await pool.query('UPDATE direccion SET ?;', [dataDireccion])
+    const dataUser = {
+        // id: req.user.id,
+        fecha_nacimiento
+    }
+    try {
+        const d1 = await pool.query('UPDATE telefonos SET ? WHERE empleado_id = ?;', [dataTelefono, req.user.id])
+        const d2 = await pool.query('UPDATE direccion SET ? WHERE empleado_id = ?;', [dataDireccion, req.user.id])
+        const d3 = await pool.query('UPDATE empleados SET ? WHERE id = ?;', [dataUser, req.user.id])
+    } catch (error) {
+        console.log(error)
+    }
     req.flash('success', 'Información actualizada')
     res.redirect('../users') 
 })
 
 router.get('/userAssistance/:id', isLoggedIn, async (req, res) =>{
     const {id} = req.params
+    const query = await pool.query(`
+    select cantidad_dias_disponibles
+    from dias_disponibles
+    where empleado_id = ?`, id)
+    const dayPlus =(query[0].cantidad_dias_disponibles + 1)
+    const newDay = {
+        cantidad_dias_disponibles: dayPlus
+    }
     // let aux = await pool.query('SELECT contador_dias FROM asistencia WHERE empleado_id = ?', [req.user.id])
     // aux += 1
     const data = {
         asistencia: true,
         empleado_id: id
     }
-    const query = await pool.query('INSERT INTO asistencia SET ?', [data])
+    const query1 = await pool.query('INSERT INTO asistencia SET ?', [data])
+    const query2 = await pool.query('UPDATE dias_disponibles SET ? WHERE empleado_id = ?;', [newDay, id])
     req.flash('success', 'Se ha registrado la asistencia al trabajo, gracias')
     res.redirect('/users')  
 })
@@ -130,6 +157,7 @@ router.get('/userAssistance/:id', isLoggedIn, async (req, res) =>{
 //SECTION ADM
 
 router.get('/admNewUsers', isLoggedIn, async (req, res) => {
+    // PARA UN RESET COMENTAR ESTE IF
     if (req.user.tipo_empleado === 1) {
         const data = await pool.query(`
         SELECT a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato
@@ -153,6 +181,7 @@ router.get('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
 })
 
 router.post('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
+    // PARA UN RESET COMENTAR ESTE IF
     if (req.user.tipo_empleado === 1) {
         const { id } = req.params
         const { tipo_empleado, salario_hora, jornada, temporal } = req.body
@@ -210,16 +239,28 @@ router.get('/admMoreInfo/:id', isLoggedIn, async(req, res) =>{
     }
 })
 
-router.get('/admAssistance/:id', isLoggedIn, async(req, res) => {
-    const {id} = req.params
-    const data = {
-        aprobado: true,
-        contador_dias: 1
-    }
-    const query = await pool.query('UPDATE asistencia SET ? WHERE empleado_id = ?;', [data, id])
-    req.flash('success', 'El trabajador esta presente')
-    res.redirect('/users')  
-})
+// router.get('/admAssistance/:id', isLoggedIn, async(req, res) => {
+//     const {id} = req.params
+//     const data = {
+//         aprobado: true,
+//         contador_dias: 1
+//     }
+//     const newDay = {
+//         cantidad_dias_disponibles: dayPlus
+//     }
+//     console.log(newDay)
+//     try {
+//         await pool.query('UPDATE asistencia SET ? WHERE empleado_id = ?;', [data, id])
+//         await pool.query('UPDATE dias_disponibles SET ? WHERE empleado_id = ?;', [newDay, id])
+//         req.flash('success', 'Asistencia registrada')
+//         res.redirect('/users')
+//     } catch (error) {
+//         req.flash('success', 'Ya has marcado la asistencia del usuario el día de hoy')
+//         res.redirect('/users')
+//     }
+//     req.flash('success', 'El trabajador esta presente')
+//     res.redirect('/users')  
+// })
 //!SECTION 
 
 module.exports = router 

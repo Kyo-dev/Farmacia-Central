@@ -1,11 +1,16 @@
-<div class="container">
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Bonos</h1>
+        <hr class="my-1">
+        <p class="lead text-center">Información sobre bonos otorgados</p>
+    </div>
     <div class="row">
         <div class="col-md-12 mx-auto">
-            <h2>Otorgar bono</h2>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
+                            <h4 class="jumbo text-center p-3">Otorgar bono</h4>
                             <tr>
                                 <th>Cedula</th>
                                 <th>Nombre</th>
@@ -25,7 +30,7 @@
                                 <td>{{s_apellido}}</td>
                                 <td>{{fecha_contrato}}</td>
                                 <td>{{nombre_cargo}}</td>
-                                <td><a href="/bonus/admRegister/{{id}}" class="btn btn-info">Revisar</a></td>
+                                <td><a href="/bonus/admRegister/{{id}}" class="btn btn-principal">Revisar</a></td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -36,11 +41,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Bonos otorgados anteriormente</h2>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
+                            <h4 class="btn-principal text-center p-3">Bonos otorgados</h4>
                             <tr>
                                 <th>Cedula</th>
                                 <th>Nombre</th>

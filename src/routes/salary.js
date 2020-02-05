@@ -35,7 +35,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         const dataWageWithHolding = await pool.query(`
         SELECT retencion, substr(fecha, 1, 10) as fecha, descripcion, url_documento 
         FROM retencion_salarial
-        WHERE empleado_id = ?;`, [req.user.id])
+        WHERE empleado_id = ? and activo = true;`, [req.user.id])
         console.log(dataWageWithHolding)
         res.render('salary/userHome', {
             dataSalary: dataSalary[0],

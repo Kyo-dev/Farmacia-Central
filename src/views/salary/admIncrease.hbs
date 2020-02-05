@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="jumbotron">
+<div class="container p-4">
+    <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Aumento salarial</h1>
         <p class="lead text-center">Información de aumentos salariales</p>
         <hr class="my-1">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     {{!-- CONFIRMAR --}}
-                    <button type="button" class="btn btn-success btn-block" data-toggle="modal"
+                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
                         data-target="#confirmarAumento">
                         Aceptar
                     </button>
@@ -53,7 +53,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                         data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                    <button type="submit" class="btn btn-principal">Confirmar</button>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     <tbody>
                         {{#each data}}
                         <tr>
-                            <td>{{cantidad}}</td>
+                            <td>₡ {{cantidad}}</td>
                             <td>{{fecha}}</td>
                         </tr>
                         {{/each}}

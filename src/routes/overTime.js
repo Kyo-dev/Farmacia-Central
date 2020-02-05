@@ -26,7 +26,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         res.render('overTime/admHome', { data, dataGeneral })
     } else {
         const data = await pool.query(`
-        SELECT substr(fecha, 1, 10) as fecha, motivo, aprobado, id, activo, informacion_estado
+        SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
         FROM horas_extra
         WHERE empleado_id = ? AND activo = true
         order by id desc;;`, [req.user.id])

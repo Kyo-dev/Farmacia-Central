@@ -1,0 +1,26 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h2>Borrar registro disciplinario</h2>
+                </div>
+                <div class="card-body">
+                    <h4>Nombre del empleado:</h4>
+                    <p><span>{{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}</span></p>
+                    <h4>Cargo que desempeña:</h4>
+                    <p><span>{{data.nombre_cargo}}</span></p>
+                    <h4>Motivo del permiso:</h4>
+                    <p><span>{{data.descripcion}}</span></p>
+                    <h4>Fecha en que se realizó el registro:</h4>
+                    <p><span>{{data.fecha}}</span></p>
+                    <h3>Importante</h3>
+                    <p class="m-2">Esta apunto de borrar un el registro, si lo hace, el trabajador {{data.nombre}}
+                        {{data.p_apellido}} {{data.s_apellido}} no vera más esta información.
+                    </p>
+                    <a class= "btn btn-danger btn-block"href="/conduct/admDelete/{{data.id}}">Borrar permiso</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

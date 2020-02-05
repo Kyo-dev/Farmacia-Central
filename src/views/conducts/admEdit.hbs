@@ -1,23 +1,20 @@
 <div class="container p-4">
-     <div class="jumbotron jumbo">
-        <h1 class="display-4 text-center">Registrar vacaciones</h1>
-        <p class="lead text-center">Días disponibles: {{out}}</p>
-        <hr class="my-1">
-    </div>
     <div class="row">
         <div class="col-md-4 mx-auto">
             <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h1 class="text-center">Editar registro disciplinario</h1>
+                </div>
                 <div class="card-body">
-                    <form action="/vacations/userNewRegister/{{dataUser.id}}" method="POST">
+                    <form action="/conduct/admEditRegister/{{data.id}}" method="POST">
                         <div class="form-group">
-                            <label for="">Fecha de salida</label>
-                            <input type="date" class="form-control" name="fecha_salida" placeholder="descripcion">
+                            <label for="">Motivo del registro</label>
+                            <input type="text" class="form-control" value="{{data.descripcion}}" name="descripcion" placeholder="Descripción" autofocus>
+                        </div> <div class="form-group">
+                            <label for="">Fecha del insidente</label>
+                            <input type="date" id="fecha" value="{{data.fecha}}" max={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso">
                         </div>
-                            <label for="">Fecha de entrada</label>
-                        <div class="form-group">
-                            <input type="date" class="form-control" name="fecha_entrada" placeholder="descripcion">
-                        </div>
-                         {{!-- CONFIRMAR --}}
+                        {{!-- CONFIRMAR --}}
                     <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
                         data-target="#confirmarAumento">
                         Aceptar
@@ -34,8 +31,9 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    No puedes sobrepasar los días disponibles, en caso de no haber o exceder estos, no se completará el proceso
-                                    ¿Desea continuar?
+                                    Estas por <span class="text-danger"><b>editar</b></span> el registro de una conducta para el trabajador 
+                                    {{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}.<br>
+                                    Esta información será visible para el trabajador. ¿Desea continuar?
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"

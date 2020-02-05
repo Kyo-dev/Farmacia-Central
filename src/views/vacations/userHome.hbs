@@ -1,30 +1,34 @@
-<div class="container">
-    <div class="jumbotron">
+<div class="container p-4">
+    <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Información de vacaciones</h1>
         {{#if dataVacations}}
-        <p class="lead text-center"><a class="btn btn-info" href="/vacations/userNewRegister/{{dataUser.id}}">Registrar dias vacacionales</a class="btn btn-info"></p>
+        <p class="lead text-center"><a class="btn btn-principal"
+                href="/vacations/userNewRegister/{{dataUser.id}}">Registrar dias vacacionales</a class="btn btn-info">
+        </p>
         {{/if}}
         <hr class="my-1">
     </div>
-    {{#each dataVacations}}
-    <div class="col-md-3">
-        <div class="card ">
-            <div class="card-body">
-                <h3 class="card-title text-center text-uppercase text-info"> Fechas de vacaciones</h3>
-                <p>Fecha de salida: <span>{{fecha_salida}}</span></p>
-                <p>Fecha de entrada: <span>{{fecha_entrada}}</span></p>
-                <a href="/permits/userEdit/{{id}}" class="btn btn-info">Editar</a>
+    <div class="row">
+        {{#each dataVacations}}
+        <div class="col-md-4 p-2">
+            <div class="card ">
+                <div class="card-title jumbo p-4">
+                    <h3 class="card-title text-center"> Fechas de vacaciones</h3>
+                </div>
+                <div class="card-body">
+                    <p>Fecha de salida: <span>{{fecha_salida}}</span></p>
+                    <p>Fecha de entrada: <span>{{fecha_entrada}}</span></p>
+                    <a href="/permits/userEdit/{{id}}" class="btn btn-principal">Editar</a>
+                </div>
             </div>
         </div>
-    </div>
-    {{else}}
-    <div class="col-md-4 mx-auto">
-        <div class="card card-body text-center">
-            <p>No existen vacaciones registradas</p>
-            <a href="/vacations/userNewRegister/{{dataUser.id}}">¿Necesitas realizar un registro?</a>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No existen vacaciones registradas</p>
+                <a href="/vacations/userNewRegister/{{dataUser.id}}">¿Necesitas realizar un registro?</a>
+            </div>
         </div>
+        {{/each}}
     </div>
-    {{/each}}
 </div>
-
-            
