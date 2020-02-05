@@ -66,7 +66,8 @@ create table fechas_empleado_temporal(
 create table despidos(
     id int auto_increment not null,
 	empleado_id int not null,
-    descripcion varchar(300),
+    descripcion varchar(300) not null,
+    url_documento varchar(100) not null,
     fecha_despido datetime default now() not null,
     activo boolean default true,
     constraint fk_despidos_empleados foreign key (empleado_id) references empleados(id),
@@ -121,7 +122,7 @@ create table permisos(
     activo boolean default true,
     borrar boolean default false,
     empleado_id int not null,
-    costo_salarial decimal(10,2) default 0 null,
+    -- costo_salarial decimal(10,2) default 0 null,
 	informacion_estado varchar(300) default 'EL permiso no ha sido revisado' not null,
     constraint pk_permisos primary key(id),
     constraint fk_permisos_estado_permiso foreign key (estado) references estados (id),
@@ -130,7 +131,7 @@ create table permisos(
 
 create table asistencia(
 	asistencia boolean default false,
-    aprobado boolean default false, 
+    -- aprobado boolean default false, 
     fecha datetime default now(),
     empleado_id int not null,
     contador_dias int default 0 not null,
@@ -209,9 +210,11 @@ create table dias_disponibles(
     empleado_id int not null,
     cantidad_dias_disponibles int default 0 not null,
     activo boolean default true not null,
+	fecha datetime default now() not null, 
     constraint fk_dias_disponibles_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_dias_disponibles primary key(id)
 );
+
 create table fechas_vacaciones(
 	id int auto_increment,
     empleado_id int not null,

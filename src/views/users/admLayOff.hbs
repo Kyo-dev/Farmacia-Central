@@ -1,20 +1,8 @@
 <div class="container p-4">
     <div class="jumbotron jumbo">
-        <h1 class="display-4 text-center">Información de los trabajadores</h1>
+        <h1 class="display-4 text-center">Despido de trabajadores</h1>
         <hr class="my-1">
-        {{#if dataNew}}
-        <p class="text-center"><a class="btn icono btn-principal" href="/users/admNewUsers">Hay nuevos empleados
-                disponibles</a></p>
-        {{/if}}
-        <div class="text-center">
-            <div class="d-inline-block">
-                <p class="text-left"><a class="btn d-block icono btn-principal" href="/users/admUsersTemp">
-                        Empleados temporales</a></p>
-            </div>
-            <div class="d-inline-block">
-                <p class="text-right"><a class="btn d-block icono btn-principal" href="/users/admLayOffs">Despidos</a></p>
-            </div>
-        </div>
+        <p class="text-center"><a class="btn btn-principal" href="/users/admLayOffsList">Lista de trabajadores despedidos</a></p>
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -28,7 +16,7 @@
                     <th>Cargo</th>
                     <th>Salario por hora</th>
                     <th>Jornada</th>
-                    <th>Más información</th>
+                    <th>Realizar despido</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +30,7 @@
                     <td>{{nombre_cargo}}</td>
                     <td>{{salario_hora}}</td>
                     <td>{{jornada}}</td>
-                    <td><a href="/users/admMoreInfo/{{id}}" class="btn btn-principal btn-block"><i
+                    <td><a href="/users/admDeleteUser/{{id}}" class="btn btn-principal btn-block"><i
                                 class="material-icons">
                                 search
                             </i></a></td>

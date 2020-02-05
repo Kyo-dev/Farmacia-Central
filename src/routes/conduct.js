@@ -13,7 +13,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         on a.empleado_id =  b.id
         inner join tipo_empleados c
         on c.id = b.tipo_empleado
-        where a.activo = true;`)
+        where a.activo = true and b.activo = true;`)
         console.log(dataConducts)
         res.render('conducts/admHome', { dataExist: dataExist[0], dataConducts })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
@@ -31,6 +31,15 @@ router.get('/', isLoggedIn, async (req, res) => {
         where activo = 1 and empleado_id = ?`, [req.user.id])
         console.log(count)
         res.render('conducts/userHome', {dataConducts, count: count[0]})
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 

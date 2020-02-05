@@ -1,0 +1,33 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Consulta de pagos</h1>
+        <p class="lead text-center">Información de el pago mensual</p>
+        <hr class="my-1">
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card-body">
+                <div class="form-group">
+                    <h4>Nombre del trabajador:</h4>
+                    <P>{{dataSalary.nombre}} {{dataSalary.p_apellido}} {{dataSalary.s_apellido}}</P>
+                    <h4>Cargo que desempeña</h4>
+                    <p>{{dataSalary.nombre_cargo}}</p>
+                    <h4>Información salarial</h4>
+                    <p>Salario por hora: ₡ <span>{{dataSalary.salario_hora}}</span></p>
+                    <p>Jornada diaria: <span>{{dataSalary.jornada}}</span> horas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h3>Consultar</h3>
+            <p>Ingrese el año y el mes para conocer la información</p>
+            <form action="/payRoll/admCheck/{{dataSalary.id}}" method="POST">
+                <div class="form-group">
+                    <input type="date" value="{{date.fecha}}" max="{{date.fecha}}" class="form-control" name="payDay" placeholder="salario por hora"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-block btn-principal">Confirmar</button>
+            </form>
+        </div>
+    </div>
+</div>

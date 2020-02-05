@@ -14,9 +14,10 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id   
+        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 1 and a.activo = 1
         `)
         res.render('salary/admHome', { dataSalary })
-    } else {
+    } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const dataSalary = await pool.query(`
         SELECT salario_hora, jornada
         FROM salarios
@@ -43,6 +44,15 @@ router.get('/', isLoggedIn, async (req, res) => {
             dataWageWithHolding,
             arrayIncrease
         })
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 

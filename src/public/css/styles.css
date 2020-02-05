@@ -55,6 +55,11 @@ text-decoration:none;
 
 }
 
+.btn-op{
+    width: 50%;
+
+}
+
 @media (min-width: 992px) {
     .masthead h1 {
         font-size: 5.5rem;

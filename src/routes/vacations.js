@@ -15,11 +15,11 @@ router.get('/', isLoggedIn, async (req, res) => {
         on c.empleado_id = a.id
         inner join fechas_vacaciones d
         on d.empleado_id = a.id
-        order by d.id desc
-        `)
+        where a.activo = true
+        order by d.id desc`)
         console.log(data)
         res.render('vacations/admHome', {data})
-    } else {
+    } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         // USER HOME
         const dataUser = await pool.query('SELECT id FROM empleados WHERE id = ?;', [req.user.id])
         const dataDay = await pool.query(`
@@ -32,6 +32,15 @@ router.get('/', isLoggedIn, async (req, res) => {
         where empleado_id = ?;`, [req.user.id])
         // console.log({ dataDay, dataVacations })
         res.render('vacations/userHome', { dataDay: dataDay[0], dataUser: dataUser[0], dataVacations })
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 

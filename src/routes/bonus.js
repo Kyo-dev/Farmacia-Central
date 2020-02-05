@@ -9,8 +9,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.nombre_cargo
         From empleados a
         INNER JOIN tipo_empleados b
-        ON a.tipo_empleado = b.id;
-        `)
+        ON a.tipo_empleado = b.id
+        where a.activo = true;`)
         const dataBonos = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
         b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, c.nombre_cargo
@@ -18,11 +18,11 @@ router.get('/', isLoggedIn, async (req, res) => {
         INNER JOIN bonos b
         ON a.id = b.empleado_id
         INNER JOIN tipo_empleados c
-        ON a.tipo_empleado = c.id;          
-        `)
+        ON a.tipo_empleado = c.id
+        WHERE a.activo = true;`)
         console.log(dataBonos)
         res.render('bonus/admHome', { dataUsuarios, dataBonos})
-    } else {
+    } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(` 
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
         b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, b.motivo
@@ -31,6 +31,15 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = b.empleado_id
         where a.id = ? `, [req.user.id])
         res.render('bonus/userHome', { data })
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 

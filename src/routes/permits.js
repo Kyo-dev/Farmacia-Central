@@ -6,19 +6,28 @@ const { isLoggedIn } = require('../lib/auth')
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
         const data = await pool.query(`
-        select a.id, a.horas, a.hora_salida, b.nombre, b.p_apellido, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado, substr(a.fecha_salida, 1, 10) as fecha_salida
+        select a.horas, a.hora_salida, a.id, a.horas, a.hora_salida, b.nombre, b.p_apellido, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
+        a.activo, a.empleado_id , a.informacion_estado, substr(a.fecha_salida, 1, 10) as fecha_salida
         from permisos a
         inner join empleados b
         on a.empleado_id = b.id
         where a.activo = true;`)
         res.render('permits/admHome', { data })
-    } else {
+    } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) { 
         const data = await pool.query(`SELECT 
         id, estado, titulo,descripcion, fecha_solicitud, horas, hora_salida,
-        empleado_id , costo_salarial, informacion_estado, substr(fecha_salida, 1, 10) as fecha
+        empleado_id , informacion_estado, substr(fecha_salida, 1, 10) as fecha
         FROM permisos where empleado_id = ? and borrar = false and activo = true`, [req.user.id])
         res.render('permits/userHome', { data })
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 
@@ -106,7 +115,7 @@ router.get('/userDelete/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
     const data = await pool.query(`SELECT 
     id, estado, titulo, descripcion, substr(fecha_solicitud, 1, 10) as fecha_solicitud, horas, hora_salida,
-    empleado_id , costo_salarial, informacion_estado, substr(fecha_salida, 1, 10) as fecha_salida
+    empleado_id , informacion_estado, substr(fecha_salida, 1, 10) as fecha_salida
     FROM permisos where id = ? and borrar = false`, [id]) 
     console.log(data[0])
     res.render('permits/userDelete', { data: data[0] })
@@ -124,7 +133,7 @@ router.get('/admCheck/:id', isLoggedIn, async (req, res) => {
         const {id} = req.params
         const data = await pool.query(`
         select a.id, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
+        a.activo, a.empleado_id , a.informacion_estado, a.horas, a.hora_salida
         from permisos a
         inner join empleados b
         on a.empleado_id = b.id
@@ -136,11 +145,10 @@ router.get('/admCheck/:id', isLoggedIn, async (req, res) => {
 router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
         const { id } = req.params
-        const { informacion_estado, estado, costo_salarial } = req.body
+        const { informacion_estado, estado } = req.body
         const data = {
             informacion_estado, 
-            estado, 
-            costo_salarial
+            estado
         }
         const query = await pool.query('UPDATE permisos SET ? WHERE id = ?', [data, id])
         req.flash('success', 'Permiso actualizado satisfactoriamente')
@@ -153,7 +161,7 @@ router.get('/admDelete/:id', isLoggedIn, async (req, res) => {
         const { id } = req.params
         const data = await pool.query(`
         select a.id, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado
+        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado, a.horas, a.hora_salida
         from permisos a
         inner join empleados b
         on a.empleado_id = b.id

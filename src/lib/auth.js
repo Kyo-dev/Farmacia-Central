@@ -9,6 +9,6 @@ module.exports = {
         if(!req.isAuthenticated()){
             return next()
         }
-        return res.redirect('/profile')  
+        return res.redirect('/signin')  //CREAR PAGINA NO USER
     }
 }

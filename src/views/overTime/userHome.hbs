@@ -4,7 +4,7 @@
         <p class="lead text-center">Información relacionada con las horas extras laboradas</p>
         <hr class="my-1">
         {{#if data}}
-        <p class="text-center"><a href="/overTime/newRegister">¿Necesitas registrar nuevas horas extra laboradas?</a></p>
+        <p class="text-center"><a class="btn btn-principal" href="/overTime/newRegister">¿Necesitas registrar nuevas horas extra laboradas?</a></p>
         {{/if}}
     </div>
     <div class="row">
@@ -24,7 +24,7 @@
             </div>
         </div>
         {{else}}
-        <div class="col-md-4">
+        <div class="col-md-4 mx-auto">
             <div class="card card-body text-center">
                 <p>No hay horas extra registradas</p>
                 <a href="/overTime/newRegister">¿Necesitas registras nuevas horas extra laboradas?</a>

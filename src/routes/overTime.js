@@ -13,8 +13,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
         WHERE estado = 1 
-        AND b.activo = true;
-        `)
+        AND b.activo = true
+        AND a.activo = true;`)
         const dataGeneral = await pool.query(`
         Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo, b.informacion_estado
         From empleados a 
@@ -24,7 +24,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.tipo_empleado = c.id
         order by b.id desc;`)
         res.render('overTime/admHome', { data, dataGeneral })
-    } else {
+    } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(`
         SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
         FROM horas_extra
@@ -32,6 +32,15 @@ router.get('/', isLoggedIn, async (req, res) => {
         order by id desc;;`, [req.user.id])
         console.log(data)
         res.render('overTime/userHome', { data })
+    } else {
+        const data = await pool.query(`
+        select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido
+        from empleados a
+        inner join despidos b
+        on a.id = b.empleado_id
+        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        console.log(data)
+        res.render('auth/noUser', {data: data[0]})
     }
 })
 
