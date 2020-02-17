@@ -1,0 +1,51 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h1 class="text-center">Información adicional</h1>
+                </div>
+                <div class="card-body">
+                    <h4>Solicitud:</h4>
+                    <p><span>{{dataTask.titulo}}</span></p>
+                    <h4>Explicación:</h4>
+                    <p><span>{{dataTask.descripcion}}</span></p>
+                    <h4>Fecha de la tarea</h4>
+                    <p><span>{{dataTask.fecha}}</span></p>
+                    <h4>Solicitado:</h4>
+                    <p><span>{{timesago dataTask.fecha_solicitud}}</span></p>
+                    <form action="/tasks/userCheck/{{dataTask.id}}" method="POST">
+                   {{!-- CONFIRMAR --}}
+                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
+                        data-target="#confirmarRetencion">
+                        Tarea realizada
+                    </button>
+                    <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmarRetencion" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-principal" id="exampleModalLongTitle">
+                                        Importante</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Estas a punto de marcar la tarea como realizada, la administradora podrá verlo. <br> ¿Desea continuar?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-principal">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- CONFIRMAR --}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

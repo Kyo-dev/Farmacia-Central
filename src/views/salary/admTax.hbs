@@ -1,5 +1,5 @@
 <div class="container p-4">
-     <div class="jumbotron jumbo">
+    <div class="jumbotron jumbo">
         <h1 class="display-4 text-center"> Retención salarial</h1>
         <hr class="my-1">
     </div>
@@ -21,7 +21,7 @@
             <h3>Realizar aumento salarial</h3>
             <form action="/salary/admTax/{{dataUser.id}}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="number" class="form-control" name="retencion" placeholder="Monto a retener" required>
+                    <input type="number" class="form-control" name="retencion" placeholder="Monto total a retener" required>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="descripcion" placeholder="Motido de la retención"
@@ -43,20 +43,27 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title text-danger" id="exampleModalLongTitle">
-                                        Importante</h5>
+                                        <i class="material-icons">
+                                            warning
+                                        </i></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
                                     Estas a punto de <span class="text-danger"><b>retener</b></span> el
-                                    valor ingresado para el trabajador {{dataSalario.nombre}}.
+                                    valor ingresado para el trabajador {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.
                                     Esto afecta al salario actual del trabajador
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                    <button type="button" class="btn btn-secondary" title="Cancelar"
+                                        data-dismiss="modal"><i class="material-icons">
+                                            clear
+                                        </i></button>
+                                    <button type="submit" class="btn btn-danger"
+                                        title="Crear reteción y subir archivo"><i class="material-icons">
+                                            publish
+                                        </i></button>
                                 </div>
                             </div>
                         </div>

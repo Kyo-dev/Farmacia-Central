@@ -78,7 +78,12 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         let salaryHour = 0
         let workingDay = 0
         let dayWorks = 0
-
+        let ccss = 0
+        let tax = 0
+        const dataUser = await pool.query(`
+        select cedula, nombre, p_apellido, s_apellido
+        from empleados
+        where id = ?`, [id])
         const dataPermits = await pool.query(`
         select sum(b.horas) as aux, b.empleado_id
         from permisos b
@@ -87,10 +92,11 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         where b.empleado_id = ?
         and year(b.fecha_salida) = ? 
         and month(b.fecha_salida) = ?
-        and a.activo = true;`, [id, year, month])
+        and a.activo = true
+        and estado = 2;`, [id, year, month])
         if(dataPermits[0].aux >= 0) permits = dataPermits[0].aux
         if (typeof permits === "object") permits = 0
-        console.log(`SOY PERMITS ${permits}`)
+        console.log(`PERMISOS ${permits}`)
                 
         const dataBonus = await pool.query(`
         select sum(b.cantidad) as aux, b.empleado_id
@@ -103,7 +109,7 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         and a.activo = true;`, [id, year, month])
         if (dataBonus[0].aux >= 0) bonus = dataBonus[0].aux
         if (typeof bonus === "object") bonus = 0
-        console.log(`SOY BONUS ${bonus}`)
+        console.log(`BONOS ${bonus}`)
         
         const dataOverTime = await pool.query(`
         select sum(b.cantidad_horas) as aux, b.empleado_id
@@ -116,7 +122,7 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         and a.activo = true;`, [id, year, month])
         if(dataOverTime[0].aux >= 0) overTime = dataOverTime[0].aux
         if (typeof overTime === "object")overTime = 0
-        console.log(`SOY OVERTIME ${overTime}`)
+        console.log(`HORAS EXTRA ${overTime}`)
         const dataSalary = await pool.query(`
         select b.salario_hora, b.jornada , b.empleado_id
         from salarios b
@@ -126,8 +132,8 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         and a.activo = true;`, [id])
         salaryHour = dataSalary[0].salario_hora
         workingDay = dataSalary[0].jornada
-        console.log(`SOY SALARIO POR HORA ${salaryHour}`)
-        console.log(`SOY JORNADA ${workingDay}`)
+        console.log(`SALARIO POR HORA ${salaryHour}`)
+        console.log(`JORNADA ${workingDay}`)
         const dataDayWorks = await pool.query(`
         select sum(b.contador_dias) as aux, b.empleado_id
         from asistencia b
@@ -139,14 +145,31 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
         and a.activo = true;`, [id, year, month])
         if(dataDayWorks[0].aux >= 0) dayWorks = dataDayWorks[0].aux
         if (typeof dayWorks === "object")dayWorks = 0
-        console.log(`SOY LOS DIAS DE TRABAJADOS ${dayWorks}`)
+        console.log(`DIAS DE TRABAJADOS ${dayWorks}`)
+
+        const dataTax = await pool.query(`
+        select sum(b.retencion) as aux, b.empleado_id
+        from retencion_salarial b
+        inner join empleados a
+        on a.id = b.empleado_id
+        where b.empleado_id = ?
+        and year(b.fecha) = ?
+        and month(b.fecha) = ?
+        and a.activo = true;`, [id, year, month])
+        if(dataTax[0].aux >= 0) tax = dataTax[0].aux
+        if (typeof tax === "object")tax = 0
+        console.log('RETENCIONES: '+ tax)
         // TODOS LOS DATOS
         // SALARIO BASE
-        //((((dias trabajados * jornada diaria) - permisos)* salario por hora) + bonos ) + (salario por hora + (overtime * 2))
-        let salarioBase = ((((dayWorks * workingDay)-permits)*salaryHour) + bonus) + (salaryHour * (overTime * 2))
-        console.log(salarioBase)
+        //(((dias trabajados * jornada diaria) - permisos)* salario por hora) + (salario por hora + (overtime * 2))
+        ccss = (((((dayWorks * workingDay)-permits)*salaryHour) + (salaryHour * (overTime * 2))) * 10.5 ) / 100
+        let baseSalary = (((((dayWorks * workingDay)-permits)*salaryHour) + (salaryHour * (overTime * 2))) +bonus)
+        // el bono se suma al final
+        console.log('SALARIO GANADO SIN PRESTACIONES: '+baseSalary)
+        console.log('APLICANDO EL PORCENTAJE DE CCSS: '+ccss)
+        let salary = baseSalary - ccss
         // DATOS DE CCSS
-        res.send('ADM')
+        res.render('payRoll/admView',{dataUser: dataUser[0],dayWorks, permits, bonus, overTime, salaryHour, workingDay, ccss, baseSalary, salary, year, month, tax} )
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         res.send('USER')
     } else {

@@ -3,7 +3,8 @@
         <h1 class="display-4 text-center">Información del perfil</h1>
         <p class="lead text-center">Bienvenido {{user.nombre}}</p>
         {{#unless dataAsistencia}}
-        <p class="lead text-center">Marcar asistencia<a href="/users/userAssistance/{{user.id}}"><i class="material-icons">done</i></a></p>
+        <p class="lead text-center">Marcar asistencia<a href="/users/userAssistance/{{user.id}}"><i
+                    class="material-icons">done</i></a></p>
         {{/unless}}
 
         <hr class="my-1">
@@ -15,22 +16,41 @@
                 <div class="card-body">
                     <p class=" text-left">Nombre completo: <span>{{dataUser.nombre}} {{dataUser.p_apellido}}
                             {{dataUser.s_apellido}}</span></p>
-                    <p class="text-left">Cargo que desempeña: <span>{{dataRole.nombre_cargo}}</span></p>
-                    <p class="text-left">Correo electrónico: <span>{{dataUser.correo}}</span></p>
-                    <p class="text-left">Fecha de contratación: <span>{{dataUser.fecha_contrato}}</span></p>
-                    <p class="text-left">Precio por hora: <span>{{dataSalary.salario_hora}}</span></p>
-                    <p class="text-left">Horas laborales: <span>{{dataSalary.jornada}}</span></p>
+                    <p class="text-left"> <i title="Cargo que desempeña" class="material-icons ">
+                            person
+                        </i> Cargo: <span>{{dataRole.nombre_cargo}}</span></p>
+                    <p class="text-left"><i title="Correo electrónico" class="material-icons ">
+                            alternate_email
+                        </i> Correo electrónico: <span>{{dataUser.correo}}</span></p>
+                    <p class="text-left"><i title="Fecha de contratación" class="material-icons">
+                            date_range
+                        </i> Fecha de contratación: <span>{{dataUser.fecha_contrato}}</span></p>
+                    <p class="text-left"><i title="Salario por hora" class="material-icons">
+                            watch_later
+                        </i> Salario por hora: <span>{{dataSalary.salario_hora}}</span></p>
+                    <p class="text-left"><i title="Horas laborales" class="material-icons">
+                            hourglass_full
+                        </i> Jornada laboral: <span>{{dataSalary.jornada}}</span></p>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <p class="text-left">Bonos otorgados: <span>{{dataBonus.motivo}}</span><br>
-                        <a class="btn btn-principal" href="/bonus">Más información</a>
+                    <p class="text-left">Tareas pendientes: <span>{{dataTasks.aux}}</span><br>
+                        <a class="btn btn-principal" href="/tasks"><i title="Más información" class="material-icons">
+                                info
+                            </i></a>
                     </p>
-                    <p class="text-left">Sanciones disciplinarias: <span>{{dataConctas.descripcion}}</span><br>
-                        <a class="btn btn-principal" href="/bonus">Más información CAMBIAR RUTA</a>
+                    <p class="text-left">Bonos otorgados: <span>{{dataBonos.aux}}</span><br>
+                        <a class="btn btn-principal" href="/bonus"><i title="Más información" class="material-icons">
+                                info
+                            </i></a>
+                    </p>
+                    <p class="text-left">Sanciones disciplinarias: <span>{{dataCondutas.aux}}</span><br>
+                        <a class="btn btn-principal" href="/conduct"><i title="Más información" class="material-icons">
+                                info
+                            </i></a>
                     </p>
                 </div>
             </div>

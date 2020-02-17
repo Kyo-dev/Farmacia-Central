@@ -1,5 +1,5 @@
 <div class="container p-4">
-    {{#if dataLayOff}}
+    {{!-- {{#if dataLayOff}}
     <div class="card-title text-center jumbo p-4">
         <h2> Información del extrabajador</h2>
     </div>
@@ -7,10 +7,13 @@
     <div class="card-title text-center jumbo p-4">
         <h2>Información del trabajador</h2>
     </div>
-    {{/if}}
+    {{/if}} --}}
     <div class="row">
         {{#if dataLayOff}}
         <div class="col-md-5 mx-auto">
+            <div class="card-title text-center jumbo p-4">
+                <h2> Información del extrabajador</h2>
+            </div>
             <div class="card">
 
                 <div class="card-body">
@@ -20,28 +23,32 @@
                     <p><span>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</span></p>
                     <h4>Edad:</h4>
                     <p><span>{{dataUser.edad}} años</span></p>
-                    <h4>Cargo que desempeña:</h4>
+                    <h4>Cargo que desempeñó:</h4>
                     <p><span>{{dataRole.nombre_cargo}}</span></p>
                     <h4>Dirección: </h4>
                     <p><span>{{dataAdress.nombre_distrito}}, {{dataAdress.nombre_canton}},
-                            {{dataAdress.nombre_provincia}}. {{dataAdress.direccion}} </span></p>
-
-
+                            {{dataAdress.nombre_provincia}}. {{dataAdress.direccion}}</span></p>
+                    <h4>Información adicional: </h4>
+                    <p><span> {{payMessage}}</span></p>
                 </div>
             </div>
         </div>
         <div class="col-md-5 mx-auto">
+            <div class="card-title text-center jumbo p-4">
+                <h2> Más Información</h2>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <h4>Número de teléfono: </h4>
                     <p><span>{{dataPhone.numero}}</span></p>
                     <h4>Correo electrónico: </h4>
                     <p><span>{{dataUser.correo}}</span></p>
-
                     <h4>Modivo del despido: </h4>
                     <p><span>{{dataLayOff.descripcion}}</span></p>
                     <h4>Más Información</h4>
                     <p><a href="http://localhost:4000/uploads/{{dataLayOff.url_documento}}">consultar</a></p>
+                    <p><a class="btn btn-principal btn-block" href="/users/admReHire/{{dataUser.id}}">Recontratar</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -71,6 +78,5 @@
             </div>
         </div>
         {{/if}}
-
     </div>
 </div>

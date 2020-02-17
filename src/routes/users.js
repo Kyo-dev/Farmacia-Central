@@ -15,15 +15,15 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.tipo_empleado = d.id
         WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 1 and a.activo = 1; 
         `) // tipo_empleado <> 1 para no ver la data del adm
-        const dataAssistance = await pool.query(`
-        select aprobado 
-        from asistencia;`)
+        // const dataAssistance = await pool.query(`
+        // select aprobado 
+        // from asistencia;`)
         const dataNew = await pool.query(`
         select aprobado
         from empleados
         where aprobado = 0`)
         console.log(data)
-        res.render('users/admHome', { data, dataAssistance, dataNew })
+        res.render('users/admHome', { data, dataNew })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query('select id from direccion where empleado_id = ?', [req.user.id])
         const provincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
@@ -47,8 +47,9 @@ router.get('/', isLoggedIn, async (req, res) => {
             SELECT salario_hora, jornada
             FROM salarios
             WHERE empleado_id = ?;`, [req.user.id])
-            const dataBonos = await pool.query('SELECT count(motivo) as motivo FROM bonos WHERE empleado_id = ?',[req.user.id])
-            const dataCondutas = await pool.query('SELECT count(descripcion) as descripcion FROM registro_disciplinario WHERE empleado_id = ?',[req.user.id])
+            const dataBonos = await pool.query('SELECT count(id) as aux FROM bonos WHERE empleado_id = ?;',[req.user.id])
+            const dataTasks = await pool.query('SELECT count(id) as aux FROM tareas WHERE tipo_empleado = ? and estado = 1 ;',[req.user.tipo_empleado])
+            const dataCondutas = await pool.query('SELECT count(id) as aux FROM registro_disciplinario WHERE empleado_id = ?;',[req.user.id])
             const dataAsistencia = await pool.query('Select asistencia from asistencia where substr(fecha, 1, 10) = CURDATE() and empleado_id = ?;',[req.user.id])
             res.render('users/userHome', {
                 dataCondutas: dataCondutas[0],
@@ -56,7 +57,8 @@ router.get('/', isLoggedIn, async (req, res) => {
                 dataBonos: dataBonos[0], 
                 dataUser: dataUser[0],
                 dataRole: dataRole[0],
-                dataAsistencia: dataAsistencia[0]
+                dataAsistencia: dataAsistencia[0],
+                dataTasks: dataTasks[0]
             })
         }
     } else {
@@ -177,12 +179,11 @@ router.get('/admNewUsers', isLoggedIn, async (req, res) => {
         const data = await pool.query(`
         SELECT a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato
         FROM empleados a
-        WHERE a.aprobado = 0;
-        `)
+        WHERE a.aprobado = 0;`)
         res.render('users/admNewUsers', { data })
     }
 })
-
+// COMENTAR PARA RESET
 router.get('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
         const { id } = req.params
@@ -196,7 +197,7 @@ router.get('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
             res.render('users/admCheck', { data: data[0] })   
     }
 })
-
+// COMENTAR PARA RESET
 router.post('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
     // PARA UN RESET COMENTAR ESTE IF
     if (req.user.tipo_empleado === 1) {
@@ -212,9 +213,33 @@ router.post('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
             jornada,
             empleado_id: id
         }
-        const queryEmpleados = await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
-        const querySalarios = await pool.query('INSERT INTO salarios SET ?', [dataSalario])
-        res.redirect('../') 
+        const min = dataSalario.salario_hora * dataSalario.jornada
+        if(dataSalario.jornada <= 0){
+            req.flash('message', 'Por favor, especifique la jornada laboral')
+            return res.redirect('/users')
+        }
+        if(dataSalario.salario_hora <= 0){
+            req.flash('message', 'Por favor, especifique el salario por hora')
+            return res.redirect('/users')
+        }
+        if(min <= 10358){
+            req.flash('message', 'No cumple con el salario mínimo')
+            return res.redirect('/users')
+        }
+        if(tipo_empleado.length <= 0){
+            req.flash('message', 'Por favor, especifique el cargo del nuevo trabajador')
+            return res.redirect('/users')
+        }
+        try {
+            const queryEmpleados = await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
+            const querySalarios = await pool.query('INSERT INTO salarios SET ?', [dataSalario])
+            req.flash('success','Datos insertados correctamente')
+            return res.redirect('/users')
+        } catch (error) {
+            req.flash('message','Ha ocurrido un error, por favor intentelo de nuevo')
+            console.log(error)
+            return res.redirect('/users')
+        }
     }
 })
 
@@ -222,7 +247,7 @@ router.get('/admMoreInfo/:id', isLoggedIn, async(req, res) =>{
     if (req.user.tipo_empleado === 1) {
         const {id} = req.params
         const dataUser = await pool.query(`
-        select cedula, fecha_contrato, fecha_nacimiento, nombre, p_apellido, s_apellido, correo, TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) AS edad
+        select id, cedula, fecha_contrato, fecha_nacimiento, nombre, p_apellido, s_apellido, correo, TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) AS edad
         from empleados
         where id = ?;`, [id])
         const dataAdress = await pool.query(`
@@ -240,7 +265,7 @@ router.get('/admMoreInfo/:id', isLoggedIn, async(req, res) =>{
         from tipo_empleados a
         inner join empleados b
         on a.id = b.tipo_empleado
-        where a.id = ?;`, [id])
+        where b.id = ?;`, [id])
         const dataPhone = await pool.query(`
         select a.numero 
         from telefonos a
@@ -251,12 +276,41 @@ router.get('/admMoreInfo/:id', isLoggedIn, async(req, res) =>{
         select descripcion, url_documento 
         from despidos
         where empleado_id = ?`, [id])
+        const dataSalary = await pool.query(`
+        SELECT salario_hora, jornada
+        FROM salarios
+        WHERE empleado_id = ?;`, [id])
+        const dataPayOff = await pool.query(`
+        SELECT DATEDIFF(CURDATE() ,(select fecha_contrato
+            from empleados 
+            where id = ?)) as dias;`, [id])
+        let pay = 0
+        let payMessage = ''
+        if(dataPayOff[0].dias < 89 ){
+            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} dias`
+            console.log(dataPayOff)
+        } else if(dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*7
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
+            console.log(dataPayOff)
+        } else if(dataPayOff[0].dias >= 240 && dataPayOff[0].dias < 364){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*14
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
+            console.log(dataPayOff)
+        }else if(dataPayOff[0].dias >= 365){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*19
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
+            console.log(dataPayOff)
+        }
+        console.log(payMessage)
         res.render('users/admMoreInfo', {
             dataUser: dataUser[0],
             dataAdress: dataAdress[0],
             dataRole: dataRole[0],
             dataPhone: dataPhone[0],
-            dataLayOff: dataLayOff[0]
+            dataLayOff: dataLayOff[0],
+            payMessage,
+            pay
         })
     }
 })
@@ -318,15 +372,41 @@ router.get('/admDeleteUser/:id', isLoggedIn, async(req, res )=> {
         from tipo_empleados a
         inner join empleados b
         on a.id = b.tipo_empleado
-        where a.id = ?;`, [id])
+        where b.id = ?;`, [id])
         const dataSalary = await pool.query(`
         SELECT salario_hora, jornada
         FROM salarios
-        WHERE empleado_id = ?;`, [req.user.id])
+        WHERE empleado_id = ?;`, [id])
+        const dataPayOff = await pool.query(`
+        SELECT DATEDIFF(CURDATE() ,(select fecha_contrato
+            from empleados 
+            where id = ?)) as dias;`, [id])
+        let pay = 0
+        let payMessage = ''
+        if(dataPayOff[0].dias < 89 ){
+            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} `
+            console.log(dataPayOff)
+        } else if(dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*7
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            console.log(dataPayOff)
+        } else if(dataPayOff[0].dias >= 240 && dataPayOff[0].dias < 364){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*14
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            console.log(dataPayOff)
+        }else if(dataPayOff[0].dias >= 365){
+            pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*19
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            console.log(dataPayOff)
+        }
+        console.log(payMessage)
         res.render('users/admDeleteUser', {
             dataUser: dataUser[0],
             dataRole: dataRole[0],
-            dataSalary: dataSalary[0]
+            dataSalary: dataSalary[0],
+            dataPayOff: dataPayOff[0],
+            payMessage,
+            pay
         })
     }
 })
@@ -364,6 +444,80 @@ router.post('/admDeleteUser/:id', isLoggedIn, async(req, res) => {
     }
 })
 
+router.get('/admReHire/:id', isLoggedIn, async (req, res) => {
+    if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {id} = req.params
+        const dataUser = await pool.query(`
+        select id, cedula, substr(fecha_contrato, 1, 10) as fecha_contrato, fecha_nacimiento, nombre, p_apellido, s_apellido, correo, TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) AS edad
+        from empleados
+        where id = ?
+        and activo = false;`, [id])
+        const dataRol = await pool.query(`
+        SELECT a.nombre_cargo
+        FROM tipo_empleados a
+        inner join empleados b
+        on a.id = b.tipo_empleado
+        WHERE b.id = ?
+        AND b.activo = false;`, [id])
+        const dataSalary = await pool.query(`
+        select salario_hora, jornada
+        from salarios
+        where empleado_id = ?;`, [id])
+        console.log({dataUser: dataUser[0]})
+        console.log({dataSalary: dataSalary[0]})
+        console.log({dataRol: dataRol[0]})
+        res.render('users/admReHire', {dataUser: dataUser[0], dataSalary: dataSalary[0], dataRol: dataRol[0]})
+    }
+})
+
+router.post('/admRehire/:id', isLoggedIn, async (req, res) => {
+    const {id} = req.params
+    const { tipo_empleado, salario_hora, jornada, temporal } = req.body
+    const date = await pool.query (`select substr(now(), 1, 10) as fecha;`)
+    const dataEmpleado = {
+        tipo_empleado,
+        temporal,
+        aprobado: 1,
+        activo: true,
+        fecha_contrato: date[0].fecha
+    }
+    const dataSalario = {
+        salario_hora,
+        jornada,
+        empleado_id: id
+    }
+    const dataRehire = {
+        activo: 0
+    }
+    const min = dataSalario.salario_hora * dataSalario.jornada
+    if(dataSalario.jornada <= 0){
+        req.flash('message', 'Por favor, especifique la jornada laboral')
+        return res.redirect('/users')
+    }
+    if(dataSalario.salario_hora <= 0){
+        req.flash('message', 'Por favor, especifique el salario por hora')
+        return res.redirect('/users')
+    }
+    if(min <= 10358){
+        req.flash('message', 'No cumple con el salario mínimo')
+        return res.redirect('/users')
+    }
+    if(dataEmpleado.tipo_empleado.length <= 0){
+        req.flash('message', 'Por favor, especifique el cargo del nuevo trabajador')
+        return res.redirect('/users')
+    }
+    try {
+        await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
+        await pool.query('UPDATE salarios SET ? WHERE empleado_id = ?', [dataSalario, id])
+        await pool.query('UPDATE despidos SET ? WHERE empleado_id = ?', [dataRehire, id])
+        req.flash('success', 'Se ha realizado el proceso de forma satisfactoria')
+        return res.redirect('/users')
+    } catch (error) {
+        console.log(error)
+        req.flash('message', 'Ha ocurrido un error')
+        return res.redirect('/users')
+    }
+})
 //!SECTION 
 
 module.exports = router 

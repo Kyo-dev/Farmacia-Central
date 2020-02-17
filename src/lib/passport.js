@@ -8,16 +8,21 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'clave',
     passReqToCallback: true
 }, async (req, correo, clave, done) => {
-    console.log(req.body)
     const { cedula, nombre, p_apellido, s_apellido } = req.body
     const newUser = {
-        correo,
+        correo: correo.toLowerCase(),
         clave,
         cedula,
         nombre,
         p_apellido,
         s_apellido,
     };
+    newUser.correo = newUser.correo.toLowerCase()
+    if(newUser.correo.length <= 0) return req.flash('Ingrese un correo')  
+    if(newUser.clave.length <= 0) return req.flash('Ingrese una clave')  
+    if(newUser.nombre.length <= 0) return req.flash('Ingrese un nombre')  
+    if(newUser.p_apellido.length <= 0) return req.flash('Ingrese su primer apellido')  
+    if(newUser.s_apellido.length <= 0) return req.flash('Ingrese su segundo apellido')  
     newUser.clave = await helpers.encryptingPass(clave)
     const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
     newUser.id = result.insertId

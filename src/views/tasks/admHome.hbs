@@ -1,0 +1,96 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Tareas</h1>
+        <p class="lead text-center"><a class="btn btn-principal" href="tasks/admNewRegister">Crear una tarea</a></p>
+        <p class="text-center"><a class="btn btn-principal" href="tasks/listRegisters">Historial de tareas</a></p>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-center">
+                <div class="card-title jumbo p-2">
+                    <h5 class="text-center text-uppercase">Tareas pendientes</h5>
+                </div>
+                <div class="card-body">
+                    {{#if dataToDo}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <th>Descripcion</th>
+                                    <th>Estado</th>
+                                    <th>Rol</th>
+                                    <th>Solicitado</th>
+                                    {{!-- <th>Editar</th>
+                                    <th>Eliminar</th> --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataToDo}}
+                                <tr>
+                                    <td>{{titulo}}</td>
+                                    <td>{{descripcion}}</td>
+                                    <td>{{estado}}</td>
+                                    <td>{{nombre_cargo}}</td>
+                                    <td>{{timesago fecha_solicitud}}</td>
+                                    {{!-- <td><a href="/permits/admCheck/{{id}}" class="btn btn-principal">Revisar</a></td>
+                                    <td><a href="/permits/admDelete/{{id}}" class="btn btn-secondary">Revisar</a></td> --}}
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <p class=" text-center">  No hay registros</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-2"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-title jumbo p-2">
+                    <h4 class="text-center text-uppercase">Tareas realizadas</h4>
+                </div>
+                <div class="card-body">
+                     {{#if dataDone}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <th>Descripcion</th>
+                                    <th>Tarea creada</th>
+                                    <th>Estado</th>
+                                    <th>Rol</th>
+                                    <th>Realizado por</th>
+                                    <th>Tarea realizada</th>
+                                    <th>Fecha exacta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataDone}}
+                                <tr>
+                                    <td>{{titulo}}</td>
+                                    <td>{{descripcion}}</td>
+                                    <td>{{timesago fecha_solicitud}}</td>
+                                    <td>{{estado}}</td>
+                                    <td>{{nombre_cargo}}</td>
+                                    <td>{{nombre}} {{p_apellido}} {{s_apellido}}</td>
+                                    <td>{{timesago fecha_realizacion}}</td>
+                                    <td>{{fecha}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <p class=" text-center">  No hay registros</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         from permisos a
         inner join empleados b
         on a.empleado_id = b.id
-        where a.activo = true;`)
+        where a.activo = true
+        and a.estado = 1;`)
         res.render('permits/admHome', { data })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) { 
         const data = await pool.query(`SELECT 
@@ -72,7 +73,10 @@ router.post('/userNewRegister', isLoggedIn, async (req, res) => {
 
 router.get('/userEdit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
-    const data = await pool.query(`SELECT * FROM permisos WHERE id = ?`, [id])
+    const data = await pool.query(`SELECT 
+    id, estado, titulo,descripcion, fecha_solicitud, horas, hora_salida,
+    empleado_id , informacion_estado, substr(fecha_salida, 1, 10) as fecha
+    FROM permisos WHERE id = ?`, [id])
     res.render('permits/userEdit', { data: data[0] })
 })
 
@@ -84,7 +88,9 @@ router.post('/userEdit/:id', isLoggedIn, async (req, res) => {
         descripcion,
         fecha_salida,
         horas,
-        hora_salida
+        hora_salida,
+        estado: 1,
+        informacion_estado: 'El permiso require nuevamente una revisión.'
     }
     if(titulo.length <= 0){
         req.flash('message', `Por favor ingrese un titulo`)
@@ -107,7 +113,7 @@ router.post('/userEdit/:id', isLoggedIn, async (req, res) => {
         return res.redirect('/permits')
     }
     await pool.query('UPDATE permisos SET ? WHERE id = ?;', [data, id])
-    req.flash('success', 'Permiso actualizado satisfactoriamente')
+    req.flash('success', 'Permiso actualizado y pendiente de revisión nuevamente')
     res.redirect('/permits')
 })
 

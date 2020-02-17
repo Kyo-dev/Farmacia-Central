@@ -4,21 +4,21 @@ create database rrhh_db;
 
 use rrhh_db;
 
-create table farmacia (
-	id tinyint auto_increment,
-    nombre varchar(50) not null,
-    hora_apertura varchar (10) not null,
-    hora_cierre varchar(10) not null,
-    ccss_sem decimal(6,2) not null,
-    ccss_ivm decimal(6,2) not null,
-    lpt_aportepbp decimal(6,2) not null,
-    lpt_fondo_laboral decimal(6,2) not null,
-    lpt_fondo_pensiones decimal(6,2) not null,
-    lpt_aportetbp decimal(6,2) not null,
-    ins decimal(6.2) not null,
-    activo boolean default true not null,
-    constraint pk_farmacia primary key(id)
-);
+-- create table farmacia (
+-- id tinyint auto_increment,
+ --   nombre varchar(50) not null,
+ --   hora_apertura varchar (10) not null,
+ --   hora_cierre varchar(10) not null,
+ --   ccss_sem decimal(6,2) not null,
+ --   ccss_ivm decimal(6,2) not null,
+ --   lpt_aportepbp decimal(6,2) not null,
+ --   lpt_fondo_laboral decimal(6,2) not null,
+-- lpt_fondo_pensiones decimal(6,2) not null,
+--    lpt_aportetbp decimal(6,2) not null,
+--    ins decimal(6.2) not null,
+--    activo boolean default true not null,
+--    constraint pk_farmacia primary key(id)
+-- );
 
 create table tipo_empleados(
 	id tinyint auto_increment not null,
@@ -43,16 +43,21 @@ create table empleados(
 	correo varchar(200) not null unique,
     -- url_documento varchar(300) default 'No se ha registrado el resumen' not null,
     clave varchar(200) not null,
+	constraint fk_empleados_tipo_empleado foreign key(tipo_empleado) references tipo_empleados(id),
     constraint pk_empleados primary key(id)
 );
-create table empleados_temporales(
-	id tinyint auto_increment,
-	empleado_id int not null,
-    fecha datetime default now() not null,
-    descripcion varchar(300) not null,
-	constraint fk_temporales_empleados foreign key (empleado_id) references empleados(id),
-    constraint pk_empleados_temporales primary key(id)
-);
+
+ALTER TABLE empleados ADD CONSTRAINT fk_empleados_tipo_empleado FOREIGN KEY (tipo_empleado) REFERENCES tipo_empleados(id);
+
+-- create table empleados_temporales(
+-- id tinyint auto_increment,
+	-- empleado_id int not null,
+--    fecha datetime default now() not null,
+    -- descripcion varchar(300) not null,
+	-- constraint fk_temporales_empleados foreign key (empleado_id) references empleados(id),
+    -- constraint pk_empleados_temporales primary key(id)
+-- );
+
 create table fechas_empleado_temporal(
 	id int auto_increment,
 	empleado_id int not null,
@@ -95,14 +100,21 @@ create table tareas(
     titulo varchar(50) not null,
     descripcion varchar(300) not null,
     activo boolean default true,
+    fecha_solicitud datetime default now(),
+    tipo_empleado tinyint not null,
+	estado tinyint default 1 not null,
+    constraint fk_tareas_tipo_empleado foreign key(tipo_empleado) references tipo_empleados(id),
+    constraint fk_tareas_estadoo foreign key (estado) references estados (id),
     constraint pk_tareas primary key (id)
 );
-create table cargo_tareas(
-	id_tipo_empleado tinyint not null,
+create table realizar_tarea(
+	id int not null auto_increment,
+	empleado_id int not null,
+    fecha_realizacion datetime default now(),
     id_tarea int not null,
-    constraint fk_cargo_tareas_tipo_empleado foreign key(id_tipo_empleado) references tipo_empleados(id),
-    constraint fk_cargo_tareas_tareas foreign key(id_tarea) references tareas(id),
-    constraint pk_cargo_tareas primary key (id_tipo_empleado, id_tarea)
+    constraint fk_realizar_tareas_tarea foreign key(id_tarea) references tareas(id),
+    constraint fk_realizar_tareas_empleados foreign key (empleado_id) references empleados(id),
+    constraint pk_realizar_tareas primary key (id)
 );
 create table estados(
 	id tinyint auto_increment not null,
@@ -137,6 +149,16 @@ create table asistencia(
     contador_dias int default 0 not null,
     constraint fk_asistencia_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_asistencia primary key(empleado_id, fecha)
+);
+
+CREATE TABLE dias_feriados(
+	id int not null,
+    dia date not null,
+    descripcion varchar (50) not null,
+    activo boolean not null,
+    obligado boolean default true not null,
+    constraint fk_feriados_asistencia foreign key (id_asistencia) references asistencia (fecha),
+    constraint pk_dias_feriados primary key(id)
 );
 
 create table registro_disciplinario(

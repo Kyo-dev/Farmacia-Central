@@ -1,0 +1,84 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Recontratación</h1>
+        <p class="lead text-center">Información del nuevo empleado {{data.nombre}}</p>
+        <hr class="my-1">
+    </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Nombre completo:</h4>
+                    <p><span>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</span></p>
+                    <h4>Número de cédula</h4>
+                    <p><span>{{dataUser.cedula}}</span></p>
+                    <h4>Fecha de contratación</h4>
+                    <p><span>{{dataUser.fecha_contrato}}</span></p>
+                    <h4>Edad</h4>
+                    <p><span>{{dataUser.edad}} años</span></p>
+                    <h4>Correo electrónico</h4>
+                    <p><span>{{dataUser.correo}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/users/admReHire/{{dataUser.id}}" method="POST">
+                        <p>Cargo que desempeñará</p>
+                        <div class="form-group">
+                            <input required type="radio" name="tipo_empleado" value="1"> Administrador<br>
+                            <input required type="radio" name="tipo_empleado" value="2"> Doctor<br>
+                            <input required type="radio" name="tipo_empleado" value="3"> Dependiente<br>
+                            <input required type="radio" name="tipo_empleado" value="4"> Mensajero<br>
+                        </div>
+                        <div class="form-group">
+                            <p>Salario por hora</p>
+                            <input type="number" value="{{dataSalary.salario_hora}}" class="form-control" name="salario_hora"
+                                placeholder="Salario del trabajador por hora laboral" required>
+                        </div>
+                        <div class="form-group">
+                            <p>Jornada diaria</p>
+                            <input type="number" value="{{dataSalary.jornada}}" class="form-control" name="jornada" placeholder="Horas que trabajará por día"required>
+                        </div>
+                        <p>Tipo de empleado</p>
+                        <div class="form-group">
+                            <input required type="radio" name="temporal" value="1"> permanente<br>
+                            <input required type="radio" name="temporal" value="0"> temporal<br>
+                        </div>
+                        {{!-- CONFIRMAR --}}
+                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
+                        data-target="#confirmarRetencion">
+                        Recontratar
+                    </button>
+                    <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmarRetencion" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">
+                                        Importante</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Estas a punto de <span class="text-danger"><b>recontratar</b></span> a el
+                                    ex trabajador {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.
+                                    ¿Desea continuar?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- CONFIRMAR --}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

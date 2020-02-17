@@ -6,7 +6,6 @@
                     <h2>Borrar registro de horas extra</h2>
                 </div>
                 <div class="card-body">
-                    <div class="m-4"></div>
                     <h4>Información:</h4>
                     <p><span>{{data.informacion_estado}}</span></p>
                     <h4>Cantidad de horas extra trabajadas:</h4>
@@ -14,36 +13,43 @@
                     <h4>Fecha de las horas extra</h4>
                     <p><span>{{data.fecha}}</span></p>
                     <h3>Importante</h3>
-                    <p class="m-2">Esta apunto de borrar un las horas, sin embargo, el administrador aun tiene acceso a la información</p>
+                    <p class="m-2">Esta apunto de borrar un las horas, sin embargo, el administrador aun tiene acceso a
+                        la información</p>
                     <form action="/overTime/userDelete/{{data.id}}" method="POST">
-                    {{!-- CONFIRMAR --}}
-                    <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
-                        data-target="#confirmarRetencion">
-                        Aceptar
-                    </button>
-                    <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
-                        aria-labelledby="confirmarRetencion" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">
-                                        Importante</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    No se realizara el pago de las horas extra. ¿Desea continuar?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                        {{!-- CONFIRMAR --}}
+                        <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
+                            data-target="#confirmarRetencion">
+                            Aceptar
+                        </button>
+                        <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
+                            aria-labelledby="confirmarRetencion" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger" title="Importante" id="exampleModalLongTitle">
+                                            <i class="material-icons">
+                                                warning
+                                            </i></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        No se realizara el pago de las horas extra. ¿Desea continuar?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" title="Cancelar" class="btn btn-secondary" data-dismiss="modal"><i
+                                                class="material-icons">
+                                                clear
+                                            </i></button>
+                                        <button type="submit" title="Confirmar" class="btn btn-danger"><i class="material-icons">
+                                                done
+                                            </i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {{!-- CONFIRMAR --}}
+                        {{!-- CONFIRMAR --}}
                     </form>
                 </div>
             </div>

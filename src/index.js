@@ -78,8 +78,9 @@ app.use('/payroll', require('./routes/payroll'))
 app.use('/permits', require('./routes/permits'))
 app.use('/conduct', require('./routes/conduct'))
 app.use('/salary', require('./routes/salary'))
-app.use('/users', require('./routes/users'))
+app.use('/tasks', require('./routes/tasks'))
 app.use('/bonus', require('./routes/bonus'))
+app.use('/users', require('./routes/users'))
 
 //navegador
 app.use(express.static(path.join(__dirname, 'public')))

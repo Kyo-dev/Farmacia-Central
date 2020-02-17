@@ -95,7 +95,7 @@ router.post('/admIncrease/:id', isLoggedIn, async (req, res) => {
             cantidad
         }
         if (parseInt(data.cantidad) >= 0) {
-            const salario = ((parseFloat(salarioActual[0].salario_hora) + parseFloat(data.cantidad)))
+            const salario = ((parseInt(salarioActual[0].salario_hora) + parseInt(data.cantidad)))
             const query = await pool.query('INSERT INTO aumento_salarial SET ?;', [data])
             const actSalario = await pool.query(`UPDATE salarios SET salario_hora = ? WHERE id = ?`, [salario, id])
             req.flash('success', 'Aumento realizado satisfactoriamente')

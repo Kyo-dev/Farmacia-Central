@@ -8,7 +8,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
-                         <h4 class="jumbo text-center p-3">Solicitud pendiente</h4>
+                        <h4 class="jumbo text-center p-3">Solicitud pendiente</h4>
                         <tr>
                             <th>Cedula</th>
                             <th>Nombre</th>
@@ -28,7 +28,10 @@
                             <td>{{s_apellido}}</td>
                             <td>{{nombre_cargo}}</td>
                             <td>{{fecha}}</td>
-                            <td><a href="/overTime/admNewRegister/{{id}}" class="btn btn-principal btn-block">Revisar</a>
+                            <td><a title="Revisar" href="/overTime/admNewRegister/{{id}}" class="btn btn-principal btn-block"><i
+                                        class="material-icons">
+                                        info
+                                    </i></a>
                             </td>
                         </tr>
                         {{/each}}
@@ -43,7 +46,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
-                         <h4 class="btn-principal text-center p-3">Horas extra aprobadas</h4>
+                        <h4 class="btn-principal text-center p-3">Horas extra aprobadas</h4>
                         <tr>
                             <th>Cedula</th>
                             <th>Nombre</th>
