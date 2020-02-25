@@ -3,6 +3,7 @@ body{
     font-family: 'Oswald', sans-serif;
     overflow: hidden;
     overflow-y: auto;
+    font-size: 1.1em;
     /* background: url('/img/background.png'); */
 }
 body.smooth_scroll {
@@ -20,8 +21,8 @@ text-decoration:none;
     min-width: 30rem;
     width: 100%;
     height: 100%;
-    padding-top: 4rem;
-    /* background: url('/img/background.png'); */
+    padding-top: 0rem;
+    background: url('/img/background.png');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -30,22 +31,32 @@ text-decoration:none;
     font-size: 4rem;
     margin: 0;
     padding: 0;
-    color: green;
+    color: #95B754;
 }
 .masthead h3 {
-    color: indianred;
+    color: snow;
+    font-size: 2.5rem;
 }
 .jumbo{
     background: #02194B;
     color: snow;
+    font-size: 1.5rem;
 }
 .btn-principal{
     background-color:#95B754;
     color: snow;
 }
+.btn-principal:hover{
+    background-color:#95B754;
+    color:  rgb(3, 39, 117);
+}
 .btn-secomdary{
     background-color:rgb(67, 68, 66);
     color: snow;
+}
+.btn-index{
+    padding: 0.5em 0.8em;
+    border-radius: 15%;
 }
 .bg-dark{
     background-color: #02194B!important;
@@ -54,12 +65,10 @@ text-decoration:none;
     color: snow!important;
 
 }
-
 .btn-op{
     width: 50%;
 
 }
-
 @media (min-width: 992px) {
     .masthead h1 {
         font-size: 5.5rem;

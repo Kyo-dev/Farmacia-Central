@@ -1,6 +1,6 @@
 <div class="container p-4">
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-6 mx-auto">
             <div class="card">
                 <div class="card-title jumbo p-4">
                      <h4 class="text-center text-uppercase">Solicitar una tarea</h4>
@@ -9,11 +9,11 @@
                     <form action="/tasks/admNewRegister" method="POST">
                         <div class="form-group">
                             <label for="">Titulo de la tarea</label>
-                            <input type="text" class="form-control" name="titulo" placeholder="Titulo" autofocus>
+                            <input type="text" class="form-control" name="titulo" placeholder="Titulo" autofocus required>
                         </div>
                         <div class="form-group">
                             <label for="">Información adicional</label>
-                            <input type="text" class="form-control" name="descripcion" placeholder="descripcion">
+                            <input type="text" class="form-control" name="descripcion" placeholder="descripción" required>
                         </div>
                        <p>¿A quien va dirigida la tarea?</p>
                         <div class="form-group">

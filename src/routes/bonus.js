@@ -69,7 +69,15 @@ router.post('/admRegister/:id', isLoggedIn, async (req, res)=>{
             cantidad,
             empleado_id: id
         }
-        console.log(data)
+        if(data.motivo.length <= 0){
+            req.flash('message', `Especifique el motivo del bono`)
+            return res.redirect('/permits')
+        }
+        if(data.cantidad <= 0){
+            req.flash('message', `Has ingresado un valor invalido, debe ser un número positivo`)
+            return res.redirect('/permits')
+        }
+        req.flash('success', `Bono otorgado satisfactoriamente`)
         const query = await pool.query(`INSERT INTO bonos SET ?;`, [data])
         res.redirect('/bonus')
     } else{

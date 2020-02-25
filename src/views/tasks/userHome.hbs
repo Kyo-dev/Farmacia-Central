@@ -5,7 +5,7 @@
     </div>
     <div class="row">
         {{#each dataToDo}}
-        <div class="col-md-3">
+        <div class="col-md-4 mx-auto">
             <div class="card ">
                 <div class="card-head jumbo p-4">
                     <h3 class="card-title text-center text-uppercase">
@@ -20,15 +20,16 @@
                     <a href="/tasks/userCheck/{{id}}" class="btn btn-principal btn-block">Marcar como realizado</a>
                 </div>
             </div>
+            <div class="my-3"></div>
         </div>
         {{else}}
-            <div class="col-md-4 mx-auto">
-                <div class="card card-body text-center">
-                    <p>No hay tareas pendientes <span><i class="material-icons">
-insert_emoticon
-</i></span> </p>
-                </div>
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay tareas pendientes <span><i class="material-icons">
+                            insert_emoticon
+                        </i></span> </p>
             </div>
+        </div>
         {{/each}}
     </div>
 </div>

@@ -4,7 +4,10 @@
         <p class="lead text-center">Bienvenido {{user.nombre}}</p>
         {{#unless dataAsistencia}}
         <p class="lead text-center">Marcar asistencia<a href="/users/userAssistance/{{user.id}}"><i
-                    class="material-icons">done</i></a></p>
+                    class="material-icons text-danger">clear</i></a></p>
+        {{else}}
+        <p class="lead text-center">Asistencia marcada <i
+                    class="material-icons">done</i></p>
         {{/unless}}
 
         <hr class="my-1">

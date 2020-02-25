@@ -92,15 +92,34 @@ router.post('/userMoreInfo', isLoggedIn, async (req, res) => {
         const newDate ={
             fecha_nacimiento
         }
+        console.log(newTelefono.numero)
+        if(newTelefono.tipo_telefono <= 0){
+            req.flash('message', 'Por favor, especifique el tipo de teléfono')
+            return res.redirect('/users')
+        }
+        if(newTelefono.numero.length <= 7 || newTelefono.numero.length >= 9){
+            req.flash('message', 'El número debe ser de 8 caracteres numéricos.')
+            return res.redirect('/users')
+        }
+        if(newDireccion.direccion <= 0){
+            req.flash('message', 'Por favor, especifique su dirección')
+            return res.redirect('/users')
+        }
+        if(newDate.fecha_nacimiento.length <= 0){
+            req.flash('message', 'Indique su fecha de nacimiento')
+            return res.redirect('/users')
+        }
         try {
             const d1 = await pool.query('INSERT INTO telefonos SET ?;', [newTelefono])
             const d2 = await pool.query('INSERT INTO direccion SET ?;', [newDireccion])
             const d3 = await pool.query('UPDATE empleados SET ? WHERE id = ?;', [newDate, req.user.id])
+            req.flash('success', 'Nueva información ingresada')
+            return res.redirect('/users')
         } catch (error) {
             console.log(error)
+            req.flash('message', 'Ha ocurrido un error inesperado, por favor intentelo de nuevo.')
+            return res.redirect('/users')
         }
-        req.flash('success', 'Nueva información ingresada')
-        res.redirect('../users')    
     }
 })
 
@@ -110,7 +129,8 @@ router.get('/userEditMoreInfo', isLoggedIn, async(req, res)=>{
     const dataProvincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
     const dataCanton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton;`)
     const dataDistrito = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito;`)
-    const dataUsuario = await pool.query(`SELECT fecha_nacimiento FROM empleados;`)
+    const dataUsuario = await pool.query(`SELECT substr(fecha_nacimiento, 1, 10) as fecha FROM empleados where id = ?;`, [req.user.id])
+    console.log(dataUsuario)
     res.render('users/userEditMoreInfo',{dataProvincia, dataCanton, dataDistrito, dataDireccion: dataDireccion[0], dataNumero: dataNumero[0], dataUsuario: dataUsuario[0]})
 })
 
@@ -132,6 +152,23 @@ router.post('/userEditMoreInfo', isLoggedIn, async (req, res) => {
         const dataUser = {
             // id: req.user.id,
             fecha_nacimiento
+        }
+        console.log(dataTelefono.numero)
+        if(dataTelefono.tipo_telefono <= 0){
+            req.flash('message', 'Por favor, especifique el tipo de teléfono')
+            return res.redirect('/users')
+        }
+        if(dataTelefono.numero.length <= 7 || dataTelefono.numero.length >= 9){
+            req.flash('message', 'El número telefónico debe ser de 8 caracteres numéricos.')
+            return res.redirect('/users')
+        }
+        if(dataDireccion.direccion <= 0){
+            req.flash('message', 'Por favor, especifique su dirección')
+            return res.redirect('/users')
+        }
+        if(dataUser.fecha_nacimiento.length <= 0){
+            req.flash('message', 'Indique su fecha de nacimiento')
+            return res.redirect('/users')
         }
         try {
             const d1 = await pool.query('UPDATE telefonos SET ? WHERE empleado_id = ?;', [dataTelefono, req.user.id])
@@ -432,6 +469,10 @@ router.post('/admDeleteUser/:id', isLoggedIn, async(req, res) => {
             req.flash('message', `Por favor ingrese un documento`)
             return res.redirect('/users')
         }
+        if(req.fileValidationError) {
+            req.flash('message', `Archivo no valido`)
+            return res.end(req.fileValidationError);
+      }
         console.log(data)
         try {
             const query1 = await pool.query('INSERT INTO despidos SET ?;', [data])

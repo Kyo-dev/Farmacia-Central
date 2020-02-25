@@ -36,7 +36,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         const dataWageWithHolding = await pool.query(`
         SELECT retencion, substr(fecha, 1, 10) as fecha, descripcion, url_documento 
         FROM retencion_salarial
-        WHERE empleado_id = ? and activo = true;`, [req.user.id])
+        WHERE empleado_id = ? and activo = true
+        LIMIT 3;`, [req.user.id])
         console.log(dataWageWithHolding)
         res.render('salary/userHome', {
             dataSalary: dataSalary[0],
@@ -99,11 +100,11 @@ router.post('/admIncrease/:id', isLoggedIn, async (req, res) => {
             const query = await pool.query('INSERT INTO aumento_salarial SET ?;', [data])
             const actSalario = await pool.query(`UPDATE salarios SET salario_hora = ? WHERE id = ?`, [salario, id])
             req.flash('success', 'Aumento realizado satisfactoriamente')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
     } else {
         req.flash('message', `ERROR, Debe ser un administrador para porder realizar esta acción`)
-        res.redirect('/salary')
+        return res.redirect('/salary')
     }
 })
 
@@ -147,22 +148,22 @@ router.post('/admTax/:id', isLoggedIn, async (req, res) => {
         }
         if (parseFloat(data.retencion) <= 0) {
             req.flash('message', `El valor ₡ ${data.retencion} no es valido, debe ser un número positivo`)
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
         if (data.descripcion.length <= 0) {
             req.flash('message', `Por favor ingrese una descripcion`)
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
         if (data.url_documento.length >= 0) {
             const query = await pool.query('INSERT INTO retencion_salarial SET ?;', [data])
             req.flash('success', `Registro realizado`)
-            res.redirect('/salary')
+            return res.redirect('/salary')
         } else {
             req.flash('message', `Por favor ingrese el documento que detalla la retencion, en formato .pdf o docx`)
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
     } else {
-        res.redirect('/salary')
+        return res.redirect('/salary')
     }
 })
 

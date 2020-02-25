@@ -23,7 +23,7 @@
             <h3>Realizar aumento salarial</h3>
             <form action="/salary/admIncrease/{{dataSalary.id}}" method="POST">
                 <div class="form-group">
-                    <input type="number" step="any" class="form-control" name="cantidad" placeholder="salario por hora"
+                    <input type="number" min="1" class="form-control" name="cantidad" placeholder="salario por hora"
                         required>
                 </div>
                 <div class="form-group">

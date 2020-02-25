@@ -18,7 +18,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         where a.activo = true
         order by d.id desc`)
         console.log(data)
-        res.render('vacations/admHome', {data})
+        res.render('vacations/admHome', { data })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         // USER HOME
         const dataUser = await pool.query('SELECT id FROM empleados WHERE id = ?;', [req.user.id])
@@ -38,15 +38,16 @@ router.get('/', isLoggedIn, async (req, res) => {
         from empleados a
         inner join despidos b
         on a.id = b.empleado_id
-        where a.id = ? and a.activo = false;`, [req.user.id]) 
+        where a.id = ? and a.activo = false;`, [req.user.id])
         console.log(data)
-        res.render('auth/noUser', {data: data[0]})
+        res.render('auth/noUser', { data: data[0] })
     }
 })
 
 router.get('/userNewRegister/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado !== 1) {
         const { id } = req.params
+        const date = await pool.query(`select substr(now(), 1, 10) as fecha;`)
         const dataDay = await pool.query(`
         select empleado_id, cantidad_dias_disponibles
         from dias_disponibles
@@ -66,7 +67,7 @@ router.get('/userNewRegister/:id', isLoggedIn, async (req, res) => {
             out = 'No hay dias disponibles'
         }
         // console.log(dataUser)
-        res.render('vacations/userNewRegister', { out, dataUser: dataUser[0] })
+        res.render('vacations/userNewRegister', { out, dataUser: dataUser[0], date: date[0] })
     }
 })
 
@@ -74,14 +75,15 @@ router.post('/userNewRegister/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado !== 1) {
         const { id } = req.params
         const { fecha_salida, fecha_entrada } = req.body
+        let fecha1 = moment(fecha_salida);
+        let fecha2 = moment(fecha_entrada);
+        const valid = fecha2.diff(fecha1, 'days');//DIAS DEL FORMULARIO
         const data = {
             fecha_entrada,
             fecha_salida,
             empleado_id: id,
+            cantidad: valid
         }
-        let fecha1 = moment(data.fecha_salida);
-        let fecha2 = moment(data.fecha_entrada);
-        const valid = fecha2.diff(fecha1, 'days');//DIAS DEL FORMULARIO
         // console.log('Dias del formulario ' + valid) //DIAS DEL FORMULARIO
         const aux = valid * 30
         // console.log('AUX: ' + aux)

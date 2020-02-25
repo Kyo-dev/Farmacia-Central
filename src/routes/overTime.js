@@ -13,7 +13,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
         WHERE estado = 1 
-        AND b.activo = true
+        AND b.activo = false
         AND a.activo = true;`)
         const dataGeneral = await pool.query(`
         Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo, b.informacion_estado
@@ -22,6 +22,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = b.empleado_id
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
+        WHERE b.activo = true
         order by b.id desc;`)
         res.render('overTime/admHome', { data, dataGeneral })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
@@ -57,23 +58,23 @@ router.post('/newRegister', isLoggedIn, async (req, res) => {
     }
     if (cantidad_horas <= 0) {
         req.flash('message', `El valor ${cantidad_horas} debe ser un numero positivo`)
-        res.redirect('/overTime')
+        return res.redirect('/overTime')
     }
-    if (cantidad_horas >= 16) {
-        req.flash('message', `La cantidad de horas ${cantidad_horas} no pueden ser correctas.`)
-        res.redirect('/overTime')
-    }
+    // if (cantidad_horas >= 16) {
+    //     req.flash('message', `La cantidad de horas ${cantidad_horas} no pueden ser correctas.`)
+    //     res.redirect('/overTime')
+    // }
     if (motivo.length <= 0) {
         req.flash('message', `Por favor especifíque su trabajo durante las horas extra`)
-        res.redirect('/overTime')
+        return res.redirect('/overTime')
     }
     if (motivo.length >= 150) {
         req.flash('message', `Por favor disminuya la explicación, solo explique la labores que realizó.`)
-        res.redirect('/overTime')
+        return res.redirect('/overTime')
     }
     const query = pool.query('INSERT INTO horas_extra SET ?', [data])
     req.flash('success', `Registro realizado y pendiente de revision`)
-    res.redirect('/overTime')
+    return res.redirect('/overTime')
 })
 
 router.get('/userDelete/:id', isLoggedIn, async (req, res) => {
@@ -120,23 +121,43 @@ router.get('/admNewRegister/:id', isLoggedIn, async (req, res) => {
 router.post('/admNewRegister/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
         const { id } = req.params
-        console.log(id)
         const { informacion_estado, estado } = req.body
-        const data = {
-            estado,
-            informacion_estado
-        }
-        if(data.estado.length <= 0){
-            req.flash('message', 'Por favor especifique el estado del mensaje')
+        console.log(estado)
+        if(estado == 2){
+            const data = {
+                estado,
+                informacion_estado,
+                activo: true
+            }
+            if(data.estado.length <= 0){
+                req.flash('message', 'Por favor especifique el estado del mensaje')
+                return res.redirect('/overTime')
+            }
+            if(data.informacion_estado.length <=0){
+                req.flash('message', 'Por favor agrege una anotación')
+                return res.redirect('/overTime')
+            }
+            await pool.query('UPDATE horas_extra SET ? WHERE id = ?', [data, id])
+            req.flash('success', 'Registro realizado satisfactoriamente')
+            return res.redirect('/overTime')
+        }else if(estado == 3){
+            const data = {
+                estado,
+                informacion_estado,
+                activo: false
+            }
+            if(data.estado.length <= 0){
+                req.flash('message', 'Por favor especifique el estado del mensaje')
+                return res.redirect('/overTime')
+            }
+            if(data.informacion_estado.length <=0){
+                req.flash('message', 'Por favor agrege una anotación')
+                return res.redirect('/overTime')
+            }
+            await pool.query('UPDATE horas_extra SET ? WHERE id = ?', [data, id])
+            req.flash('success', 'Has rechazado las horas extra')
             return res.redirect('/overTime')
         }
-        if(data.informacion_estado.length <=0){
-            req.flash('message', 'Por favor agrege una anotación')
-            return res.redirect('/overTime')
-        }
-        const query = await pool.query('UPDATE horas_extra SET ? WHERE id = ?', [data, id])
-        req.flash('success', 'Registro realizado satisfactoriamente')
-        return res.redirect('/overTime')
     } else {
         req.flash('message', 'Solo los administradores pueden estar aquí')
         res.redirect('/overTime')

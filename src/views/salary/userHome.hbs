@@ -4,7 +4,7 @@
         <hr class="my-1">
     </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="card ">
                 <div class="card-title jumbo p-4">
                     <h4 class="card-title text-center text-uppercase">Salario actual</h4>
@@ -15,9 +15,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-title jumbo p-2">
+                <div class="card-title jumbo p-3">
                     <h4 class="card-title text-center text-uppercase">Último aumento recibído</h4>
                 </div>
                 <div class="card-body">
@@ -26,11 +26,12 @@
                     {{else}}
                     <p>Fecha excta del último aumento:</p>
                     <p><span>{{dataIncrease.fecha}}</span></p>
-                    <p>El último aumento fue de: ₡ <span>{{dataIncrease.cantidad}}</span> a la hora laboral</p>
+                    <p>El último aumento fue de: <br> ₡ <span>{{dataIncrease.cantidad}}</span> a la hora laboral</p>
                     <p>Recibido: {{timesago dataIncrease.timeAgo}}</p>
                     {{/unless}}
                 </div>
             </div>
+            <div class="my-4"></div>
         </div>
         <div class="col-md-6">
             <div class="card">

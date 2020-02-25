@@ -1,10 +1,10 @@
 <div class="container p-4">
     <div class="row">
-        <div class="col-md-4 mx-auto">
-            <div class="card-title jumbo p-4">
-                <h2>Información del permiso</h2>
-            </div>
+        <div class="col-md-6 mx-auto">
             <div class="card">
+                <div class="card-title jumbo p-4">
+                    <h2>Información sobre las horas extra</h2>
+                </div>
                 <div class="card-body">
                     <h4>Nombre del empleado:</h4>
                     <p><span>{{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}</span></p>
@@ -15,12 +15,13 @@
                     <h3>Revision del permiso</h3>
                     <form action="/overTime/admNewRegister/{{data.id}}" method="POST">
                         <div class="form-group">
-                            <input type="radio" required name="estado" value="1"> Pendiente<br>
+                            {{!-- <input type="radio" required name="estado" value="1"> Pendiente<br> --}}
                             <input type="radio" required name="estado" value="2"> Aprobado<br>
                             <input type="radio" required name="estado" value="3"> Rechazado<br>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="informacion_estado" placeholder="Descripción" required>
+                            <input type="text" class="form-control" name="informacion_estado" placeholder="Descripción"
+                                required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-principal btn-block">Actualizar</button>

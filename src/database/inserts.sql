@@ -23,6 +23,9 @@ INSERT INTO estados (estado)
 VALUES('aprobado');
 INSERT INTO estados (estado)
 VALUES('rechazado');
+INSERT INTO estados (estado)
+VALUES('realizado');
+
 
 INSERT INTO provincia (codigo_provincia,nombre_provincia) VALUES 
  (1,'San José'),
@@ -589,3 +592,11 @@ INSERT INTO distrito (codigo_distrito, codigo_canton, nombre_distrito) VALUES
  (70603,706,'Pocora'),
  (70604,706,'Río Jiménez'),
  (70605,706,'Duacarí');
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

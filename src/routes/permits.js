@@ -32,8 +32,9 @@ router.get('/', isLoggedIn, async (req, res) => {
     }
 })
 
-router.get('/userNewRegister', isLoggedIn, (req, res) => {
-    res.render('permits/userNewRegister')
+router.get('/userNewRegister', isLoggedIn, async (req, res) => {
+    const date = await pool.query (`select substr(now(), 1, 10) as fecha;`)
+    res.render('permits/userNewRegister', {date: date[0]})
 })
 
 router.post('/userNewRegister', isLoggedIn, async (req, res) => {
@@ -73,11 +74,12 @@ router.post('/userNewRegister', isLoggedIn, async (req, res) => {
 
 router.get('/userEdit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
+    const date = await pool.query (`select substr(now(), 1, 10) as fecha;`)
     const data = await pool.query(`SELECT 
     id, estado, titulo,descripcion, fecha_solicitud, horas, hora_salida,
     empleado_id , informacion_estado, substr(fecha_salida, 1, 10) as fecha
     FROM permisos WHERE id = ?`, [id])
-    res.render('permits/userEdit', { data: data[0] })
+    res.render('permits/userEdit', { data: data[0], date: date[0]})
 })
 
 router.post('/userEdit/:id', isLoggedIn, async (req, res) => {
@@ -156,6 +158,14 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             informacion_estado, 
             estado
         }
+        if(data.informacion_estado.length <= 0){
+            req.flash('message', `Especifique su decisión `)
+            return res.redirect('/permits')
+        }
+        if(data.estado.length <= 0){
+            req.flash('message', `Por favor indique el estado del permiso`)
+            return res.redirect('/permits')
+        }
         const query = await pool.query('UPDATE permisos SET ? WHERE id = ?', [data, id])
         req.flash('success', 'Permiso actualizado satisfactoriamente')
         res.redirect('/permits')
@@ -167,7 +177,7 @@ router.get('/admDelete/:id', isLoggedIn, async (req, res) => {
         const { id } = req.params
         const data = await pool.query(`
         select a.id, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
-        a.activo, a.empleado_id , a.costo_salarial, a.informacion_estado, a.horas, a.hora_salida
+        a.activo, a.empleado_id, a.informacion_estado, a.horas, a.hora_salida
         from permisos a
         inner join empleados b
         on a.empleado_id = b.id
