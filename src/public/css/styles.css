@@ -42,6 +42,16 @@ text-decoration:none;
     color: snow;
     font-size: 1.5rem;
 }
+.jumbo-danger{
+    background: rgb(165, 4, 4);
+    color: snow;
+    font-size: 1.5rem;
+}
+.jumbo-secomdary{
+    background: #95B754;
+    color: snow;
+    font-size: 1.5rem;
+}
 .btn-principal{
     background-color:#95B754;
     color: snow;

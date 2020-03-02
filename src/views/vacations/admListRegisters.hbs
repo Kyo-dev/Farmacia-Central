@@ -1,0 +1,67 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Historial</h1>
+        {{#if year}}
+        <p class="lead text-center">Información de vacaciones por año {{year}}</p>
+        {{else}}
+        <p class="lead text-center" Información de vacaciones por año</p>
+            {{/if}}
+            <form action="/vacations/listRegisters" method="POST">
+                <div class="form-group">
+                    <label for="">Seleccione una fecha</label>
+                    <input type="date" class="form-control" max="{{date.fecha}}" value="{{date.fecha}}" name="fecha"
+                        placeholder="fecha">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-principal btn-block">Consultar</button>
+                </div>
+            </form>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-title jumbo p-2">
+                    <h4 class="text-center text-uppercase">Vacaciones solicitadas durante la el año</h4>
+                </div>
+                <div class="card-body">
+                    {{#if data}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                <th>Cedula</th>
+                                <th>Segundo Apellido</th>
+                                <th>Primer apellido</th>
+                                <th>Nombre</th>
+                                <th>Días disponibles</th>
+                                <th>Cargo</th>
+                                <th>Días que se retira</th>
+                                <th>Fecha de salida</th>
+                                <th>Fecha de entrada</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each data}}
+                                <tr>
+                                    <td>{{cedula}}</td>
+                                    <td>{{s_apellido}}</td>
+                                    <td>{{p_apellido}}</td>
+                                    <td>{{nombre}}</td>
+                                    <td>{{dias}}</td>
+                                    <td>{{nombre_cargo}}</td>
+                                    <td>{{diferencia}}</td>
+                                    <td>{{fecha_salida}}</td>
+                                    <td>{{fecha_entrada}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <p class=" text-center"> No hay registros</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

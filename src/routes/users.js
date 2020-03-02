@@ -72,7 +72,13 @@ router.get('/', isLoggedIn, async (req, res) => {
         res.render('auth/noUser', {data: data[0]})
     }
 })
-
+router.get('/userHome', isLoggedIn, async(req, res) => {
+    if (req.user.tipo_empleado === 1) {
+        res.render('users/admDash')
+    }else{
+        res.redirect('/users')
+    }
+})
 router.post('/userMoreInfo', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion, fecha_nacimiento } = req.body

@@ -14,7 +14,6 @@ router.get('/', isLoggedIn, async (req, res) => {
         inner join tipo_empleados c
         on c.id = b.tipo_empleado
         where a.activo = true and b.activo = true;`)
-        console.log(dataConducts)
         res.render('conducts/admHome', { dataExist: dataExist[0], dataConducts })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const dataConducts = await pool.query(`
@@ -162,6 +161,36 @@ router.get('/admDelete/:id', isLoggedIn, async(req, res) => {
         }
         const query = await pool.query('UPDATE registro_disciplinario SET ? WHERE id = ?;', [data, id])
         res.redirect('/conduct')
+    }
+})
+
+
+router.get('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        res.render('conducts/admListRegisters', { date: date[0] })
+    }
+})
+
+router.post('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {fecha} = req.body
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        let year = fecha.substring(0,4)
+        let month = fecha.substring(5,7)
+        let day = fecha.substring(8,11)
+        const dataConducts = await pool.query(`
+        select b.cedula, a.empleado_id, a.id, a.descripcion, a.fecha as fechaXL, substr(a.fecha, 1, 10) as fecha, b.nombre, b.p_apellido, b.s_apellido, c.nombre_cargo
+        from registro_disciplinario a
+        inner join empleados b
+        on a.empleado_id =  b.id
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        where a.activo = true 
+        and b.activo = true
+        and year(a.fecha) = ?
+        and month(a.fecha) = ?;`, [year, month])
+        res.render('conducts/admListRegisters', {dataConducts, date: date[0], year , month})
     }
 })
 

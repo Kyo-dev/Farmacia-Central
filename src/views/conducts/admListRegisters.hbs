@@ -1,12 +1,21 @@
 <div class="container p-4">
     <div class="jumbotron jumbo">
-        <h1 class="display-4 text-center">Informacíon de conductas</h1>
-        <hr class="my-1">
-        {{#if dataExist}}
-        <p class="text-center"><a class="btn btn-principal" href="/conduct/admNewRegister">¿Necesitas registrar una
-                conducta inadecuada?</a></p>
+        <h1 class="display-4 text-center">Historial de conductas</h1>
+        {{#if month}}
+        <p class="lead text-center">Lista de conductas por fecha {{year}}/{{month}}</p>
+        {{else}}
+        <p class="lead text-center">Lista de conductas por fecha </p>
         {{/if}}
-        <p class="text-center"><a class="btn btn-principal" href="conduct/listRegisters">Historial de conductas</a></p>
+        <form action="/conduct/listRegisters" method="POST">
+            <div class="form-group">
+                <label for="">Seleccione una fecha</label>
+                <input type="date" class="form-control" max="{{date.fecha}}" value="{{date.fecha}}" name="fecha"
+                    placeholder="fecha">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-principal btn-block">Consultar</button>
+            </div>
+        </form>
     </div>
     <div class="row">
         {{#each dataConducts}}
@@ -26,13 +35,6 @@
                     <a href="/conduct/admEditRegister/{{id}}" class="btn btn-block btn-principal">Editar</a>
                     <a href="/conduct/admDeleteRegister/{{id}}" class="btn btn-block btn-secondary">Borrar</a>
                 </div>
-            </div>
-        </div>
-        {{else}}
-        <div class="col-md-4 mx-auto">
-            <div class="card card-body text-center">
-                <p>No existen regsitros</p>
-                <a href="/conduct/admNewRegister">¿Necesitas realizar uno?</a>
             </div>
         </div>
         {{/each}}

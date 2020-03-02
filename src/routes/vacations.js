@@ -119,12 +119,35 @@ router.post('/userNewRegister/:id', isLoggedIn, async (req, res) => {
     }
 })
 
-// SECTION  ADM
+router.get('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        res.render('vacations/admListRegisters', { date: date[0] })
+    }
+})
 
-// !SECTION 
 
-// SECTION USER
-
-// !SECTION 
-
+router.post('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {fecha} = req.body
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        let year = fecha.substring(0,4)
+        let month = fecha.substring(5,7)
+        let day = fecha.substring(8,11)
+        const data = await pool.query(`
+        select a.nombre, a.cedula, a.p_apellido, a.s_apellido, b.nombre_cargo, TRUNCATE(c.cantidad_dias_disponibles/ 30, 0) as dias, substr(d.fecha_entrada, 1, 10) as fecha_entrada, substr(d.fecha_salida, 1, 10) as fecha_salida,  DATEDIFF( d.fecha_entrada, d.fecha_salida) as diferencia 
+        from empleados a
+        inner join tipo_empleados b
+        on b.id = a.tipo_empleado
+        inner join dias_disponibles c
+        on c.empleado_id = a.id
+        inner join fechas_vacaciones d
+        on d.empleado_id = a.id
+        where a.activo = true
+        AND year(d.fecha_salida) = ?
+        order by d.id desc`, [year])
+        console.log(data)
+        res.render('vacations/admListRegisters', {data, date: date[0], year})
+    }
+})
 module.exports = router

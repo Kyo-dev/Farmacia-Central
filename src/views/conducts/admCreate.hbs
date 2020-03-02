@@ -1,6 +1,6 @@
 <div class="container p-4">
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-title jumbo p-4">
                      <h4 class="text-center text-uppercase">Registro de conducta</h4>
@@ -12,7 +12,7 @@
                             <input type="text" class="form-control" name="descripcion" placeholder="Descripción" autofocus>
                         </div> <div class="form-group">
                             <label for="">Fecha del insidente</label>
-                            <input type="date" id="fecha" max={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso">
+                            <input type="date" id="fecha" max={{date.fecha}} value={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso">
                         </div>
                         {{!-- CONFIRMAR --}}
                     <button type="button" class="btn btn-principal btn-block" data-toggle="modal"

@@ -5,6 +5,7 @@ const { isLoggedIn } = require('../lib/auth')
 
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
+        const date = await pool.query('select substr(now(), 6, 2) as fecha;')
         const data = await pool.query(`
         Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo
         From empleados a 
@@ -23,14 +24,16 @@ router.get('/', isLoggedIn, async (req, res) => {
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
         WHERE b.activo = true
-        order by b.id desc;`)
+        AND month(b.fecha) = ?
+        order by b.id desc;`, [date])
+        console.log(date)
         res.render('overTime/admHome', { data, dataGeneral })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(`
         SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
         FROM horas_extra
         WHERE empleado_id = ? AND activo = true
-        order by id desc;;`, [req.user.id])
+        order by id desc;`, [req.user.id])
         console.log(data)
         res.render('overTime/userHome', { data })
     } else {
@@ -199,8 +202,7 @@ router.post('/listRegisters', isLoggedIn, async (req, res) => {
         WHERE b.activo = true
         AND year(b.fecha) = ?
         AND month(b.fecha) = ?
-        AND day(b.fecha) = ?
-        order by b.id desc;`, [year, month, day])
+        order by b.id desc;`, [year, month])
         res.render('overTime/admListRegisters', { data, dataGeneral, date: date[0], year , month, day})
     }
 })
