@@ -216,6 +216,18 @@ create table retencion_salarial(
     constraint fk_retencion_salarial_empleados foreign key (empleado_id) references empleados(id),
     constraint pk_retencion_salarial primary key(id)
 );
+create table incapacidades(
+    id int auto_increment,
+    empleado_id int not null,
+    fecha_salida date not null,
+    fecha_entrada date not null,
+    motivo varchar(200) not null,
+    constraint fk_incapacidad_empleados foreign key (empleado_id) references empleados(id),
+    constraint pk_incapacidad primary key(id)
+);
+ALTER TABLE incapacidades ADD column activo boolean not null default true;
+ALTER TABLE incapacidades ADD column cantidad int not null default 0;
+
 create table bonos(
 	id int auto_increment,
     empleado_id int not null,

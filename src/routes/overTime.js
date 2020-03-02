@@ -164,4 +164,45 @@ router.post('/admNewRegister/:id', isLoggedIn, async (req, res) => {
     }
 })
 
+
+router.get('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        res.render('overTime/admListRegisters', { date: date[0] })
+    }
+})
+
+router.post('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {fecha} = req.body
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        let year = fecha.substring(0,4)
+        let month = fecha.substring(5,7)
+        let day = fecha.substring(8,11)
+        const data = await pool.query(`
+        Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo
+        From empleados a 
+        INNER JOIN horas_extra b
+        ON a.id = b.empleado_id
+        INNER JOIN tipo_empleados c
+        ON a.tipo_empleado = c.id
+        WHERE estado = 1 
+        AND b.activo = false
+        AND a.activo = true;`)
+        const dataGeneral = await pool.query(`
+        Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo, b.informacion_estado
+        From empleados a 
+        INNER JOIN horas_extra b
+        ON a.id = b.empleado_id
+        INNER JOIN tipo_empleados c
+        ON a.tipo_empleado = c.id
+        WHERE b.activo = true
+        AND year(b.fecha) = ?
+        AND month(b.fecha) = ?
+        AND day(b.fecha) = ?
+        order by b.id desc;`, [year, month, day])
+        res.render('overTime/admListRegisters', { data, dataGeneral, date: date[0], year , month, day})
+    }
+})
+
 module.exports = router

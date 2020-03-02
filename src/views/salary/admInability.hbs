@@ -1,35 +1,36 @@
 <div class="container p-4">
     <div class="jumbotron jumbo">
-        <h1 class="display-4 text-center"> Retención salarial</h1>
+        <h1 class="display-4 text-center"> Incapacidades </h1>
         <hr class="my-1">
     </div>
     <div class="row">
         <div class="col-md-6 mx-auto">
             <div class="card-body">
                 <div class="form-group">
+                    <h4>Información adicional del trabajador</h4> <br>
                     <h4>Nombre del trabajador:</h4>
                     <P>{{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}</P>
-                    <h4>Cargo que desempeña</h4>
+                    <h4>Cargo que desempeña:</h4>
                     <p>{{dataRole.nombre_cargo}}</p>
-                    <h4>Información salarial</h4>
-                    <p>Salario por hora: ₡ <span>{{dataSalary.salario_hora}}</span></p>
-                    <p>Jornada diaria: <span>{{dataSalary.jornada}}</span> horas</p>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <h3>Realizar aumento salarial</h3>
-            <form action="/salary/admTax/{{dataUser.id}}" method="POST" enctype="multipart/form-data">
+            <form action="/salary/admInability/{{dataUser.id}}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="number" class="form-control" name="retencion" placeholder="Monto total a retener" required>
+                    <label for="">Registrar fecha de salida</label> <br>
+                    <input type="date" class="form-control" value="{{dataDate.fecha}}" name="fecha_salida"
+                        placeholder="Fecha de salida" required>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="descripcion" placeholder="Motido de la retención"
-                        required>
+                    <label for="">Registrar fecha de reingreso</label> <br>
+                    <input type="date" class="form-control" value="{{dataDate.fecha}}" min="{{dataDate.fecha}}"
+                        name="fecha_entrada" placeholder="Fecha de entrada" required>
                 </div>
                 <div class="form-group">
-                    <input type="file" class="form-control-file" name="url_documento" placeholder="adjuntar un archivo"
-                        required>
+                    <label for="">Motivo de la incapacidad</label> <br>
+                    <input type="text" class="form-control" name="motivo" maxlength="200" placeholder="Descripción">
                 </div>
                 <div class="form-group">
                     {{!-- CONFIRMAR --}}
@@ -51,18 +52,19 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Estas a punto de <span class="text-danger"><b>retener</b></span> el
-                                    valor ingresado para el trabajador {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.
-                                    Esto afecta al salario actual del trabajador
+                                    Estas a punto de <span class="text-danger"><b>registrar</b></span>
+                                    una incapacidad para el trabajador {{dataUser.nombre}} {{dataUser.p_apellido}}
+                                    {{dataUser.s_apellido}}. <br>
+                                    ¿Desea continuar?
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" title="Cancelar"
                                         data-dismiss="modal"><i class="material-icons">
                                             clear
                                         </i></button>
-                                    <button type="submit" class="btn btn-danger"
+                                    <button type="submit" class="btn btn-principal"
                                         title="Crear reteción y subir archivo"><i class="material-icons">
-                                            publish
+                                            check
                                         </i></button>
                                 </div>
                             </div>
@@ -81,23 +83,22 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Fecha de registro</th>
+                            <th>Fecha de salida</th>
+                            <th>Fecha de ingreso</th>
                             <th>Motivo</th>
-                            <th>Monto retenido</th>
-                            <th>Documento</th>
                             <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{#each dataTax}}
+                        {{#each dataInability}}
                         <tr>
-                            <td>{{fecha}}</td>
-                            <td>{{descripcion}}</td>
-                            <td>{{retencion}}</td>
-                            <td><a href="http://localhost:4000/uploads/{{url_documento}}">consultar documento</a></td>
-                            <td> <a class="btn btn-danger btn-block" href="/salary/admDeleteTax/{{id}}"><i class="material-icons">
-                                            clear
-                                        </i></a>
+                            <td>{{fecha_salida}}</td>
+                            <td>{{fecha_entrada}}</td>
+                            <td>{{motivo}}</td>
+                            <td> <a class="btn btn-danger btn-block" href="/salary/admDeleteTax/{{id}}"><i
+                                        class="material-icons">
+                                        clear
+                                    </i></a>
                             </td>
                         </tr>
                         {{/each}}

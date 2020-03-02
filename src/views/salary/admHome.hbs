@@ -16,6 +16,7 @@
                     <th>Cargo que desempeña</th>
                     <th>Aumentos</th>
                     <th>Retenciones</th>
+                    <th>Incapacidades</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,12 +29,17 @@
                     <td>{{salario_hora}}</td>
                     <td>{{jornada}}</td>
                     <td>{{nombre_cargo}}</td>
-                    <td><a href="/salary/admIncrease/{{id}}" title="Aplicar aumento" class="btn btn-principal btn-block"><i
-                                class="material-icons">
+                    <td><a href="/salary/admIncrease/{{id}}" title="Aplicar aumento"
+                            class="btn btn-principal btn-block"><i class="material-icons">
                                 trending_up
                             </i></a></td>
-                    <td><a href="/salary/admTax/{{id}}" title="Realizar retención" class="btn btn-secondary btn-block"><i class="material-icons">
+                    <td><a href="/salary/admTax/{{id}}" title="Realizar retención"
+                            class="btn btn-secondary btn-block"><i class="material-icons">
                                 trending_down
+                            </i></a></td>
+                    <td><a href="/salary/admInability/{{id}}" title="Realizar retención" class="btn btn-danger btn-block"><i
+                                class="material-icons">
+                                local_hospital
                             </i></a></td>
                 </tr>
                 {{/each}}

@@ -14,9 +14,19 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `salarioBrutoEmpleado`(
 BEGIN
     DECLARE totalSalarioHora int default 0;
     DECLARE totalHorasJornada int default 0;
+    DECLARE totalIncapacidades int default 0;
     DECLARE hora int default 0;
 	DECLARE total int default 0;
-    IF (select sum(salario_hora) from salarios
+    IF(select sum(cantidad) from incapacidades
+    where activo = true and empleado_id = _id 
+	and year(fecha_salida) = _anio and month(fecha_salida) = _mes) <> 0 then
+		Set totalIncapacidades =  (Select sum(cantidad) from incapacidades
+		where activo = true
+		and empleado_id = 3
+		and year(fecha_salida) = '2020'
+		and month(fecha_salida) = '02');
+    END IF;
+    IF (select salario_hora from salarios
     where activo = true and empleado_id = _id) <> 0 then 
 		Set totalSalarioHora = (Select salario_hora from salarios
 			where activo = true
@@ -28,7 +38,7 @@ BEGIN
             where activo = true
 			and empleado_id = _id);
     end if;    
-	set total = ((totalSalarioHora * totalHorasJornada)* 30);
+	set total = (totalSalarioHora * totalHorasJornada * (30-totalIncapacidades));
     RETURN total;
 END$$
 
@@ -55,12 +65,13 @@ BEGIN
     DECLARE totalHorasJornada int default 0;
 	DECLARE totalBonos int default 0;
     DECLARE totalVacaciones int default 0;
+    DECLARE totalRetenciones int default 0;
+	DECLARE bruto int default 0;
     DECLARE hora int default 0;
 	DECLARE total int default 0;
-    DECLARE inc_ccss_dias smallint default -5;
-    DECLARE inc_ins_dias smallint default -5;
+	set bruto = (select salarioBrutoEmpleado(_id, _mes, _anio));
     IF(Select sum(horas) from permisos
-		where activo = true and empleado_id = _id 
+		where activo = true and empleado_id = _id and estado = 2
 		and year(fecha_salida) = _anio and month(fecha_salida) = _mes) <> 0 THEN
 			Set totalPermisos = 
 				(Select sum(horas) 
@@ -88,6 +99,12 @@ BEGIN
                 and year(fecha) = _anio
                 and month(fecha) = _mes);
 	end if; 
+    IF (Select sum(retencion) from retencion_salarial
+		where activo = true and empleado_id = _id) <> 0 then
+			Set totalRetenciones = (Select sum(retencion) from retencion_salarial
+				where activo = true
+                and empleado_id = _id);
+	end if; 
     IF(select sum(cantidad) from fechas_vacaciones
 		where activo = true and empleado_id = _id
         and year(fecha_salida) = _anio and month(fecha_salida) = _mes) <> 0 then 
@@ -109,7 +126,7 @@ BEGIN
             where activo = true
 			and empleado_id = _id);
     end if;    
-	set total = ( ((totalSalarioHora * totalHorasJornada)* 30) + (totalVacaciones * totalSalarioHora * totalHorasJornada*-1) + + (totalVacaciones * totalSalarioHora * totalHorasJornada) + (hora*totalPermisos*-1) + (totalHorasExtra * totalSalarioHora * 1.5) + (totalBonos) + (totalSalarioHora * totalHorasJornada * inc_ccss_dias) + (totalSalarioHora * totalHorasJornada * inc_ccss_dias) + ((((totalSalarioHora * totalHorasJornada)*5)*50)/100) + (totalSalarioHora * totalHorasJornada * inc_ins_dias)  );
+	set total = ((bruto-totalRetenciones) + (totalVacaciones * totalSalarioHora * totalHorasJornada*-1) + (totalVacaciones * totalSalarioHora * totalHorasJornada) + (hora*totalPermisos*-1) + (totalHorasExtra * totalSalarioHora * 1.5) + (totalBonos) + ((((totalSalarioHora * totalHorasJornada)*5)*50)/100));
     RETURN total;
 END$$
 
@@ -139,6 +156,7 @@ BEGIN
     DECLARE totalHorasJornada int default 0;
     DECLARE totalBonos int default 0;
     DECLARE totalHorasExtra int default 0;
+    DECLARE totalRetenciones int default 0;
     DECLARE auxBonos int default 0;
     DECLARE auxHorasExtra int default 0;
     DECLARE hora int default 0;
@@ -181,6 +199,15 @@ BEGIN
                 and year(fecha) = totalAnio
                 and month(fecha) = totalMes);
 	end if; 
+    IF (Select sum(retencion) from retencion_salarial
+		where activo = true and empleado_id = _id
+		and year(fecha) = _anio and month(fecha) = _mes) <> 0 then
+			Set totalRetenciones = (Select sum(retencion) from retencion_salarial
+				where activo = true
+                and empleado_id = _id
+                and year(fecha) = _anio
+                and month(fecha) = _mes);
+	end if; 
     set totalAnio = totalAnio + 1 ;
     set totalMes = 1;
     set auxBonos = totalBonos;
@@ -205,7 +232,7 @@ BEGIN
                 and empleado_id = _id
                 and year(fecha) = totalAnio
                 and month(fecha) = totalMes);
-	end if; 
+	end if;
 	set auxBonos = auxBonos + totalBonos;
     set auxHorasExtra = auxHorasExtra + totalHorasExtra;
 	set totalBonos = 0;
@@ -216,10 +243,18 @@ BEGIN
 	set total = salarioAnual + auxBonos + (hora * auxHorasExtra * 1.5);
     set resultado = total / 12;
     else 
-    
     set mesContratacion =  (select month(fecha_contrato) from empleados where id = _id);
     set mesCount = ((mesContratacion - 11)* -1 );
     set totalMes = mesContratacion;
+    IF (Select sum(retencion) from retencion_salarial
+		where activo = true and empleado_id = _id
+		and year(fecha) = _anio and month(fecha) = _mes) <> 0 then
+			Set totalRetenciones = (Select sum(retencion) from retencion_salarial
+				where activo = true
+                and empleado_id = _id
+                and year(fecha) = _anio
+                and month(fecha) = _mes);
+	end if; 
     while totalMes < 11 do
      IF (Select sum(cantidad) from bonos
 		where activo = true and empleado_id = _id 
@@ -246,7 +281,7 @@ BEGIN
     set totalMes = totalMes + 1;
     end while;
     set salarioAnual =  (((totalSalarioHora * totalHorasJornada)* 30) * mesContratacion);
-	set total = salarioAnual + auxBonos + (hora * auxHorasExtra * 1.5);
+	set total = (salarioAnual + auxBonos + (hora * auxHorasExtra * 1.5)- 2 * totalRetenciones);
     set resultado = total / mesContratacion;
     end if;
     RETURN resultado;
@@ -277,7 +312,7 @@ BEGIN
     DECLARE totalHorasJornada int default 0;
     DECLARE neto int default 0;
     DECLARE dia int ;
-	DECLARE resultado int;
+	DECLARE resultado int default 0;
     IF (select sum(salario_hora) from salarios
     where activo = true and empleado_id = _id) <> 0 then 
 		Set totalSalarioHora = (Select salario_hora from salarios
@@ -290,25 +325,29 @@ BEGIN
 	set dia = (totalSalarioHora * totalHorasJornada);
     set neto = (select salarioNetoEmpleado(_id, _mes, _anio));
     set ccss_obrero = (((neto * 10.5)/ 100)*-1);
-    set resultado =  neto + ccss_obrero + 20000 - 100000;
+    set resultado =  (neto + ccss_obrero);
     RETURN resultado;
 END$$
 
 DELIMITER ;
 
+select * from bonos where empleado_id = 3
 
+select * from empleados
 
-select * from bonos;
 -- SALARIO SIN REBAJAS
-select salarioBrutoEmpleado(5, '02', '2020');
+select salarioBrutoEmpleado(5, '01', '2020');
 -- SALARIO CON EXTRAS
-select salarioNetoEmpleado(5, '02', '2020');
+select salarioNetoEmpleado(5, '03', '2020');
 -- AGUINALDO
-select salarioAguinaldo(5, '02', '2020');
+select salarioAguinaldo(5, '01', '2020');
 -- PAGO DEL MES 
-select salarioEmpleado(5, '02', '2020');
+select salarioEmpleado(3, '01', '2020');
 
 select year(fecha_contrato) from empleados where id = 5;
 select substr(now(), 1, 4) as fecha;
 -- + (totalHorasExtra * (totalSalarioHora * 1.5)) + (hora*totalPermisos)*-1) 
 
+select empleado_id, id, fecha_salida, fecha_entrada , motivo from incapacidades where empleado_id = 3
+
+select * from permisos 

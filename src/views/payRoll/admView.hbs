@@ -18,33 +18,31 @@
                             <th>Mes</th>
                             <th>Horas descontadas <br>por permisos</th>
                             <th>Bonos</th>
-                            <th>Número de horas extra</th>
+                            <th>Cantidad <br> de horas extra</th>
                             <th>Salario por hora</th>
-                            <th>Cantidad de días<br>trabajados</th>
                             <th>Jornada díaria</th>
-                            <th>Prestaciones CCSS</th>
                             <th>Retenciones</th>
                             <th>Salario bruto</th>
                             <th>Salario neto</th>
+                            <th>Valor<br>Aguinaldo <br> acumulado </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <td>{{dataUser.cedula}}</td>
-                        <td>{{dataUser.nombre}}</td>
-                        <td>{{dataUser.p_apellido}}</td>
-                        <td>{{dataUser.s_apellido}}</td>
+                        <td>{{employee.cedula}}</td>
+                        <td>{{employee.nombre}}</td>
+                        <td>{{employee.p_apellido}}</td>
+                        <td>{{employee.s_apellido}}</td>
                         <td class="text-right">{{year}}</td>
                         <td class="text-right">{{month}}</td>
-                        <td class="text-center">{{permits}}</td>
-                        <td class="text-right">₡{{bonus}}</td>
-                        <td class="text-center">{{overTime}}</td>
-                        <td class="text-right">₡{{salaryHour}}</td>
-                        <td class="text-center">{{dayWorks}}</td>
-                        <td class="text-center">{{workingDay}}</td>
-                        <td class="text-right">₡{{ccss}}</td>
-                        <td class="text-right">₡{{tax}}</td>
-                        <td class="text-right">₡{{baseSalary}}</td>
-                        <td class="text-right">₡{{salary}}</td>
+                        <td class="text-center">{{permits.aux}}</td>
+                        <td class="text-right">₡{{bonus.aux}}</td>
+                        <td class="text-center">{{overTime.aux}}</td>
+                        <td class="text-right">₡{{salary.salario_hora}}</td>
+                        <td class="text-center">{{salary.jornada}} horas</td>
+                        <td class="text-right">₡{{tax.aux}}</td>
+                        <td class="text-right">₡{{salaryB.bruto}}</td>
+                        <td class="text-right">₡{{salaryP.pago}}</td>
+                        <td class="text-right">₡{{salaryA.aguinaldo}}</td>
                         </tr>
                     </tbody>
                 </table>

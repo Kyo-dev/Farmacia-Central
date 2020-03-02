@@ -26,12 +26,12 @@ router.get('/', isLoggedIn, async (req, res) => {
         res.render('users/admHome', { data, dataNew })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query('select id from direccion where empleado_id = ?', [req.user.id])
-        const provincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
+        const dataProvincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
         const canton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton;`)
         const distrito = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito;`)
         if (data.length === 0 ) {
             console.log('NO HA REGISTRADO INFORMACION')
-            res.render('users/userMoreInfo',  {provincia, canton, distrito })
+            res.render('users/userMoreInfo',  {dataProvincia, canton, distrito })
         }else {
             const dataUser = await pool.query(`
             SELECT id, cedula, correo, nombre, p_apellido, s_apellido, substr(fecha_contrato, 1, 10) as fecha_contrato
@@ -130,7 +130,7 @@ router.get('/userEditMoreInfo', isLoggedIn, async(req, res)=>{
     const dataCanton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton;`)
     const dataDistrito = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito;`)
     const dataUsuario = await pool.query(`SELECT substr(fecha_nacimiento, 1, 10) as fecha FROM empleados where id = ?;`, [req.user.id])
-    console.log(dataUsuario)
+    console.log([dataProvincia[0]])
     res.render('users/userEditMoreInfo',{dataProvincia, dataCanton, dataDistrito, dataDireccion: dataDireccion[0], dataNumero: dataNumero[0], dataUsuario: dataUsuario[0]})
 })
 
@@ -153,7 +153,7 @@ router.post('/userEditMoreInfo', isLoggedIn, async (req, res) => {
             // id: req.user.id,
             fecha_nacimiento
         }
-        console.log(dataTelefono.numero)
+        console.log(dataDireccion)
         if(dataTelefono.tipo_telefono <= 0){
             req.flash('message', 'Por favor, especifique el tipo de teléfono')
             return res.redirect('/users')
@@ -425,15 +425,15 @@ router.get('/admDeleteUser/:id', isLoggedIn, async(req, res )=> {
             console.log(dataPayOff)
         } else if(dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239){
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*7
-            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} ha trabajado ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
             console.log(dataPayOff)
         } else if(dataPayOff[0].dias >= 240 && dataPayOff[0].dias < 364){
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*14
-            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} ha trabajado ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
             console.log(dataPayOff)
         }else if(dataPayOff[0].dias >= 365){
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora)*19
-            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
+            payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} ha trabajado ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
             console.log(dataPayOff)
         }
         console.log(payMessage)
@@ -558,6 +558,18 @@ router.post('/admRehire/:id', isLoggedIn, async (req, res) => {
         req.flash('message', 'Ha ocurrido un error')
         return res.redirect('/users')
     }
+})
+
+router.get('/direction-canton/:id', isLoggedIn, async (req, res) => {
+    const {id} = req.params
+    const dataCanton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton where codigo_provincia = ?`,[id])
+    res.json(dataCanton)
+})
+
+router.get('/direction-distrito/:id', isLoggedIn, async (req, res) => {
+    const {id} = req.params
+    const dataCanton = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito where codigo_canton = ?`,[id])
+    res.json(dataCanton)
 })
 //!SECTION 
 

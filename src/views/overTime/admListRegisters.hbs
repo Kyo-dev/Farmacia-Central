@@ -1,0 +1,65 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Historial</h1>
+        {{#if month}}
+        <p class="lead text-center">Lista de horas extra por fecha {{year}}/{{month}}/{{day}}</p>
+        {{else}}
+        <p class="lead text-center">Lista de horas extra por fecha </p>
+        {{/if}}
+        <form action="/overTime/listRegisters" method="POST">
+            <div class="form-group">
+                <label for="">Seleccione una fecha</label>
+                <input type="date" class="form-control" max="{{date.fecha}}" value="{{date.fecha}}" name="fecha"
+                    placeholder="fecha">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-principal btn-block">Consultar</button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-title jumbo p-2">
+                    <h4 class="text-center text-uppercase">Bonos realizados durante la el mes</h4>
+                </div>
+                <div class="card-body">
+                    {{#if dataGeneral}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Cedula</th>
+                                    <th>Nombre</th>
+                                    <th>Primer apellido</th>
+                                    <th>Segundo apellido</th>
+                                    <th>Fecha de realización</th>
+                                    <th>Estado</th>
+                                    <th>Cantidad</th>
+                                    <th>Motivo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataGeneral}}
+                                <tr>
+                                    <td>{{cedula}}</td>
+                                    <td>{{nombre}}</td>
+                                    <td>{{p_apellido}}</td>
+                                    <td>{{s_apellido}}</td>
+                                    <td>{{fecha}}</td>
+                                    <td>{{informacion_estado}}</td>
+                                    <td>{{cantidad_horas}}</td>
+                                    <td>{{motivo}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <p class=" text-center"> No hay registros</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -195,4 +195,53 @@ router.get('/admConfirmDelete/:id', isLoggedIn, async (req, res)=>{
     }
 })
 
+router.get('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        res.render('permits/admListRegisters', { date: date[0] })
+    }
+})
+
+
+router.post('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {fecha} = req.body
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        let year = fecha.substring(0,4)
+        let month = fecha.substring(5,7)
+        let day = fecha.substring(8,11)
+        const dataToDo = await pool.query(`
+        SELECT a.id, a.titulo, a.descripcion, a.fecha_solicitud, a.fecha_salida, a.horas, a.hora_salida, b.nombre_cargo, c.estado
+        FROM permisos a
+        INNER JOIN tipo_empleados b
+        ON a.empleado_id = b.id
+        INNER JOIN estados c
+        ON a.estado = c.id
+        WHERE a.activo = true
+        AND a.estado = 1
+        AND year(a.fecha_solicitud) = ?
+        AND  month(a.fecha_solicitud) = ?
+        AND day(a.fecha_solicitud) =?;`, [year, month, day])
+        const dataDone = await pool.query(`
+        SELECT a.id, a.titulo, a.descripcion, a.fecha_solicitud, substr(a.fecha_solicitud, 1, 10) as fecha, a.fecha_salida, a.horas, a.hora_salida, b.nombre_cargo, c.estado, e.nombre, e.p_apellido, e.s_apellido
+        FROM permisos a
+        INNER JOIN tipo_empleados b
+        ON a.empleado_id = b.id
+        INNER JOIN estados c
+        ON a.estado = c.id
+        INNER JOIN realizar_tarea d
+        ON d.id_tarea = a.id
+        INNER JOIN empleados e
+        ON d.empleado_id = e.id
+        WHERE a.activo = true
+        AND a.estado <> 1
+        AND year(a.fecha_solicitud) = ?
+        AND  month(a.fecha_solicitud) = ?
+        AND day(a.fecha_solicitud) =?;`, [year, month, day])
+        console.log(dataDone)
+        console.log(year, month, day)
+        res.render('permits/admListRegisters', {dataToDo, dataDone, date: date[0], year, month, day})
+    }
+})
+
 module.exports = router

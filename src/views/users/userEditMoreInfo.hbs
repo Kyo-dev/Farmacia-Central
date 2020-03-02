@@ -7,46 +7,43 @@
                 </div>
                 <div class="card-body">
                     <form action="/users/userEditMoreInfo" method="POST">
-                    <div class="form-group">
-                        <p class="text-left" >Tipo de teléfono</p>
-                            <select  name="tipo_telefono">
+                        <div class="form-group">
+                            <p class="text-left">Tipo de teléfono</p>
+                            <select name="tipo_telefono">
                                 <option value="1">Celular</option>
                                 <option value="2">Casa</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="numero" class="form-control" placeholder="{{dataNumero.numero}}" class="form-control" autofocus required>
+                            <input type="number" name="numero" class="form-control" value="{{dataNumero.numero}}" placeholder="{{dataNumero.numero}}"
+                                class="form-control" autofocus>
                         </div>
-                       <div class="form-group">
-                        <p class="text-left" >Provincia</p>
-                            <select  name="codigo_provincia" required>
+                        <div class="form-group">
+                            <p class="text-left">Provincia</p>
+                            <select name="codigo_provincia" id="provincias" onchange="fnProvincia(this.value)" required>
                                 {{#each dataProvincia}}
-                                <option value="{{codigo_provincia}}">{{nombre_provincia}}</option>
+                                <option  id="idP" value="{{codigo_provincia}}">{{nombre_provincia}}</option>
                                 {{/each}}
                             </select>
                         </div>
                         <div class="form-group">
-                        <p class="text-left" >Canton</p>
-                            <select  name="codigo_canton" required>
-                                {{#each dataCanton}}
-                                <option value="{{codigo_canton}}">{{nombre_canton}}</option>
-                                {{/each}}
+                            <p class="text-left">Canton</p>
+                            <select  name="codigo_canton" class="sel" onchange="fnCanton(this.value)" id="idCanton" required>
                             </select>
                         </div>
                         <div class="form-group">
-                        <p class="text-left" >Distrito</p>
-                            <select  name="codigo_distrito" required>
-                                {{#each dataDistrito}}
-                                <option value="{{codigo_distrito}}">{{nombre_distrito}}</option>
-                                {{/each}}
+                            <p class="text-left">Distrito</p>
+                            <select  name="codigo_distrito" class="sel" id="idDistrito" required>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="direccion" class="form-control" placeholder="{{dataDireccion.direccion}}" class="form-control" required>
+                            <input type="text" name="direccion" class="form-control"
+                                placeholder="{{dataDireccion.direccion}}" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="">Fecha de nacimiento</label>
-                            <input type="date" value="{{dataUsuario.fecha}}" name="fecha_nacimiento" class="form-control" placeholder="Fecha nacimiento" class="form-control" required>
+                            <input type="date" value="{{dataUsuario.fecha}}" name="fecha_nacimiento"
+                                class="form-control" placeholder="Fecha nacimiento" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-principal btn-block">Actualizar datos</button>
@@ -57,3 +54,4 @@
         </div>
     </div>
 </div>
+<script src="/js/direction.js"></script>

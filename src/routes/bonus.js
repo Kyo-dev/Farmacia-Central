@@ -11,17 +11,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         INNER JOIN tipo_empleados b
         ON a.tipo_empleado = b.id
         where a.activo = true;`)
-        const dataBonos = await pool.query(`
-        Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
-        b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, c.nombre_cargo
-        From empleados a
-        INNER JOIN bonos b
-        ON a.id = b.empleado_id
-        INNER JOIN tipo_empleados c
-        ON a.tipo_empleado = c.id
-        WHERE a.activo = true;`)
-        console.log(dataBonos)
-        res.render('bonus/admHome', { dataUsuarios, dataBonos})
+        res.render('bonus/admHome', { dataUsuarios})
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(` 
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
@@ -82,6 +72,36 @@ router.post('/admRegister/:id', isLoggedIn, async (req, res)=>{
         res.redirect('/bonus')
     } else{
         res.send('No deberia estar aqui')
+    }
+})
+
+router.get('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        res.render('bonus/admListRegisters', { date: date[0] })
+    }
+})
+
+router.post('/listRegisters', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const {fecha} = req.body
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        let year = fecha.substring(0,4)
+        let month = fecha.substring(5,7)
+        let day = fecha.substring(8,11)
+        const dataBonos = await pool.query(`
+        Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
+        b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, c.nombre_cargo
+        From empleados a
+        INNER JOIN bonos b
+        ON a.id = b.empleado_id
+        INNER JOIN tipo_empleados c
+        ON a.tipo_empleado = c.id
+        WHERE a.activo = true
+        AND year(b.fecha) = ?
+        AND month(b.fecha) = ?;`, [year, month])
+        console.log(dataBonos)
+        res.render('bonus/admListRegisters', {dataBonos, date: date[0], year , month})
     }
 })
 

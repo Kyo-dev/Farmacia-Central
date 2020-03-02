@@ -18,16 +18,15 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-title jumbo p-3">
-                    <h4 class="card-title text-center text-uppercase">Último aumento recibído</h4>
+                    <h4 class="card-title text-center text-uppercase">Última incapacidad</h4>
                 </div>
                 <div class="card-body">
-                    {{#unless dataIncrease}}
-                    <p>No hay informacion de aumentos salariales</p>
+                    {{#unless dataInability}}
+                    <p>No hay información de al respecto</p>
                     {{else}}
-                    <p>Fecha excta del último aumento:</p>
-                    <p><span>{{dataIncrease.fecha}}</span></p>
-                    <p>El último aumento fue de: <br> ₡ <span>{{dataIncrease.cantidad}}</span> a la hora laboral</p>
-                    <p>Recibido: {{timesago dataIncrease.timeAgo}}</p>
+                    <p>Fecha de inicio de la incapacidad: <span>{{dataInability.fecha_salida}}</span></p>
+                    <p>Fecha de fin de la incapacidad: <span>{{dataInability.fecha_salida}}</span></p>
+                    <p>Motivo: <span>{{dataInability.motivo}}</span></p>
                     {{/unless}}
                 </div>
             </div>
@@ -48,7 +47,7 @@
                                 <tr>
                                     <th>Monto retenido</th>
                                     <th>Fecha</th>
-                                    <th>Descripcion</th>
+                                    <th>Descripción</th>
                                     <th>Revisar</th>
                                 </tr>
                             </thead>
@@ -70,9 +69,12 @@
             </div>
         </div>
     </div>
-    <div class="row">
+</div>
+<div class="p-2"></div>
+<div class="container">
+     <div class="row">
         {{#unless arrayIncrease}}
-        <div class="col-md-12 mx-auto">
+        <div class="col-md-10 mx-auto">
             <div class="card">
                 <div class="card-title text-center text-uppercase jumbo p-4">
                     <p>Aumentos salariales</p>
@@ -83,7 +85,7 @@
             </div>
         </div>
         {{else}}
-        <div class="col-md-12 mx-auto">
+        <div class="col-md-10 mx-auto">
             <div class="card ">
                 <div class="card-title jumbo p-4">
                     <h4 class="card-title text-center jumbo text-uppercase">Historial de aumentos al salario</h4>

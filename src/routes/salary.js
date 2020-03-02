@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
+const moment = require('moment')
 
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
@@ -38,12 +39,19 @@ router.get('/', isLoggedIn, async (req, res) => {
         FROM retencion_salarial
         WHERE empleado_id = ? and activo = true
         LIMIT 3;`, [req.user.id])
-        console.log(dataWageWithHolding)
+        const dataInability = await pool.query(`
+        select id, substr(fecha_salida, 1,10) as fecha_salida, substr(fecha_entrada,1, 10) as fecha_entrada , motivo 
+        from incapacidades
+        where empleado_id = ?
+        order by id desc
+        LIMIT 1;`, [req.user.id]) 
+        console.log(dataInability)
         res.render('salary/userHome', {
             dataSalary: dataSalary[0],
             dataIncrease: dataIncrease[0],
             dataWageWithHolding,
-            arrayIncrease
+            arrayIncrease,
+            dataInability: dataInability[0]
         })
     } else {
         const data = await pool.query(`
@@ -178,6 +186,81 @@ router.get('/admDeleteTax/:id', isLoggedIn, async (req, res) => {
         res.redirect('/salary')
     }
 })
+
+router.get('/admInability/:id', isLoggedIn, async(req, res) => {
+    if(req.user.tipo_empleado === 1){
+        const {id} = req.params
+        const dataDate = await pool.query('select substr(now(), 1, 10) as fecha;')
+        const dataInability = await pool.query(`
+        select id, substr(fecha_salida, 1,10) as fecha_salida, substr(fecha_entrada,1, 10) as fecha_entrada , motivo 
+        from incapacidades
+        where empleado_id = ?`, [id]) 
+        const dataUser = await pool.query(`
+        Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, 
+        substr(a.fecha_contrato, 1, 10) as fecha_contrato
+        From empleados a
+        WHERE a.id = ?`, [id])
+        const dataRole = await pool.query(`
+        select a.nombre_cargo
+        from tipo_empleados a
+        inner join empleados b
+        on b.tipo_empleado = a.id`)
+        console.log(dataDate[0].fecha)
+        res.render('salary/admInability', {dataUser: dataUser[0], dataRole: dataRole[0], dataDate: dataDate[0], dataInability})
+    }
+})
+
+router.post('/admInability/:id', isLoggedIn, async(req, res)=>{
+    if(req.user.tipo_empleado === 1){
+        const {id} = req.params
+        const {fecha_salida, fecha_entrada, motivo} = req.body
+        let fecha1 = moment(fecha_salida);
+        let fecha2 = moment(fecha_entrada);
+        const cantidad = fecha2.diff(fecha1, 'days'); //DIAS DEL FORMULARIO
+        const data = {
+            empleado_id: id,
+            fecha_salida,
+            fecha_entrada,
+            motivo,
+            cantidad
+        }
+        console.log(cantidad)
+        if(data.fecha_salida.length <= 0){
+            req.flash('message', 'Ingresa una fecha de reingreso valida')
+            res.redirect('/salary')
+        }
+        if(data.fecha_entrada.length <= 0){
+            req.flash('message', 'Ingresa una fecha de entrada valida')
+            res.redirect('/salary')
+        }
+        if(data.fecha_entrada == fecha_salida){
+            req.flash('message', 'La fechas deben ser distintas')
+            res.redirect('/salary')
+        }
+        if(data.motivo.length <= 0){
+            req.flash('message', 'Por favor ingrese un motivo')
+            res.redirect('/salary')
+        }
+        if(data.motivo.length >= 200){
+            req.flash('message', 'Simplifique si explicación')
+            res.redirect('/salary')
+        }
+        if(data.cantidad.length <= 0){
+            req.flash('message', 'Error en la fecha')
+            res.redirect('/salary')
+        }
+        try {
+            await pool.query('INSERT INTO incapacidades SET ?', [data])
+            req.flash('success', 'Registro realizado de forma satisfactoria')
+            res.redirect('/salary')
+        } catch (error) {
+            console.log(error)
+            req.flash('message', 'Error, por favor intentelo de nuevo')
+            res.redirect('/salary')
+        }
+    }
+})
+
 // !SECTION 
 
 // SECTION USER
