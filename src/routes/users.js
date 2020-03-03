@@ -13,7 +13,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 1 and a.activo = 1; 
+        WHERE a.aprobado = 1 and temporal = 1 and a.activo = 1; 
         `) // tipo_empleado <> 1 para no ver la data del adm
         // const dataAssistance = await pool.query(`
         // select aprobado 
@@ -302,8 +302,8 @@ router.post('/admEditNewUser/:id', isLoggedIn, async (req, res) => {
             return res.redirect('/users')
         }
         try {
-            const queryEmpleados = await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
-            const querySalarios = await pool.query('INSERT INTO salarios SET ?', [dataSalario])
+            await pool.query('UPDATE empleados SET ? WHERE id = ?', [dataEmpleado, id])
+            await pool.query('INSERT INTO salarios SET ?', [dataSalario])
             req.flash('success', 'Datos insertados correctamente')
             return res.redirect('/users')
         } catch (error) {
@@ -409,7 +409,7 @@ router.get('/admLayOffs', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 1;`)
+        WHERE a.aprobado = 1 and tipo_empleado <> 1 ;`)
         console.log(data)
         res.render('users/admLayOff', { data })
     }
@@ -424,7 +424,7 @@ router.get('/admLayOffsList', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 1 and a.activo = 0; 
+        WHERE a.aprobado = 1 and tipo_empleado <> 1 and a.activo = 0; 
         `) // tipo_empleado <> 1 para no ver la data del adm
 
         res.render('users/admListLayOff', { data })
@@ -455,7 +455,7 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
         let pay = 0
         let payMessage = ''
         if (dataPayOff[0].dias < 89) {
-            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} `
+            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} dias`
             console.log(dataPayOff)
         } else if (dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239) {
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora) * 7
