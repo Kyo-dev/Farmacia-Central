@@ -32,7 +32,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         const data = await pool.query(`
         SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
         FROM horas_extra
-        WHERE empleado_id = ? AND activo = true
+        WHERE empleado_id = ? 
         order by id desc;`, [req.user.id])
         console.log(data)
         res.render('overTime/userHome', { data })

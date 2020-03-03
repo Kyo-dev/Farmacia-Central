@@ -1,3 +1,118 @@
-<div class="container">
-    hola
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Información de actividades</h1>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card">
+
+                <div class="card-title jumbo p-3">
+                    <h4 class="card-title text-center text-uppercase">Solicitud de permisos</h4>
+                </div>
+                <div class="card-body">
+                    {{#unless dataPermits}}
+                    <p>No hay información de al respecto</p>
+                    {{else}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Trabajador: </th>
+                                    <th>Solicitado</th>
+                                    <th>Revisar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataPermits}}
+                                <tr>
+                                    <td>{{nombre}} {{p_apellido}}</td>
+                                    <td>{{timesago fecha_solicitud}}</td>
+                                    <td><a href="/permits/admCheck/{{id}}" class="btn btn-block btn-principal"><i
+                                                class="material-icons">
+                                                search
+                                            </i></a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-title jumbo p-3">
+                    <h4 class="card-title text-center text-uppercase">Tareas pendientes</h4>
+                </div>
+                <div class="card-body">
+                    {{#unless dataTasks}}
+                    <p>No hay información de al respecto</p>
+                    {{else}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Información</th>
+                                    <th>Solicitada</th>
+                                    <th>Responsables</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataTasks}}
+                                <tr>
+                                    <td>{{titulo}}</td>
+                                    <td>{{timesago fecha_solicitud}}</td>
+                                    <td>{{nombre_cargo}}s</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-title jumbo p-3">
+                    <h4 class="card-title text-center text-uppercase">Revisión de Horas extra</h4>
+                </div>
+                <div class="card-body">
+                    {{#unless dataOverTime}}
+                    <p>No hay información de al respecto</p>
+                    {{else}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Trabajador</th>
+                                    <th>Fecha</th>
+                                    <th>Cantidad</th>
+                                    <th>Revisar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataOverTime}}
+                                <tr>
+                                    <td>{{nombre}}</td>
+                                    <td>{{fecha}}</td>
+                                    <td>{{cantidad_horas}} horas</td>
+                                    <td><a href="/overTime/admNewRegister/{{id}}" class="btn btn-block btn-principal"><i
+                                                class="material-icons">
+                                                search
+                                            </i></a></td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

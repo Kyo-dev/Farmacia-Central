@@ -140,7 +140,7 @@ router.get('/admCheck/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
         const {id} = req.params
         const data = await pool.query(`
-        select a.id, b.cedula, a.estado, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
+        select a.id, b.cedula, b.nombre, b.p_apellido, b.s_apellido, a.estado, a.titulo, a.descripcion, substr(a.fecha_salida, 1, 10) as fecha_salida,  substr(a.fecha_solicitud, 1, 10) as fecha_solicitud, empleado_id,
         a.activo, a.empleado_id , a.informacion_estado, a.horas, a.hora_salida
         from permisos a
         inner join empleados b
