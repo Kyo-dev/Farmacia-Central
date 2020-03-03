@@ -48,7 +48,8 @@ router.get('/admNewRegister', isLoggedIn, async (req, res) => {
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.nombre_cargo
         from empleados a
         inner join tipo_empleados b
-        on b.id = a.tipo_empleado`)
+        on b.id = a.tipo_empleado
+        where a.activo = true;`)
         console.log(dataUsers)
         res.render('conducts/admTable', { dataUsers })
     }
@@ -62,7 +63,8 @@ router.get('/admCreate/:id', isLoggedIn, async (req, res) => {
         from empleados a
         inner join tipo_empleados b
         on b.id = a.tipo_empleado
-        where a.id = ?;`, [id])
+        where a.id = ? 
+        and a.activo = true;`, [id])
         const date = await pool.query('select substr(now(), 1, 10) as fecha')
         console.log(date[0])
         res.render('conducts/admCreate', { dataUser: dataUser[0], date: date[0] })

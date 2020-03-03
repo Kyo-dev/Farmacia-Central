@@ -57,11 +57,15 @@ text-decoration:none;
     color: snow;
 }
 .btn-principal:hover{
-    background-color:#95B754;
-    color:  rgb(3, 39, 117);
+    background-color:rgb(98, 122, 54);
+    color: snow;
 }
 .btn-secomdary{
-    background-color:rgb(67, 68, 66);
+    background-color:#02194B;
+    color: snow;
+}
+.btn-secomdary:hover{
+    background-color:rgb(17, 63, 161);
     color: snow;
 }
 .btn-index{

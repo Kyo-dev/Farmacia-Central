@@ -15,7 +15,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id   
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and a.activo = 1
+        WHERE a.aprobado = 1 and a.activo = 1
         `)
         res.render('salary/admHome', { dataSalary })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {

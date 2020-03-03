@@ -12,7 +12,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and a.activo = 1; 
+        WHERE a.aprobado = 1
+        and a.activo = 1; 
         `) // tipo_empleado <> 1 para no ver la data del adm
         console.log(data)
         res.render('payRoll/admHome', { data })

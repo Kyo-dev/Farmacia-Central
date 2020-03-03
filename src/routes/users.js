@@ -395,7 +395,7 @@ router.get('/admUsersTemp', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 0 ;`)
+        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 0 and a.activo = 1;`)
         res.render('users/admUsersTemp', { data })
     }
 })
@@ -409,7 +409,7 @@ router.get('/admLayOffs', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 ;`)
+        WHERE a.aprobado = 1 and a.tipo_empleado <> 1 and a.activo = 1;`)
         console.log(data)
         res.render('users/admLayOff', { data })
     }
@@ -424,9 +424,8 @@ router.get('/admLayOffsList', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and tipo_empleado <> 1 and a.activo = 0; 
+        WHERE a.aprobado = 1 and a.tipo_empleado <> 1 and a.activo = 0; 
         `) // tipo_empleado <> 1 para no ver la data del adm
-
         res.render('users/admListLayOff', { data })
     }
 })
@@ -437,7 +436,8 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
         const dataUser = await pool.query(`
         select id, cedula, fecha_contrato, fecha_nacimiento, nombre, p_apellido, s_apellido, correo, TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) AS edad
         from empleados
-        where id = ?;`, [id])
+        where id = ?
+        and tipo_empleado <> 1;`, [id])
         const dataRole = await pool.query(`
         select a.nombre_cargo 
         from tipo_empleados a
@@ -454,6 +454,10 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
             where id = ?)) as dias;`, [id])
         let pay = 0
         let payMessage = ''
+        if(dataUser.tipo_empleado == 1){
+            req.flash('message', `No puedes eliminar este usuario`)
+            return res.redirect('/users')
+        }
         if (dataPayOff[0].dias < 89) {
             payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} dias`
             console.log(dataPayOff)
@@ -470,7 +474,6 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
             payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} ha trabajado ${dataPayOff[0].dias} por lo que le corresponde un pago final de: ${pay} `
             console.log(dataPayOff)
         }
-        console.log(payMessage)
         res.render('users/admDeleteUser', {
             dataUser: dataUser[0],
             dataRole: dataRole[0],

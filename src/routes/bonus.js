@@ -10,7 +10,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         From empleados a
         INNER JOIN tipo_empleados b
         ON a.tipo_empleado = b.id
-        where a.activo = true;`)
+        where a.activo = true
+        and aprobado = true;`)
         res.render('bonus/admHome', { dataUsuarios})
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(` 
