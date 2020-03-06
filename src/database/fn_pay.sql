@@ -22,9 +22,9 @@ BEGIN
 	and year(fecha_salida) = _anio and month(fecha_salida) = _mes) <> 0 then
 		Set totalIncapacidades =  (Select sum(cantidad) from incapacidades
 		where activo = true
-		and empleado_id = 3
-		and year(fecha_salida) = '2020'
-		and month(fecha_salida) = '02');
+		and empleado_id = _id
+		and year(fecha_salida) = _anio
+		and month(fecha_salida) = _mes);
     END IF;
     IF (select salario_hora from salarios
     where activo = true and empleado_id = _id) <> 0 then 
@@ -336,13 +336,13 @@ select * from bonos where empleado_id = 3
 select * from empleados
 
 -- SALARIO SIN REBAJAS
-select salarioBrutoEmpleado(5, '01', '2020');
+select salarioBrutoEmpleado(5, '03', '2020');
 -- SALARIO CON EXTRAS
 select salarioNetoEmpleado(5, '03', '2020');
 -- AGUINALDO
 select salarioAguinaldo(5, '01', '2020');
 -- PAGO DEL MES 
-select salarioEmpleado(3, '01', '2020');
+select salarioEmpleado(5, '03', '2020');
 
 select year(fecha_contrato) from empleados where id = 5;
 select substr(now(), 1, 4) as fecha;
@@ -350,4 +350,4 @@ select substr(now(), 1, 4) as fecha;
 
 select empleado_id, id, fecha_salida, fecha_entrada , motivo from incapacidades where empleado_id = 3
 
-select * from permisos 
+select * from empleados
