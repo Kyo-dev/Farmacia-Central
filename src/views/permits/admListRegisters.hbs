@@ -2,7 +2,7 @@
     <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Historial</h1>
         {{#if year}}
-        <p class="lead text-center">Lista de permisos en la fecha {{year}}/{{month}}/{{day}}</p>
+        <p class="lead text-center">Lista de permisos en la fecha {{year}}/{{month}}</p>
         {{else}}
         <p class="lead text-center">Lista de permisos en la fecha </p>
         {{/if}}
@@ -22,7 +22,7 @@
         <div class="col-md-12">
             <div class="card text-center">
                 <div class="card-title jumbo p-2">
-                    <h5 class="text-center text-uppercase">Tareas pendientes</h5>
+                    <h5 class="text-center text-uppercase">Permisos pendientes</h5>
                 </div>
                 <div class="card-body">
                     {{#if dataToDo}}
@@ -32,6 +32,7 @@
                                 <tr>
                                     <th>Titulo</th>
                                     <th>Descripcion</th>
+                                    <th>Nombre</th>
                                     <th>Estado</th>
                                     <th>Rol</th>
                                     <th>Solicitado</th>
@@ -44,6 +45,7 @@
                                 <tr>
                                     <td>{{titulo}}</td>
                                     <td>{{descripcion}}</td>
+                                    <td>{{nombre}} {{p_apellido}} {{s_apellido}}</td>
                                     <td>{{estado}}</td>
                                     <td>{{nombre_cargo}}</td>
                                     <td>{{timesago fecha_solicitud}}</td>
@@ -82,15 +84,16 @@
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th>Titulo</th>
-                                    <th>Descripcion</th>
-                                    <th>Tarea creada</th>
+                                    <th>Título</th>
+                                    <th>Descripción</th>
+                                    <th>solicitud creada</th>
                                     <th>Estado</th>
                                     <th>Rol</th>
                                     <th>Solicitado por</th>
                                     <th>Tarea realizada</th>
                                     <th>Duración</th>
                                     <th>Fecha exacta de solicitud</th>
+                                    <th>Descargar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,7 +107,11 @@
                                     <td>{{nombre}} {{p_apellido}} {{s_apellido}}</td>
                                     <td>{{timesago fecha_solicitud}}</td>
                                     <td>{{horas}} Horas</td>
-                                    <td>{{fecha}}</td>
+                                    <td>{{fecha_salida}}</td>
+                                    <td><a href="/permits/admDownload/{{id}}" class="btn btn-block btn-secondary"><i
+                                                class="material-icons">
+                                                get_app
+                                            </i></td>
                                 </tr>
                                 {{/each}}
                             </tbody>
