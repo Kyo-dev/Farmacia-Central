@@ -1,4 +1,4 @@
-<div class="container p-4">
+{{!-- <div class="container p-4">
     <div class="row">
         <div class="mx-auto">
             <div class="card">
@@ -39,17 +39,22 @@
                         <div class="form-group">
                             <p>Salario por hora</p>
                             <input type="number" class="form-control" name="salario_hora"
-                                placeholder="Costo salarial del permiso" required>
+                                placeholder="Salario por hora" required>
                         </div>
                         <div class="form-group">
                             <p>Jornada diaria</p>
                             <input type="number" class="form-control" name="jornada" placeholder="Información adicional"required>
                         </div>
                         <p>Tipo de empleado</p>
-                        <div class="form-group">
+                        {{!-- <div class="form-group">
                             <input required type="radio" name="temporal" value="1"> permanente<br>
                             <input required type="radio" name="temporal" value="0"> temporal<br>
-                        </div>
+                        </div> --}}
+
+                        {{!-- <select class="form-control" onchange="fnTemp(this.value)" id="temp" name="temporal">
+                                <option value="1">permanente</option>
+                                <option value="0">temporal</option>
+                            </select> --}}
                         <div class="form-group">
                             <button class="btn btn-success btn-block">Actualizar</button>
                         </div>
@@ -59,3 +64,4 @@
         </div>
     </div>
 </div>
+<script src="/js/usersTemp.js"></script> --}}

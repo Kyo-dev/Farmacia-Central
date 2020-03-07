@@ -1,0 +1,71 @@
+<div class="container p-4">
+    <div class="jumbotron jumbo">
+        <h1 class="display-4 text-center">Contratar</h1>
+        <p class="lead text-center">Información del trabajador temporal {{data.nombre}} </p>
+        <hr class="my-1">
+    </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Nombre completo:</h4>
+                    <p><span>{{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}</span></p>
+                    <h4>Número de cédula</h4>
+                    <p><span>{{data.cedula}}</span></p>
+                    <h4>Cargo que ha desempeñado</h4>
+                    <p><span>{{data.nombre_cargo}}</span></p>
+                    <h4>Correo electrónico</h4>
+                    <p><span>{{data.correo}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/users/admEditUserTemp/{{data.id}}" method="POST">
+                        <div class="form-group">
+                            <p>Fecha del servicio</p>
+                            <input type="date" min="{{date.fecha}}" value="{{date.fecha}}" class="form-control" name="fecha"
+                                placeholder="Fecha de solicitud" required>
+                        </div>
+                        <div class="form-group">
+                            <p>Motivo</p>
+                            <input type="text" maxlength="200" class="form-control" name="descripcion"
+                                placeholder="Motivo de la solicitud" required>
+                        </div>
+                        {{!-- CONFIRMAR --}}
+                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
+                        data-target="#confirmarRetencion">
+                        Solicitar
+                    </button>
+                    <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmarRetencion" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">
+                                        Importante</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Estas a punto de <span class="text-danger"><b>registrar</b></span> el servicio del {{data.nombre_cargo}}
+                                    {{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}.
+                                    ¿Desea continuar?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- CONFIRMAR --}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

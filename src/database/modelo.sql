@@ -49,21 +49,22 @@ create table empleados(
 
 ALTER TABLE empleados ADD CONSTRAINT fk_empleados_tipo_empleado FOREIGN KEY (tipo_empleado) REFERENCES tipo_empleados(id);
 
--- create table empleados_temporales(
--- id tinyint auto_increment,
-	-- empleado_id int not null,
---    fecha datetime default now() not null,
-    -- descripcion varchar(300) not null,
-	-- constraint fk_temporales_empleados foreign key (empleado_id) references empleados(id),
-    -- constraint pk_empleados_temporales primary key(id)
--- );
+create table empleados_temporales(
+	 id int auto_increment,
+	 empleado_id int not null,
+     fecha datetime default now() not null,
+     descripcion varchar(300) not null,
+	 constraint fk_temporales_empleados foreign key (empleado_id) references empleados(id),
+     constraint pk_empleados_temporales primary key(id)
+ );
 
 create table fechas_empleado_temporal(
 	id int auto_increment,
 	empleado_id int not null,
-    fecha datetime default now() not null,
+    fecha datetime default now() unique not null,
     descripcion varchar(200) not null,
     activo boolean default true,
+    dias int default 0,
     constraint pk_fechas_emplado_temporal primary key (id),
     constraint fk_fechas_temporales_empleados foreign key (empleado_id) references empleados(id)
 );

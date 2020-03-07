@@ -346,40 +346,42 @@ router.get('/admMoreInfo/:id', isLoggedIn, async (req, res) => {
         const dataLayOff = await pool.query(`
         select descripcion, url_documento 
         from despidos
-        where empleado_id = ?`, [id])
+        where empleado_id = ? and activo = 1;`, [id])
         const dataSalary = await pool.query(`
         SELECT salario_hora, jornada
         FROM salarios
         WHERE empleado_id = ?;`, [id])
         const dataPayOff = await pool.query(`
         SELECT DATEDIFF(CURDATE() ,(select fecha_contrato
-            from empleados 
-            where id = ?)) as dias;`, [id])
+        from empleados 
+        where id = ?)) as dias;`, [id])
+        const dataTemp = await pool.query(`
+        select descripcion ,substr(fecha, 1, 10) as fecha
+        from fechas_empleado_temporal 
+        where empleado_id = ? 
+        and activo = true
+        LIMIT 10`,[id])
         let pay = 0
         let payMessage = ''
         if (dataPayOff[0].dias < 89) {
             payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} dias`
-            console.log(dataPayOff)
         } else if (dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239) {
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora) * 7
             payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
-            console.log(dataPayOff)
         } else if (dataPayOff[0].dias >= 240 && dataPayOff[0].dias < 364) {
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora) * 14
             payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
-            console.log(dataPayOff)
         } else if (dataPayOff[0].dias >= 365) {
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora) * 19
             payMessage = `${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} por lo que le correspondio un pago final de: ${pay} `
-            console.log(dataPayOff)
         }
-        console.log(payMessage)
         res.render('users/admMoreInfo', {
             dataUser: dataUser[0],
             dataAdress: dataAdress[0],
             dataRole: dataRole[0],
             dataPhone: dataPhone[0],
             dataLayOff: dataLayOff[0],
+            dataTemp,
             payMessage,
             pay
         })
@@ -514,6 +516,7 @@ router.post('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
         try {
             const query1 = await pool.query('INSERT INTO despidos SET ?;', [data])
             const query2 = await pool.query('UPDATE empleados SET ? WHERE id = ?;', [update, id])
+            req.flash('success', 'Proceso realizado satisfactoriamente')
             return res.redirect('/users')
         } catch (error) {
             console.log(error)
@@ -608,6 +611,62 @@ router.get('/direction-distrito/:id', isLoggedIn, async (req, res) => {
     const dataCanton = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito where codigo_canton = ?`, [id])
     res.json(dataCanton)
 })
+
+router.get('/admEditUserTemp/:id', isLoggedIn, async(req, res)=>{
+    if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        const {id} = req.params
+        const data = await pool.query(`
+        Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato ,c.salario_hora, c.jornada, d.nombre_cargo, a.correo
+        From empleados a
+        INNER JOIN salarios c
+        ON a.id = c.empleado_id
+        INNER JOIN tipo_empleados d
+        ON a.tipo_empleado = d.id
+        WHERE a.aprobado = 1 and tipo_empleado <> 1 and temporal = 0 and a.activo = 1 and empleado_id = ?;`, [id])
+        console.log(data)
+        res.render('users/admCreateTempUser', { data: data[0], date: date[0]})
+    }
+})
+
+router.post('/admEditUserTemp/:id', isLoggedIn, async(req, res)=>{
+    const {id} = req.params
+    const {fecha, descripcion} = req.body
+    const data = {
+        fecha,
+        descripcion,
+        dias: 1,
+        empleado_id: id
+    }
+    const valid = await pool.query(`
+    select activo 
+    from fechas_empleado_temporal
+    where fecha = ? 
+    and empleado_id = ?;`,[data.fecha, id])
+    // if(valid[0].activo){
+    //     req.flash('message', 'Error, ya has realizado este contrato en la fecha ingresada')
+    //     return res.redirect('/users')
+    // }
+    if(data.descripcion.length <= 0){
+        req.flash('message', 'Ingrese un motivo')
+        return res.redirect('/users')
+    }
+    if(valid[0]){
+        req.flash('message', 'Error, ya has realizado este contrato en la fecha ingresada')
+        return res.redirect('/users')
+    } else {
+        try {
+            await pool.query('INSERT INTO fechas_empleado_temporal SET ?', [data])
+            req.flash('success', 'Proceso realizado satisfactoriamente')
+            return res.redirect('/users')
+        } catch (error) {
+            console.log(error)
+            req.flash('message', 'Error, por favor intentelo de nuevo')
+            return res.redirect('/users')
+        }
+    }
+})
+
 //!SECTION 
 
 module.exports = router 
