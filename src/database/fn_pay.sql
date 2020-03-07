@@ -63,16 +63,15 @@ BEGIN
 				where activo = true
 				and empleado_id = _id);
 		end if;
-        IF(select dias from fechas_empleado_temporal
+        IF(select sum(dias) from fechas_empleado_temporal
 		where activo = true and empleado_id =_id) <> 0 then
 			set totalTemporal = (SELECT SUM(dias) from fechas_empleado_temporal 
 				where empleado_id = _id 
                 and year(fecha) = _anio
 				and month(fecha) = _mes); 
-                end if;
+		end if;
         set total = (totalSalarioHora * totalHorasJornada * (totalTemporal-totalIncapacidades));
     END IF; 
-    
     RETURN total;
 END$$
 
@@ -375,13 +374,13 @@ BEGIN
     
     end if;
     else 
-     IF(select dias from fechas_empleado_temporal
+     IF(select SUM(dias) from fechas_empleado_temporal
 		where activo = true and empleado_id =_id) <> 0 then
 			set totalTemporal = (SELECT SUM(dias) from fechas_empleado_temporal 
 				where empleado_id = _id 
                 and year(fecha) = _anio
 				and month(fecha) = _mes); 
-                end if;
+	end if;
 		set resultado = (bruto * totalTemporal) / 12;
     END IF;
     
@@ -441,7 +440,7 @@ select salarioBrutoEmpleado(6, '03', '2020');
 -- SALARIO CON EXTRAS
 select salarioNetoEmpleado(6, '03', '2020');
 -- AGUINALDO
-select salarioAguinaldo(6, '01', '2020');
+select salarioAguinaldo(6, '03', '2020');
 -- PAGO DEL MES 
 select salarioEmpleado(6, '03', '2020');
 -- RENTA
