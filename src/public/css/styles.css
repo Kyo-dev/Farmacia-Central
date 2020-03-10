@@ -13,26 +13,32 @@ a:link{
 text-decoration:none;
 }
 .index{
-    width: 100vw;
-    height: 100vh;
+    height:100%;
+    width:100%;
 }
+
 .masthead{
     color: white;
     min-width: 30rem;
+    background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('/img/background.jpg');
+    height: 100vh;
     width: 100%;
-    height: 100%;
-    padding-top: 0rem;
-    background: url('/img/background.png');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 .masthead h1{
-    font-size: 4rem;
+    font-size: 3rem;
     margin: 0;
     padding: 0;
-    color: #95B754;
 }
+
 .masthead h3 {
     color: snow;
     font-size: 2.5rem;
@@ -69,8 +75,9 @@ text-decoration:none;
     color: snow;
 }
 .btn-index{
-    padding: 0.5em 0.8em;
-    border-radius: 15%;
+    padding: 1em 2.5em;
+    font-size: 1rem;
+    border-radius: 14%;
 }
 .bg-dark{
     background-color: #02194B!important;
@@ -88,3 +95,40 @@ text-decoration:none;
         font-size: 5.5rem;
     }
 }
+.bg{
+    background: linear-gradient(to right, rgb(255, 110, 127), rgb(191, 233, 255));
+    z-index: 2;
+    background-size: cover;
+    transition: all 0.5s ease;
+  }
+
+.t-stroke {
+    color: transparent;
+    -moz-text-stroke-width: 2px;
+    -webkit-text-stroke-width: 2px;
+    -moz-text-stroke-color: #000000;
+    -webkit-text-stroke-color: #ffffff;
+ }
+.t-shadow-halftone {
+    position: relative;
+}
+
+.t-shadow-halftone::after {
+    content: "FARMACIA CENTRAL MORAVIA";
+    font-size: 10rem;
+    letter-spacing: 0px;
+    background-size: 150%;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    /* -webkit-background-clip: text;
+    -moz-background-clip: text; */
+    -moz-text-stroke-width: 0;
+    -webkit-text-stroke-width: 0;
+    position: absolute;
+    text-align: center;
+    left: 8px;
+    right: 0;
+    top: 6px;
+    z-index: -1;
+    transition: all 0.5s ease;
+ }

@@ -2,18 +2,24 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
+const PDF = require('pdfkit')
+const fs = require('fs')
+const path = require('path');
 
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
         const dataExist = await pool.query('select id from registro_disciplinario')
         const dataConducts = await pool.query(`
-        select b.cedula, a.empleado_id, a.id, a.descripcion, a.fecha as fechaXL, substr(a.fecha, 1, 10) as fecha, b.nombre, b.p_apellido, b.s_apellido, c.nombre_cargo
+        select b.cedula, a.empleado_id, a.id, a.descripcion, a.fecha, substr(a.fecha, 1, 10) as fechaSmall, b.nombre, b.p_apellido, b.s_apellido, c.nombre_cargo
         from registro_disciplinario a
         inner join empleados b
         on a.empleado_id =  b.id
         inner join tipo_empleados c
         on c.id = b.tipo_empleado
-        where a.activo = true and b.activo = true;`)
+        where a.activo = true 
+        and b.activo = true
+        and a.fecha = substr(now(), 1, 10);`)
+        console.log(dataConducts)
         res.render('conducts/admHome', { dataExist: dataExist[0], dataConducts })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const dataConducts = await pool.query(`
@@ -65,7 +71,7 @@ router.get('/admCreate/:id', isLoggedIn, async (req, res) => {
         on b.id = a.tipo_empleado
         where a.id = ? 
         and a.activo = true;`, [id])
-        const date = await pool.query('select substr(now(), 1, 10) as fecha')
+        const date = await pool.query(`select substr(now(), 1, 10) as fecha;`)
         console.log(date[0])
         res.render('conducts/admCreate', { dataUser: dataUser[0], date: date[0] })
     }
@@ -196,4 +202,85 @@ router.post('/listRegisters', isLoggedIn, async (req, res) => {
     }
 })
 
+router.get('/admDownload/:id', isLoggedIn, async(req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const { id } = req.params
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        const dataPdf = await pool.query(`
+        select b.cedula, a.id, a.descripcion, a.fecha as fechaXL, substr(a.fecha, 1, 10) as fecha, b.nombre, b.p_apellido, b.s_apellido, c.nombre_cargo
+        from registro_disciplinario a
+        inner join empleados b
+        on a.empleado_id =  b.id
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        where a.activo = true 
+        and b.activo = true
+        and a.fecha = substr(now(), 1, 10)
+        and a.id = ?;`, [id])
+        let now = new Date();
+        const t = now.getTime()
+        let doc = new PDF()
+        const pdfName = (path.join(__dirname + `/../public/downloads/${t}.pdf`))
+        doc.pipe(fs.createWriteStream(pdfName))
+        doc.image(path.join(__dirname + `/../public/img/logo.jpg`), 0, 15 , {width: 200})
+        doc
+            .fontSize(12)
+            .font('Times-Roman')
+            .text(`San José, Costa Rica, ${date[0].fecha}`,375,50)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Farmacia Central Moravia`, 40 , 220)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${dataPdf[0].nombre_cargo}`, 40, 250)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${dataPdf[0].nombre} ${dataPdf[0].p_apellido} ${dataPdf[0].s_apellido}`, 40, 270)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Saludos cordiales`, 40, 290)
+        doc
+            .fontSize(20)
+            .font('Times-Roman')
+            .text('Conducta disciplinaria', 200, 340)
+        const message = `Por este medio se le comunica de forma oficial sobre sus actos recientes en relación a '${dataPdf[0].descripcion}'. Este registro fue realizado en la fecha ${dataPdf[0].fecha}
+        \n Por tanto, se le solicita amablemente, regular dicha acción. Se adjunta la nota del registro: `
+        const target = ` Nombre del trabajador: ${dataPdf[0].nombre} ${dataPdf[0].p_apellido} ${dataPdf[0].s_apellido} \n Número de cédula: ${dataPdf[0].cedula} \n Motivo: ${dataPdf[0].descripcion} \n Fecha del registro: ${dataPdf[0].fecha}`
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(message ,50, 390, {
+                width: 500,
+                align: 'justify',
+                indent: 30,
+                columns: 1,
+                height: 300,
+                ellipsis: true
+              });
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(target, 50, 500, {
+                width: 500,
+                align: 'justify',
+                columns: 1,
+                height: 300,
+                ellipsis: true
+            })
+        doc
+              .fontSize(14)
+              .font('Times-Roman')
+              .text('Atentamente',460 , 620)
+        doc
+              .fontSize(14)
+              .font('Times-Roman')
+              .text('Dora González, Administradora.',440 , 680)
+        doc.end()
+        res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
+    }
+})
 module.exports = router

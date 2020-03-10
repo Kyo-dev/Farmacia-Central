@@ -3,47 +3,50 @@
         <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-title jumbo p-4">
-                     <h4 class="text-center text-uppercase">Registro de conducta</h4>
+                    <h4 class="text-center text-uppercase">Registro de conducta</h4>
                 </div>
                 <div class="card-body">
                     <form action="/conduct/admCreate/{{dataUser.id}}" method="POST">
                         <div class="form-group">
                             <label for="">Motivo del registro</label>
-                            <input type="text" class="form-control" name="descripcion" placeholder="Descripción" autofocus>
-                        </div> <div class="form-group">
+                            <input type="text" class="form-control" name="descripcion" placeholder="Descripción"
+                                autofocus>
+                        </div>
+                        <div class="form-group">
                             <label for="">Fecha del insidente</label>
-                            <input type="date" id="fecha" max={{date.fecha}} value={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso">
+                            <input type="date" max="{{date.fecha}}" value="{{date.fecha}}" class="form-control"
+                                name="fecha" placeholder="fecha del permiso">
                         </div>
                         {{!-- CONFIRMAR --}}
-                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
-                        data-target="#confirmarAumento">
-                        Aceptar
-                    </button>
-                    <div class="modal fade" id="confirmarAumento" tabindex="-1" role="dialog"
-                        aria-labelledby="confirmarAumento" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">Importante
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Estas por registrar una conducta inapropiada para el trabajador
-                                    {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.<br>
-                                    Esta información será visible para el trabajador. ¿Desea continuar?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-principal">Confirmar</button>
+                        <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
+                            data-target="#confirmarAumento">
+                            Aceptar
+                        </button>
+                        <div class="modal fade" id="confirmarAumento" tabindex="-1" role="dialog"
+                            aria-labelledby="confirmarAumento" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger" id="exampleModalLongTitle">Importante
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Estas por registrar una conducta inapropiada para el trabajador
+                                        {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.<br>
+                                        Esta información será visible para el trabajador. ¿Desea continuar?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-principal">Confirmar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {{!-- CONFIRMAR --}}
+                        {{!-- CONFIRMAR --}}
                     </form>
                 </div>
             </div>
