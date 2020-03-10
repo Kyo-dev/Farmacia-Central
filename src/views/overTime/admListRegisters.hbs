@@ -22,6 +22,9 @@
             <div class="card">
                 <div class="card-title jumbo p-2">
                     <h4 class="text-center text-uppercase">Horas extra realizadas durante la el mes</h4>
+                     {{#if dataGeneral}}
+                     <p class="text-center"><a class ="btn btn-principal btn-central" href="/overTime/pdf/{{year}}/{{month}}"generar pdf>Generar pdf</a></p>
+                     {{/if}}
                 </div>
                 <div class="card-body">
                     {{#if dataGeneral}}
@@ -37,6 +40,7 @@
                                     <th>Estado</th>
                                     <th>Cantidad</th>
                                     <th>Motivo</th>
+                                    <th>Descargar pdf</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,6 +54,10 @@
                                     <td>{{informacion_estado}}</td>
                                     <td>{{cantidad_horas}}</td>
                                     <td>{{motivo}}</td>
+                                     <td><a href="/overTime/employeepdf/{{id}}" class="btn btn-block btn-secondary"><i
+                                                class="material-icons">
+                                                get_app
+                                            </i></td>
                                 </tr>
                                 {{/each}}
                             </tbody>

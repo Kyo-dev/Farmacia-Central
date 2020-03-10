@@ -154,7 +154,7 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
         doc
             .fontSize(12)
             .font('Times-Roman')
-            .text(`Reporte de bonos para la fecha: ${year}/${month}`, 40, 220)
+            .text(`Reporte de bonos para el mes: ${month} y el año ${year}`, 40, 220)
         doc
             .fontSize(14)
             .font('Times-Roman')

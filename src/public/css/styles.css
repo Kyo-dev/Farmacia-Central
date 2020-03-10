@@ -3,7 +3,7 @@ body{
     font-family: 'Oswald', sans-serif;
     overflow: hidden;
     overflow-y: auto;
-    font-size: 1.1em;
+    font-size: 1.2em;
     /* background: url('/img/background.png'); */
 }
 body.smooth_scroll {
@@ -31,6 +31,7 @@ text-decoration:none;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+    position: fixed;
 }
 
 .masthead h1{
