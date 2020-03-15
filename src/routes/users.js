@@ -48,9 +48,9 @@ router.get('/', isLoggedIn, async (req, res) => {
             SELECT salario_hora, jornada
             FROM salarios
             WHERE empleado_id = ?;`, [req.user.id])
-            const dataBonos = await pool.query('SELECT count(id) as aux FROM bonos WHERE empleado_id = ?;', [req.user.id])
+            const dataBonos = await pool.query('SELECT count(id) as aux FROM bonos WHERE empleado_id = ? and activo = true', [req.user.id])
             const dataTasks = await pool.query('SELECT count(id) as aux FROM tareas WHERE tipo_empleado = ? and estado = 1 ;', [req.user.tipo_empleado])
-            const dataCondutas = await pool.query('SELECT count(id) as aux FROM registro_disciplinario WHERE empleado_id = ?;', [req.user.id])
+            const dataCondutas = await pool.query('SELECT count(id) as aux FROM registro_disciplinario WHERE empleado_id = ? and activo = true;', [req.user.id])
             const dataAsistencia = await pool.query('Select asistencia from asistencia where substr(fecha, 1, 10) = CURDATE() and empleado_id = ?;', [req.user.id])
             res.render('users/userHome', {
                 dataCondutas: dataCondutas[0],

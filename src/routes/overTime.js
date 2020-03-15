@@ -313,7 +313,7 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
         AND month(b.fecha) = 03
         order by b.id desc;`, [year, month])
         let table0 = {
-            headers: ['Nombre', 'Primer apellido', 'Segundo apellido', 'Fecha del bono', 'Motivo', 'Cantidad'],
+            headers: ['Nombre', 'Primer apellido', 'Segundo apellido', 'Fecha del bono', 'Motivo', 'Cantidad de horas'],
             rows: []
         };
         const jsonTime = JSON.parse(JSON.stringify(dataBonos))

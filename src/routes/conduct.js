@@ -215,7 +215,6 @@ router.get('/admDownload/:id', isLoggedIn, async(req, res) => {
         on c.id = b.tipo_empleado
         where a.activo = true 
         and b.activo = true
-        and a.fecha = substr(now(), 1, 10)
         and a.id = ?;`, [id])
         let now = new Date();
         const t = now.getTime()
