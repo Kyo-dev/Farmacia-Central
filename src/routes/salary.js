@@ -42,7 +42,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         const dataInability = await pool.query(`
         select id, substr(fecha_salida, 1,10) as fecha_salida, substr(fecha_entrada,1, 10) as fecha_entrada , motivo 
         from incapacidades
-        where empleado_id = ?
+        where empleado_id = ? and activo = true
         order by id desc
         LIMIT 1;`, [req.user.id]) 
         console.log(dataInability)
@@ -194,7 +194,7 @@ router.get('/admInability/:id', isLoggedIn, async(req, res) => {
         const dataInability = await pool.query(`
         select id, substr(fecha_salida, 1,10) as fecha_salida, substr(fecha_entrada,1, 10) as fecha_entrada , motivo 
         from incapacidades
-        where empleado_id = ?`, [id]) 
+        where empleado_id = ? and activo = true`, [id]) 
         const dataUser = await pool.query(`
         Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, 
         substr(a.fecha_contrato, 1, 10) as fecha_contrato
@@ -260,6 +260,19 @@ router.post('/admInability/:id', isLoggedIn, async(req, res)=>{
         }
     }
 })
+
+router.get('/admDeleteInability/:id', isLoggedIn, async (req, res) => {
+    if (req.user.tipo_empleado === 1) {
+        const {id} = req.params
+        const data = {
+            activo: false
+        }
+        const query = await pool.query(`UPDATE incapacidades SET ? WHERE id = ?;`,[data, id])
+        req.flash('success', 'Incapacidad eliminada satisfactoriamente.')
+        res.redirect('/salary')
+    }
+})
+
 
 // !SECTION 
 
