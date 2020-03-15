@@ -18,11 +18,14 @@ passport.use('local.signup', new LocalStrategy({
         s_apellido,
     };
     newUser.correo = newUser.correo.toLowerCase()
-    if(newUser.correo.length <= 0) return req.flash('Ingrese un correo')  
-    if(newUser.clave.length <= 0) return req.flash('Ingrese una clave')  
-    if(newUser.nombre.length <= 0) return req.flash('Ingrese un nombre')  
-    if(newUser.p_apellido.length <= 0) return req.flash('Ingrese su primer apellido')  
-    if(newUser.s_apellido.length <= 0) return req.flash('Ingrese su segundo apellido')  
+    if(newUser.correo.length <= 0) {
+        req.flash('message','Datos incorrectos')
+        return done(null, false)
+    } 
+    if(newUser.clave.length <= 0) return done(null, false, req.flash('message', 'Datos incorrectos'))
+    if(newUser.nombre.length <= 0)  return done(null, false, req.flash('message','Datos incorrectos'))
+    if(newUser.p_apellido.length <= 0) return done(null, false, req.flash('message','Datos incorrectos'))
+    if(newUser.s_apellido.length <= 0)  return done(null, false, req.flash('message','Datos incorrectos'))
     newUser.clave = await helpers.encryptingPass(clave)
     const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
     newUser.id = result.insertId

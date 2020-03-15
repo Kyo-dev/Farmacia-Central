@@ -36,11 +36,11 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="direccion" class="form-control" placeholder="Dirección" class="form-control" required>
+                            <input type="text" name="direccion" class="form-control" maxlength="290" placeholder="Dirección" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="">Fecha de nacimiento</label>
-                            <input type="date" name="fecha_nacimiento" class="form-control" placeholder="Fecha nacimiento" class="form-control" required>
+                            <input type="date" name="fecha_nacimiento"  max="{{date.fecha}}" value="2000-01-01" class="form-control" placeholder="Fecha nacimiento" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-principal btn-block">Registrar información</button>

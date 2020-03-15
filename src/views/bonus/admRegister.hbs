@@ -17,7 +17,7 @@
                     <h2>Registrar un bono</h2>
                     <form action="/bonus/admRegister/{{data.id}}" method="POST">
                         <div class="form-group">
-                            <input type="text" step="any" class="form-control" name="motivo"
+                            <input type="text" step="any" class="form-control" maxlength="200" name="motivo"
                                 placeholder="Motivo del bono" required>
                         </div>
                         <div class="form-group">
@@ -42,7 +42,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Esta apunto de otorgar un bono al trabajador {{data.nombre}}
+                                            Estás apunto de otorgar un bono al trabajador {{data.nombre}}
                                             {{data.p_apellido}}
                                             lo cual <span class="text-danger"><b>suma</b></span> el valor
                                             ingresado al pago de este mes. ¿Desea continuar?

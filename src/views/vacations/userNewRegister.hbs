@@ -11,11 +11,11 @@
                     <form action="/vacations/userNewRegister/{{dataUser.id}}" method="POST">
                         <div class="form-group">
                             <label for="">Fecha de salida</label>
-                            <input type="date" class="form-control" min="{{date.fecha}}" value="{{date.fecha}}" name="fecha_salida" placeholder="descripcion">
+                            <input type="date" class="form-control" min="{{date.fecha}}" value="{{date.fecha}}" name="fecha_salida" placeholder="descripcion" required>
                         </div>
                             <label for="">Fecha de entrada</label>
                         <div class="form-group">
-                            <input type="date" class="form-control" min="{{date.fecha}}" value="{{date.fecha}}" name="fecha_entrada" placeholder="descripcion">
+                            <input type="date" class="form-control" min="{{date.fecha}}" value="{{date.fecha}}" name="fecha_entrada" placeholder="descripcion" required>
                         </div>
                          {{!-- CONFIRMAR --}}
                     <button type="button" class="btn btn-principal btn-block" data-toggle="modal"

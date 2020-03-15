@@ -9,13 +9,13 @@
                     <form action="/conduct/admCreate/{{dataUser.id}}" method="POST">
                         <div class="form-group">
                             <label for="">Motivo del registro</label>
-                            <input type="text" class="form-control" name="descripcion" placeholder="Descripción"
-                                autofocus>
+                            <input type="text" class="form-control" maxlength="300" name="descripcion" placeholder="Descripción"
+                                autofocus required>
                         </div>
                         <div class="form-group">
                             <label for="">Fecha del insidente</label>
                             <input type="date" max="{{date.fecha}}" value="{{date.fecha}}" class="form-control"
-                                name="fecha" placeholder="fecha del permiso">
+                                name="fecha" placeholder="fecha del permiso" required>
                         </div>
                         {{!-- CONFIRMAR --}}
                         <button type="button" class="btn btn-principal btn-block" data-toggle="modal"

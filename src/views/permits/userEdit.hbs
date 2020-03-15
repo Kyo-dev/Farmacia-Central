@@ -9,23 +9,23 @@
                     <form action="/permits/userEdit/{{data.id}}" method="POST">
                         <div class="form-group">
                             <label for="">Motivo del permiso</label>
-                            <input type="text" value="{{data.titulo}}" class="form-control" name="titulo" placeholder="Titulo" autofocus>
+                            <input type="text" value="{{data.titulo}}" class="form-control" name="titulo" placeholder="Titulo" autofocus required>
                         </div>
                         <div class="form-group">
                             <label for="">Información adicional</label>
-                            <input type="text" value="{{data.descripcion}}" class="form-control" name="descripcion" placeholder="descripcion">
+                            <input type="text" value="{{data.descripcion}}" class="form-control" name="descripcion" placeholder="descripcion" required>
                         </div>
                         <div class="form-group">
                             <label for="">¿Cúanta horas requiere el permiso?</label>
-                            <input type="number" value="{{data.horas}}" class="form-control" name="horas" placeholder="horas">
+                            <input type="number" value="{{data.horas}}" class="form-control" name="horas" placeholder="horas" required>
                         </div>
                         <div class="form-group">
                             <label for="">¿A qué hora se retira?</label>
-                            <input type="text" value="{{data.hora_salida}}" class="form-control" name="hora_salida" placeholder="am/pm">
+                            <input type="text" value="{{data.hora_salida}}" class="form-control" name="hora_salida" placeholder="am/pm" required>
                         </div>
                         <div class="form-group">
                              <label for="">Fecha del permiso</label>
-                            <input type="date" value="{{data.fecha}}" min="{{date.fecha}}" class="form-control" name="fecha_salida" placeholder="descripcion">
+                            <input type="date" value="{{data.fecha}}" min="{{date.fecha}}" class="form-control" name="fecha_salida" placeholder="descripcion" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-principal btn-block">Actualizar</button>

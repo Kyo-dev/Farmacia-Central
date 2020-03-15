@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <form action="/overTime/newRegister" method="POST">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="motivo" placeholder="¿Cúal fue el motivo de las horas extra?" autofocus required>
+                            <input type="text" class="form-control" maxlength="300" name="motivo" placeholder="¿Cúal fue el motivo de las horas extra?" autofocus required>
                         </div>
                         <div class="form-group">
                             <input type="number" class="form-control" name="cantidad_horas" placeholder="¿Cúantas horas fueron?" required>
@@ -34,7 +34,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Estas a punto de <span class="text-danger"><b>registrar</b></span> horas extra laboradas.
+                                    Estás a punto de <span class="text-danger"><b>registrar</b></span> horas extra laboradas.
                                     <br>¿Desea continuar?
                                 </div>
                                 <div class="modal-footer">

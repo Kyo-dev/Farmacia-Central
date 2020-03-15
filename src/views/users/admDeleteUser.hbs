@@ -23,12 +23,12 @@
             <h3>Información adicional</h3>
             <form action="/users/admDeleteUser/{{dataUser.id}}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="descripcion" placeholder="Motivo del despido"
+                    <input type="text" class="form-control" name="descripcion"  maxlength="100" placeholder="Motivo del despido"
                         required>
                 </div>
                 <div class="form-group">
                     <label for="">Adjuntar archivo</label>
-                    <input type="file" class="form-control-file" name="url_documento" placeholder="adjuntar un archivo"
+                    <input type="file" class="form-control-file" name="url_documento"  maxlength="100" placeholder="adjuntar un archivo"
                         required>
                 </div>
                 <div class="form-group">
@@ -51,7 +51,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Estas a punto de <span class="text-danger"><b>despedir</b></span>
+                                    Estás a punto de <span class="text-danger"><b>despedir</b></span>
                                     a {{dataUser.nombre}} {{dataUser.p_apellido}} {{dataUser.s_apellido}}.
                                     El cual ha cumplido la labor de {{dataRole.nombre_cargo}} por {{dataPayOff.dias}} días. <br>
                                     ¿Desea continuar?

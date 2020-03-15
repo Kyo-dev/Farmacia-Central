@@ -16,7 +16,7 @@
                         </div>
                         <div class="form-group">
                             <input type="number" name="numero" class="form-control" value="{{dataNumero.numero}}" placeholder="{{dataNumero.numero}}"
-                                class="form-control" autofocus>
+                                class="form-control" autofocus required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Provincia</p>
@@ -37,7 +37,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="direccion" class="form-control"
+                            <input type="text" name="direccion" maxlength="290"
                                 placeholder="{{dataDireccion.direccion}}" class="form-control" required>
                         </div>
                         <div class="form-group">

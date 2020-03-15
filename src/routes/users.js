@@ -29,9 +29,10 @@ router.get('/', isLoggedIn, async (req, res) => {
         const dataProvincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
         const canton = await pool.query(`SELECT nombre_canton, codigo_canton FROM canton;`)
         const distrito = await pool.query(`SELECT nombre_distrito, codigo_distrito FROM distrito;`)
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
         if (data.length === 0) {
             console.log('NO HA REGISTRADO INFORMACION')
-            res.render('users/userMoreInfo', { dataProvincia, canton, distrito })
+            res.render('users/userMoreInfo', { dataProvincia, canton, distrito, date: date[0]})
         } else {
             const dataUser = await pool.query(`
             SELECT id, cedula, correo, nombre, p_apellido, s_apellido, substr(fecha_contrato, 1, 10) as fecha_contrato
@@ -72,6 +73,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         res.render('auth/noUser', { data: data[0] })
     }
 })
+
 router.get('/userHome', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
         const dataPermits = await pool.query(`
@@ -107,6 +109,7 @@ router.get('/userHome', isLoggedIn, async (req, res) => {
         res.redirect('/users')
     }
 })
+
 router.post('/userMoreInfo', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const { tipo_telefono, numero, codigo_provincia, codigo_canton, codigo_distrito, direccion, fecha_nacimiento } = req.body

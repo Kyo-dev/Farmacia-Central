@@ -9,10 +9,10 @@
                     <form action="/conduct/admEditRegister/{{data.id}}" method="POST">
                         <div class="form-group">
                             <label for="">Motivo del registro</label>
-                            <input type="text" class="form-control" value="{{data.descripcion}}" name="descripcion" placeholder="Descripción" autofocus>
+                            <input type="text" class="form-control" value="{{data.descripcion}}" name="descripcion" placeholder="Descripción" autofocus required>
                         </div> <div class="form-group">
                             <label for="">Fecha del insidente</label>
-                            <input type="date" id="fecha" value="{{data.fecha}}" max={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso">
+                            <input type="date" id="fecha" value="{{data.fecha}}" max={{date.fecha}} class="form-control" name="fecha" placeholder="fecha del permiso" required>
                         </div>
                         {{!-- CONFIRMAR --}}
                     <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
@@ -31,7 +31,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Estas por <span class="text-danger"><b>editar</b></span> el registro de una conducta para el trabajador 
+                                    Estás por <span class="text-danger"><b>editar</b></span> el registro de una conducta para el trabajador 
                                     {{data.nombre}} {{data.p_apellido}} {{data.s_apellido}}.<br>
                                     Esta información será visible para el trabajador. ¿Desea continuar?
                                 </div>
