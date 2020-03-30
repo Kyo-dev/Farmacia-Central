@@ -15,9 +15,9 @@
                     <h4>Tiempo que se retira:</h4>
                     <p><span>{{data.horas}} horas</span></p>
                     <h4>Hora de salida de la farmacia</h4>
-                    <p><span>{{hora_salida}} am/pm</span></p>
+                    <p><span>{{data.hora_salida}} am/pm</span></p>
                     <h3>Importante</h3>
-                    <p class="m-2">Esta apunto de borrar un permiso, sin embargo, el administrador aun tiene acceso a la información</p>
+                    <p class="m-2">Está apunto de borrar un permiso, sin embargo, el administrador aún tiene acceso a la información</p>
                     <form action="/permits/userDelete/{{data.id}}" method="POST">
                     <button class= "btn btn-danger btn-block">Borrar</button>
                     </form>

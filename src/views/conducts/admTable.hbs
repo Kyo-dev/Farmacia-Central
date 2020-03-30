@@ -9,9 +9,9 @@
             <thead>
                 <tr>
                     <th>Cedula</th>
+                    <th>Nombre</th>
                     <th>Primer apellido</th>
                     <th>Segundo apellido</th>
-                    <th>Nombre</th>
                     <th>Cargo que desempleña</th>
                     <th>Realizar registro</th>
                 </tr>
@@ -19,13 +19,15 @@
             <tbody>
                 {{#each dataUsers}}
                 <tr>
-                    <td>{{id}}</td>
                     <td>{{cedula}}</td>
+                    <td>{{nombre}}</td>
                     <td>{{p_apellido}}</td>
                     <td>{{s_apellido}}</td>
-                    <td>{{nombre}}</td>
                     <td>{{nombre_cargo}}</td>
-                    <td><a href="/conduct/admCreate/{{id}}" class="btn btn-principal">Revisar</a></td>
+                    <td><a href="/conduct/admCreate/{{id}}" class="btn btn-block btn-principal"><i
+                                                class="material-icons">
+                                                search
+                                            </i></a></td>
                 </tr>
                 {{/each}}
             </tbody>

@@ -265,7 +265,7 @@ router.get('/employeepdf/:id', isLoggedIn, async (req, res) => {
             .font('Times-Roman')
             .text(`Información de las horas extra`, 200, 290)
         doc
-        const message = `Por este medio se le entrega el comprobante solicitado con respecto a las horas extras laboradas en la fecha ${dataGeneral[0].fecha}' con un total de horas de '${dataGeneral[0].cantidad_horas} por el motivo de '${dataGeneral[0].motivo}.' \n Le adjunto la tabla con la información.`
+        const message = `Por este medio se le entrega el comprobante solicitado con respecto a las horas extras laboradas en la fecha ${dataGeneral[0].fecha}' con un total de horas de '${dataGeneral[0].cantidad_horas}' por el motivo de '${dataGeneral[0].motivo}.' \n Le adjunto la tabla con la información.`
         doc
         .fontSize(14)
         .font('Times-Roman')
@@ -286,11 +286,15 @@ router.get('/employeepdf/:id', isLoggedIn, async (req, res) => {
         doc
               .fontSize(14)
               .font('Times-Roman')
-              .text('Atentamente',460 , 620)
+              .text('Atentamente',440 , 620)
         doc
               .fontSize(14)
               .font('Times-Roman')
-              .text('Dora González, Administradora.',440 , 680)
+              .text(`${req.user.nombre} ${req.user.p_apellido}`,410 , 680)
+        doc
+              .fontSize(14)
+              .font('Times-Roman')
+              .text(`Administración`,430 , 700)
         doc.end();
         res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
     }
@@ -301,7 +305,7 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
         const { year, month } = req.params
         const date = await pool.query('select substr(now(), 1, 10) as fecha;')
-        const dataBonos = await pool.query(`
+        const dataTime = await pool.query(`
         Select  a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, (b.cantidad_horas), b.id , b.estado, c.nombre_cargo, b.informacion_estado
         From empleados a 
         INNER JOIN horas_extra b
@@ -313,10 +317,10 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
         AND month(b.fecha) = 03
         order by b.id desc;`, [year, month])
         let table0 = {
-            headers: ['Nombre', 'Primer apellido', 'Segundo apellido', 'Fecha del bono', 'Motivo', 'Cantidad de horas'],
+            headers: ['Nombre', 'Primer apellido', 'Segundo apellido', 'Fecha', 'Motivo', 'Cantidad de horas'],
             rows: []
         };
-        const jsonTime = JSON.parse(JSON.stringify(dataBonos))
+        const jsonTime = JSON.parse(JSON.stringify(dataTime))
         for (let i = 0; i < jsonTime.length; i++) {
             table0.rows.push([jsonTime[i].nombre, jsonTime[i].p_apellido, jsonTime[i].s_apellido, jsonTime[i].fecha, jsonTime[i].motivo, jsonTime[i].cantidad_horas])
         }

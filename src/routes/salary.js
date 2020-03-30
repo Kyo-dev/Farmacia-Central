@@ -128,7 +128,8 @@ router.get('/admTax/:id', isLoggedIn, async (req, res) => {
         select a.nombre_cargo
         from tipo_empleados a
         inner join empleados b
-        on b.tipo_empleado = a.id`)
+        on b.tipo_empleado = a.id
+        where b.id = ?`, [id])
         const dataSalary = await pool.query(`
         SELECT salario_hora, jornada
         FROM salarios
@@ -204,7 +205,8 @@ router.get('/admInability/:id', isLoggedIn, async(req, res) => {
         select a.nombre_cargo
         from tipo_empleados a
         inner join empleados b
-        on b.tipo_empleado = a.id`)
+        on b.tipo_empleado = a.id
+        where b.id = ?` ,[id])
         console.log(dataDate[0].fecha)
         res.render('salary/admInability', {dataUser: dataUser[0], dataRole: dataRole[0], dataDate: dataDate[0], dataInability})
     }

@@ -90,13 +90,15 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             where activo = true
             and empleado_id = ?
             and year(fecha) = ?
-            and month(fecha) = ?`, [id, year, month])
+            and month(fecha) = ?
+            and estado = 2`, [id, year, month])
         const permits = await pool.query(`Select sum(horas) as aux
             from permisos 
             where activo = true 
             and empleado_id = ? 
             and year(fecha_salida) = ?
-            and month(fecha_salida) = ?;`,[id, year, month])
+            and month(fecha_salida) = ?
+            and estado = 2;`,[id, year, month])
         const salary = await pool.query(`Select c.salario_hora, c.jornada
             From empleados a
             INNER JOIN salarios c
@@ -128,13 +130,15 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             where activo = true
             and empleado_id = ?
             and year(fecha) = ?
-            and month(fecha) = ?`, [id, year, month])
+            and month(fecha) = ?
+            and estado = 2`, [id, year, month])
         const permits = await pool.query(`Select sum(horas) as aux
             from permisos 
             where activo = true 
             and empleado_id = ? 
             and year(fecha_salida) = ?
-            and month(fecha_salida) = ?;`,[id, year, month])
+            and month(fecha_salida) = ?
+            and estado = 2;`,[id, year, month])
         const salary = await pool.query(`Select c.salario_hora, c.jornada
             From empleados a
             INNER JOIN salarios c

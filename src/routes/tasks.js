@@ -158,8 +158,7 @@ router.post('/listRegisters', isLoggedIn, async (req, res) => {
         WHERE a.activo = true
         AND a.estado = 1
         AND year(a.fecha_solicitud) = ?
-        AND  month(a.fecha_solicitud) = ?
-        AND day(a.fecha_solicitud) =?;`, [year, month, day])
+        AND month(a.fecha_solicitud) = ?`, [year, month])
         const dataDone = await pool.query(`
         SELECT a.id, substr(a.fecha_solicitud, 1, 10) as fecha, a.titulo, a.descripcion, a.fecha_solicitud, b.nombre_cargo, c.estado, d.fecha_realizacion, e.nombre, e.p_apellido, e.s_apellido
         FROM tareas a
@@ -174,8 +173,7 @@ router.post('/listRegisters', isLoggedIn, async (req, res) => {
         WHERE a.activo = true
         AND a.estado = 4
         AND year(a.fecha_solicitud) = ?
-        AND  month(a.fecha_solicitud) = ?
-        AND day(a.fecha_solicitud) =?;`, [year, month, day])
+        AND  month(a.fecha_solicitud) = ?;`, [year, month])
         console.log(dataDone)
         console.log(year, month, day)
         res.render('tasks/admListRegister', {dataToDo, dataDone, date: date[0]})

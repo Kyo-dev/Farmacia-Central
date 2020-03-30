@@ -168,6 +168,7 @@ router.get('/admDelete/:id', isLoggedIn, async(req, res) => {
             activo: false
         }
         const query = await pool.query('UPDATE registro_disciplinario SET ? WHERE id = ?;', [data, id])
+        req.flash('success', `El registro ha sido borrado`)
         res.redirect('/conduct')
     }
 })
@@ -271,13 +272,17 @@ router.get('/admDownload/:id', isLoggedIn, async(req, res) => {
                 ellipsis: true
             })
         doc
-              .fontSize(14)
-              .font('Times-Roman')
-              .text('Atentamente',460 , 620)
+            .fontSize(14)
+            .font('Times-Roman')
+            .text('Atentamente', 440, 620)
         doc
-              .fontSize(14)
-              .font('Times-Roman')
-              .text('Dora González, Administradora.',440 , 680)
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${req.user.nombre} ${req.user.p_apellido}`, 410, 680)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Administración`, 430, 700)
         doc.end()
         res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
     }

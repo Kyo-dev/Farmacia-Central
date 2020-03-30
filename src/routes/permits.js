@@ -262,15 +262,15 @@ router.get('/admDownload/:id', isLoggedIn, async (req, res) => {
         let doc = new PDF()
         const pdfName = (path.join(__dirname + `/../public/downloads/${t}.pdf`))
         doc.pipe(fs.createWriteStream(pdfName))
-        doc.image(path.join(__dirname + `/../public/img/logo.jpg`), 0, 15 , {width: 200})
+        doc.image(path.join(__dirname + `/../public/img/logo.jpg`), 0, 15, { width: 200 })
         doc
             .fontSize(12)
             .font('Times-Roman')
-            .text(`San José, Costa Rica, ${date[0].fecha}`,375,50)
+            .text(`San José, Costa Rica, ${date[0].fecha}`, 375, 50)
         doc
             .fontSize(14)
             .font('Times-Roman')
-            .text(`Farmacia Central Moravia`, 40 , 220)
+            .text(`Farmacia Central Moravia`, 40, 220)
         doc
             .fontSize(14)
             .font('Times-Roman')
@@ -293,22 +293,26 @@ router.get('/admDownload/:id', isLoggedIn, async (req, res) => {
         doc
             .fontSize(14)
             .font('Times-Roman')
-            .text(message ,50, 390, {
+            .text(message, 50, 390, {
                 width: 500,
                 align: 'justify',
                 indent: 30,
                 columns: 1,
                 height: 300,
                 ellipsis: true
-              });
+            });
         doc
-              .fontSize(14)
-              .font('Times-Roman')
-              .text('Atentamente',460 , 620)
+            .fontSize(14)
+            .font('Times-Roman')
+            .text('Atentamente', 440, 620)
         doc
-              .fontSize(14)
-              .font('Times-Roman')
-              .text('Dora González, Administradora.',440 , 680)
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${req.user.nombre} ${req.user.p_apellido}`, 410, 680)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Administración`, 430, 700)
         doc.end()
         res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
     }

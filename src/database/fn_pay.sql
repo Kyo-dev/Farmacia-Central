@@ -155,6 +155,7 @@ BEGIN
 				(Select sum(horas) 
                 from permisos 
                 where activo = true 
+                and estado = 2
                 and empleado_id = _id 
                 and year(fecha_salida) = _anio 
                 and month(fecha_salida) = _mes);           
@@ -169,10 +170,11 @@ BEGIN
                 and month(fecha) = _mes);
     end if;
 	IF (Select sum(cantidad_horas) from horas_extra
-		where activo = true and empleado_id = _id
+		where activo = true and empleado_id = _id and estado = 2
 		and year(fecha) = _anio and month(fecha) = _mes) <> 0 then
 			Set totalHorasExtra = (Select sum(cantidad_horas) from horas_extra
 				where activo = true
+                and estado = 2
                 and empleado_id = _id
                 and year(fecha) = _anio
                 and month(fecha) = _mes);
@@ -279,10 +281,11 @@ BEGIN
                 and month(fecha) = totalMes);
     end if;
 	IF (Select sum(cantidad_horas) from horas_extra
-		where activo = true and empleado_id = _id
+		where activo = true and empleado_id = _id and estado = 2
 		and year(fecha) = totalAnio and month(fecha) = totalMes) <> 0 then
 			Set totalHorasExtra = (Select sum(cantidad_horas) from horas_extra
 				where activo = true
+                and estado = 2
                 and empleado_id = _id
                 and year(fecha) = totalAnio
                 and month(fecha) = totalMes);
@@ -313,10 +316,11 @@ BEGIN
                 and month(fecha) = totalMes);
     end if;
 	IF (Select sum(cantidad_horas) from horas_extra
-		where activo = true and empleado_id = _id
+		where activo = true and empleado_id = _id and estado = 2
 		and year(fecha) = totalAnio and month(fecha) = totalMes) <> 0 then
 			Set totalHorasExtra = (Select sum(cantidad_horas) from horas_extra
 				where activo = true
+                and estado = 2
                 and empleado_id = _id
                 and year(fecha) = totalAnio
                 and month(fecha) = totalMes);
@@ -354,10 +358,11 @@ BEGIN
                 and month(fecha) = totalMes);
     end if;
 	IF (Select sum(cantidad_horas) from horas_extra
-		where activo = true and empleado_id = _id
+		where activo = true and empleado_id = _id and estado = 2
 		and year(fecha) = anioContratacion and month(fecha) = totalMes) <> 0 then
 			Set totalHorasExtra = (Select sum(cantidad_horas) from horas_extra
 				where activo = true
+                and estado = 2
                 and empleado_id = _id
                 and year(fecha) = anioContratacion
                 and month(fecha) = totalMes);
@@ -459,7 +464,7 @@ select substr(now(), 1, 4) as fecha;
 
 select empleado_id, id, fecha_salida, fecha_entrada , motivo from incapacidades where empleado_id = 3
 
-select * from empleados
+select * from incapacidades
 
 
 
