@@ -503,7 +503,7 @@ router.post('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
             activo: false
         }
         if (data.descripcion.length <= 0) {
-            req.flash('message', `Por favor ingrese una descripcion`)
+            req.flash('message', `Por favor ingrese una descripción`)
             return res.redirect('/users')
         }
         if (data.url_documento.length <= 0) {

@@ -50,13 +50,13 @@ app.use(multer({
     fileSize: 1000000
   },
   fileFilter: (req, file, cb) =>{
-    const fileTypes = /pdf|docx/;
+    const fileTypes = /pdf||docx/;
     const mimetype = fileTypes.test(file.mimetype)
     const extname = fileTypes.test(path.extname(file.originalname))
     if(mimetype && extname){
       return cb(null, true)
     } 
-    // return cb(new Error("Solo se adminten archivos en formato .pdf y .docx"), false)
+    return cb(new Error("Solo se adminten archivos en formato .pdf y .docx"), false)
   },
   dest: path.join(__dirname, 'public/uploads')
 }).single('url_documento'))
