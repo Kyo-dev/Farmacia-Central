@@ -2,6 +2,29 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
+
+const multer = require('multer')
+const path = require('path')
+const uuid = require('uuid/v4')
+
+const storageMulter = multer.diskStorage({
+    destination: path.join(__dirname, 'public/uploads'),
+    filename: (req, file, cb) => {
+      cb(null, uuid() + path.extname(file.originalname).toLocaleLowerCase())
+    }
+  })
+  var upload = multer({ 
+    storage: storageMulter,
+    fileFilter: function (req, file, cb) {
+         let ext = path.extname(file.originalname);
+         if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.docx') {
+              req.fileValidationError = "Forbidden extension";
+              return cb(null, false, req.fileValidationError);
+        }
+        cb(null, true);
+    }
+});
+
 //SECTION USER
 router.get('/', isLoggedIn, async (req, res) => {
     // SI SE HACE RESET DE LA DB COMENTAR EL IF(EL CONTENIDO NO) JUNTO CON EL ELSE
@@ -490,8 +513,14 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
     }
 })
 
-router.post('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
+router.post('/admDeleteUser/:id', isLoggedIn, upload.single("url_documento"), async (req, res) => {
     if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        if (req.fileValidationError) {
+            console.log('1')
+            req.flash('message', `El formato ingresado no es válido`)
+            return res.redirect('/users')
+        }
+        console.log('2')
         const { id } = req.params
         const { descripcion } = req.body
         const data = {

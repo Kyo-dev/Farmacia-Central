@@ -3,6 +3,27 @@ const router = express.Router()
 const pool = require('../database')
 const { isLoggedIn } = require('../lib/auth')
 const moment = require('moment')
+const multer = require('multer')
+const path = require('path')
+const uuid = require('uuid/v4')
+
+const storageMulter = multer.diskStorage({
+    destination: path.join(__dirname, 'public/uploads'),
+    filename: (req, file, cb) => {
+      cb(null, uuid() + path.extname(file.originalname).toLocaleLowerCase())
+    }
+  })
+  var upload = multer({ 
+    storage: storageMulter,
+    fileFilter: function (req, file, cb) {
+         let ext = path.extname(file.originalname);
+         if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.docx') {
+              req.fileValidationError = "Forbidden extension";
+              return cb(null, false, req.fileValidationError);
+        }
+        cb(null, true);
+    }
+});
 
 router.get('/', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1) {
@@ -145,8 +166,14 @@ router.get('/admTax/:id', isLoggedIn, async (req, res) => {
     }
 })
 
-router.post('/admTax/:id', isLoggedIn, async (req, res) => {
+router.post('/admTax/:id', isLoggedIn, upload.single("url_documento"), async (req, res) => {
     if (req.user.tipo_empleado === 1) {
+        if (req.fileValidationError) {
+            console.log('1')
+            req.flash('message', `El formato ingresado no es válido`)
+            return res.redirect('/salary')
+        }
+        console.log('2')
         const { id } = req.params
         const { descripcion, retencion } = req.body
         const data = {
@@ -160,17 +187,19 @@ router.post('/admTax/:id', isLoggedIn, async (req, res) => {
             return res.redirect('/salary')
         }
         if (data.descripcion.length <= 0) {
-            req.flash('message', `Por favor ingrese una descripcion`)
+            req.flash('message', `Por favor ingrese una descripción`)
             return res.redirect('/salary')
         }
-        if (data.url_documento.length >= 0) {
+        try {
             const query = await pool.query('INSERT INTO retencion_salarial SET ?;', [data])
-            req.flash('success', `Registro realizado`)
+            req.flash('success', `Proceso realizado satisfactoriamente`)
             return res.redirect('/salary')
-        } else {
-            req.flash('message', `Por favor ingrese el documento que detalla la retencion, en formato .pdf o docx`)
-            return res.redirect('/salary')
+        } catch (error) {
+            console.log(error)
+            req.flash('message', `Error con los datos`)
+            return res.redirect('/users')
         }
+       
     } else {
         return res.redirect('/salary')
     }
