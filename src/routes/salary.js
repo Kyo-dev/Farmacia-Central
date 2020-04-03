@@ -8,7 +8,7 @@ const path = require('path')
 const uuid = require('uuid/v4')
 
 const storageMulter = multer.diskStorage({
-    destination: path.join(__dirname, 'public/uploads'),
+    destination: path.join(__dirname, '../public/uploads'),
     filename: (req, file, cb) => {
       cb(null, uuid() + path.extname(file.originalname).toLocaleLowerCase())
     }

@@ -1,3 +1,4 @@
 node_modules/
 src/public/uploads
 src/public/downloads
+src/routes/public/downloads
