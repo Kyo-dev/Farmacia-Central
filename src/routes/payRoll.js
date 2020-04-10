@@ -104,7 +104,7 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             INNER JOIN salarios c
             ON a.id = c.empleado_id
             WHERE a.id = ?`, [id])
-        const tax = await pool.query(`Select sum(retencion) as aux from retencion_salarial where empleado_id = ?;`, [id])
+        const tax = await pool.query(`Select sum(retencion) as aux from retencion_salarial where empleado_id = ? and activo = true;`, [id])
         const employee = await pool.query(`Select nombre, cedula, p_apellido, s_apellido from empleados where id = ?;`, [id])
         const salaryB = await pool.query (`select salarioBrutoEmpleado(${id}, ${month}, ${year}) as bruto;`)
         const salaryN = await pool.query (`select salarioNetoEmpleado(${id}, ${month}, ${year}) as neto;`)

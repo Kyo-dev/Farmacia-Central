@@ -14,6 +14,7 @@
                     <th>Fecha de registro</th>
                     <th>Información adcional</th>
                     <th>Aprobar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +28,8 @@
                     <td>Usuario perdiente de aprobación</td>
                     <td><a href="/users/admEditNewUser/{{id}}" class="btn btn-principal btn-block"><i
                     class="material-icons">search</i></a></td>
+                    <td><a href="/users/admPermanentDelete/{{id}}" class="btn btn-danger btn-block"><i
+                    class="material-icons">clear</i></a></td>
                 </tr>
                 {{/each}}
             </tbody>

@@ -458,6 +458,23 @@ router.get('/admLayOffsList', isLoggedIn, async (req, res) => {
     }
 })
 
+router.get('/admPermanentDelete/:id', isLoggedIn, async (req, res) => {
+    if(req.user.tipo_empleado === 1 && req.user.activo === 1){
+        const { id } = req.params
+        try {
+            await pool.query(`delete from dias_disponibles where empleado_id = ?;`, [id])
+            await pool.query(`delete from telefonos where empleado_id = ?;`, [id])
+            await pool.query(`delete from direccion where empleado_id = ?;`, [id])
+            await pool.query(`delete from empleados where id = ?;`, [id])
+            req.flash('success', `La solicitud ha sido eliminada`)
+            return res.redirect('/users')
+        } catch (error) {
+            req.flash('message', `Ah ocurrido un error`)
+            return res.redirect('/users')
+        }
+    }
+})
+
 router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
     if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
         const { id } = req.params

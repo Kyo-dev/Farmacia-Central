@@ -127,7 +127,7 @@ router.post('/admIncrease/:id', isLoggedIn, async (req, res) => {
         if (parseInt(data.cantidad) >= 0) {
             const salario = ((parseInt(salarioActual[0].salario_hora) + parseInt(data.cantidad)))
             const query = await pool.query('INSERT INTO aumento_salarial SET ?;', [data])
-            const actSalario = await pool.query(`UPDATE salarios SET salario_hora = ? WHERE id = ?`, [salario, id])
+            const actSalario = await pool.query(`UPDATE salarios SET salario_hora = ? WHERE empleado_id = ?`, [salario, id])
             req.flash('success', 'Aumento realizado satisfactoriamente')
             return res.redirect('/salary')
         }
@@ -250,44 +250,56 @@ router.post('/admInability/:id', isLoggedIn, async(req, res)=>{
         const cantidad = fecha2.diff(fecha1, 'days'); //DIAS DEL FORMULARIO
         const data = {
             empleado_id: id,
-            fecha_salida,
-            fecha_entrada,
-            motivo,
-            cantidad
+            fecha_salida: fecha_salida,
+            fecha_entrada: fecha_entrada,
+            motivo: motivo,
+            cantidad: cantidad
         }
-        console.log(cantidad)
-        if(data.fecha_salida.length <= 0){
+        if(data.fecha_salida <= 0){
             req.flash('message', 'Ingresa una fecha de reingreso valida')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
-        if(data.fecha_entrada.length <= 0){
+        if(data.fecha_entrada <= 0){
             req.flash('message', 'Ingresa una fecha de entrada valida')
-            res.redirect('/salary')
-        }
-        if(data.fecha_entrada == fecha_salida){
-            req.flash('message', 'La fechas deben ser distintas')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
         if(data.motivo.length <= 0){
             req.flash('message', 'Por favor ingrese un motivo')
-            res.redirect('/salary')
+            return res.redirect('/salary')
+        }
+        if(data.fecha_entrada == fecha_salida){
+            req.flash('message', 'La fechas deben ser distintas')
+            return res.redirect('/salary')
         }
         if(data.motivo.length >= 200){
             req.flash('message', 'Simplifique si explicación')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
         if(data.cantidad.length <= 0){
             req.flash('message', 'Error en la fecha')
-            res.redirect('/salary')
+            return res.redirect('/salary')
+        }
+        const exist = await pool.query('select substr(fecha_salida,1, 10) as fecha_salida from incapacidades where empleado_id = ? and fecha_salida = ? LIMIT 1;', [id, data.fecha_salida])
+        console.log('CONSOLA')
+        console.log(exist)
+        if(exist.length > 0 ){
+            // console.log('exist')
+            // console.log(exist)
+            // const jsonBonus = JSON.stringify(exist[0].fecha_salida)
+            // console.log(jsonBonus)
+            // if(JSON.stringify(exist[0].fecha_salida) == null ) {
+                req.flash('message', 'Ya has ingresado esa fecha de salida')
+                return res.redirect('/salary')
+            // }
         }
         try {
-            await pool.query('INSERT INTO incapacidades SET ?', [data])
+            await pool.query('INSERT INTO incapacidades SET ?;', [data])
             req.flash('success', 'Registro realizado de forma satisfactoria')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         } catch (error) {
             console.log(error)
             req.flash('message', 'Error, por favor intentelo de nuevo')
-            res.redirect('/salary')
+            return res.redirect('/salary')
         }
     }
 })

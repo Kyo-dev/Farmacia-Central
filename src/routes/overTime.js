@@ -28,14 +28,14 @@ router.get('/', isLoggedIn, async (req, res) => {
         ON a.tipo_empleado = c.id
         WHERE b.activo = true
         AND month(b.fecha) = ?
-        order by b.id desc;`, [date])
-        console.log(date)
+        order by b.id desc;`, [date[0].fecha])
         res.render('overTime/admHome', { data, dataGeneral })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(`
         SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
         FROM horas_extra
-        WHERE empleado_id = ? 
+        WHERE empleado_id = ?
+        and estado != 5
         order by id desc;`, [req.user.id])
         console.log(data)
         res.render('overTime/userHome', { data })
@@ -90,16 +90,16 @@ router.get('/userDelete/:id', isLoggedIn, async (req, res) => {
     FROM horas_extra a
     INNER JOIN estados b
     ON b.id = a.estado
-    WHERE a.activo = true
+    Where b.id != 5
     AND a.id = ?
-    order by a.id desc;;`, [id])
-    console.log(data[0])
+    order by a.id desc;`, [id])
+    console.log(data)
     res.render('overTime/userDelete',{data: data[0]})
 })
 
 router.post('/userDelete/:id', isLoggedIn, async(req, res) => {
     const {id} = req.params
-    const query = await pool.query('UPDATE horas_extra SET activo = false WHERE id = ?', [id])
+    const query = await pool.query('UPDATE horas_extra SET activo = false, estado = 5 WHERE id = ?', [id])
     req.flash('success', 'Se ha borrado el registro satisfactoriamente')
     res.redirect('/overTime')
 })
