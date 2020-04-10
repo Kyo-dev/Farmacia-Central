@@ -504,7 +504,7 @@ router.get('/admDeleteUser/:id', isLoggedIn, async (req, res) => {
             return res.redirect('/users')
         }
         if (dataPayOff[0].dias < 89) {
-            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} trabajó ${dataPayOff[0].dias} dias`
+            payMessage = `El tiempo mínimo para una indemnización corresponde a 90 días laborados, ${dataUser[0].nombre} ${dataUser[0].p_apellido} ha trabajado ${dataPayOff[0].dias} dias`
             console.log(dataPayOff)
         } else if (dataPayOff[0].dias >= 90 && dataPayOff[0].dias < 239) {
             pay = (dataSalary[0].jornada * dataSalary[0].salario_hora) * 7
