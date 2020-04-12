@@ -18,7 +18,7 @@
                             <th>Cargo que desempeña</th>
                             <th>Horas</th>
                             <th>Fecha</th>
-                            <th>Aprobar</th>
+                            <th>Revisar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +49,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
-                        <h4 class="jumbo-secomdary text-center p-3">Horas extra aprobadas durante el mes actual</h4>
+                        <h4 class="jumbo-secomdary text-center p-3">Información de horas extra durante el mes actual</h4>
                         <tr>
                             <th>Cédula</th>
                             <th>Nombre</th>
@@ -60,6 +60,7 @@
                             <th>Fecha</th>
                             <th>Horas</th>
                             <th>Información adicional</th>
+                            <th>Registro</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +75,7 @@
                             <td>{{fecha}}</td>
                             <td>{{cantidad_horas}}</td>
                             <td>{{informacion_estado}}</td>
+                            <td>{{estadoServer}}</td>
                             </td>
                         </tr>
                         {{/each}}

@@ -65,11 +65,11 @@ router.post('/admRegister/:id', isLoggedIn, async (req, res) => {
         }
         if (data.motivo.length <= 0) {
             req.flash('message', `Especifique el motivo del bono`)
-            return res.redirect('/permits')
+            return res.redirect('/bonus')
         }
         if (data.cantidad <= 0) {
             req.flash('message', `Has ingresado un valor invalido, debe ser un número positivo`)
-            return res.redirect('/permits')
+            return res.redirect('/bonus')
         }
         req.flash('success', `Bono otorgado satisfactoriamente`)
         const query = await pool.query(`INSERT INTO bonos SET ?;`, [data])
@@ -94,7 +94,7 @@ router.post('/listRegisters', isLoggedIn, async (req, res) => {
         let month = fecha.substring(5, 7)
         let day = fecha.substring(8, 11)
         const dataBonos = await pool.query(`
-        Select a.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
+        Select b.id, a.cedula, a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, 
         b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, c.nombre_cargo
         From empleados a
         INNER JOIN bonos b
@@ -165,6 +165,80 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
             prepareRow: (row, i) => doc.font('Helvetica').fontSize(12)
         });
         doc.end();
+        res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
+    }
+})
+
+router.get('/admDownload/:id', isLoggedIn, async (req, res) => {
+    if (req.user.tipo_empleado === 1 && req.user.activo === 1) {
+        const { id } = req.params
+        const date = await pool.query('select substr(now(), 1, 10) as fecha;')
+        const dataPdf = await pool.query(`
+        Select a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha_bono, b.cantidad, c.nombre_cargo
+        From empleados a
+        INNER JOIN bonos b
+        ON a.id = b.empleado_id
+        INNER JOIN tipo_empleados c
+        ON a.tipo_empleado = c.id
+        WHERE a.activo = true
+        and b.id = ?;`, [id])
+        let now = new Date();
+        const t = now.getTime()
+        let doc = new PDF()
+        const pdfName = (path.join(__dirname + `/../public/downloads/${t}.pdf`))
+        doc.pipe(fs.createWriteStream(pdfName))
+        doc.image(path.join(__dirname + `/../public/img/logo.jpg`), 0, 15, { width: 200 })
+        doc
+            .fontSize(12)
+            .font('Times-Roman')
+            .text(`San José, Costa Rica, ${date[0].fecha}`, 375, 50)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Farmacia Central Moravia`, 40, 220)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${dataPdf[0].nombre_cargo}`, 40, 250)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${dataPdf[0].nombre} ${dataPdf[0].p_apellido} ${dataPdf[0].s_apellido}`, 40, 270)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Saludos cordiales`, 40, 290)
+        doc
+            .fontSize(20)
+            .font('Times-Roman')
+            .text('Información del bono', 200, 340)
+        const message = `Por este medio se le entrega el comprobante solicitado con respecto al bono registrado con el detalle de ' ${dataPdf[0].motivo} ' por la cantidad de ' ${dataPdf[0].cantidad} ' colones.
+        \n\nEl registro fue realizado en la fecha ${dataPdf[0].fecha_bono} 
+        \n\n Sin otro particular me despido, gracias por su compromiso y esfuerzo en el trabajo.`
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(message, 50, 390, {
+                width: 500,
+                align: 'justify',
+                indent: 30,
+                columns: 1,
+                height: 300,
+                ellipsis: true
+            });
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text('Atentamente', 440, 620)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`${req.user.nombre} ${req.user.p_apellido}`, 410, 680)
+        doc
+            .fontSize(14)
+            .font('Times-Roman')
+            .text(`Administración`, 430, 700)
+        doc.end()
         res.redirect(`http://localhost:4000/downloads/${t}.pdf`)
     }
 })

@@ -247,8 +247,8 @@ router.get('/admDownload/:id', isLoggedIn, async(req, res) => {
             .fontSize(20)
             .font('Times-Roman')
             .text('Conducta disciplinaria', 200, 340)
-        const message = `Por este medio se le comunica de forma oficial sobre sus actos recientes en relación a '${dataPdf[0].descripcion}'. Este registro fue realizado en la fecha ${dataPdf[0].fecha}
-        \n Por tanto, se le solicita amablemente, regular dicha acción. Se adjunta la nota del registro: `
+        const message = `Por este medio se le comunica de forma escrita acerca de sus actos recientes en relación a '${dataPdf[0].descripcion}'. Este registro fue realizado en la fecha ${dataPdf[0].fecha}
+        \n Por tanto, se le solicita amablemente regular dicha acción. Se adjunta la nota del registro: `
         const target = ` Nombre del trabajador: ${dataPdf[0].nombre} ${dataPdf[0].p_apellido} ${dataPdf[0].s_apellido} \n Número de cédula: ${dataPdf[0].cedula} \n Motivo: ${dataPdf[0].descripcion} \n Fecha del registro: ${dataPdf[0].fecha}`
         doc
             .fontSize(14)

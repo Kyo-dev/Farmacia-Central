@@ -3,52 +3,58 @@
         <div class="col-md-6 mx-auto">
             <div class="card">
                 <div class="card-title jumbo p-4">
-                     <h4 class="text-center text-uppercase">Solicitar una tarea</h4>
+                    <h4 class="text-center text-uppercase">Solicitar una tarea</h4>
                 </div>
                 <div class="card-body">
                     <form action="/tasks/admNewRegister" method="POST">
                         <div class="form-group">
                             <label for="">Título de la tarea</label>
-                            <input type="text" class="form-control" name="titulo" maxlength="50" placeholder="Título" autofocus required>
+                            <input type="text" class="form-control" name="titulo" maxlength="50" placeholder="Título"
+                                autofocus required>
                         </div>
                         <div class="form-group">
                             <label for="">Información adicional</label>
-                            <input type="text" class="form-control" name="descripcion" maxlength="300" placeholder="Descripción" required>
+                            <input type="text" class="form-control" name="descripcion" maxlength="300"
+                                placeholder="Descripción" required>
                         </div>
-                       <p>¿A quien va dirigida la tarea?</p>
+                        <p>¿A quien va dirigida la tarea?</p>
                         <div class="form-group">
                             <input required type="radio" name="tipo_empleado" value="2"> Doctores<br>
                             <input required type="radio" name="tipo_empleado" value="3"> Dependientes<br>
                             <input required type="radio" name="tipo_empleado" value="4"> Mensajeros<br>
                         </div>
                         {{!-- CONFIRMAR --}}
-                    <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
-                        data-target="#confirmarRetencion">
-                        Asignar
-                    </button>
-                    <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
-                        aria-labelledby="confirmarRetencion" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title text-principal" id="exampleModalLongTitle">
-                                        Crear tarea</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    La tarea será asignada <br> ¿Desea continuar?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-principal">Confirmar</button>
+                        <button type="button" class="btn btn-principal btn-block" data-toggle="modal"
+                            data-target="#confirmarRetencion">
+                            Asignar
+                        </button>
+                        <div class="modal fade" id="confirmarRetencion" tabindex="-1" role="dialog"
+                            aria-labelledby="confirmarRetencion" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-principal" id="exampleModalLongTitle">
+                                            Crear tarea</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        La tarea será asignada <br> ¿Desea continuar?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" title="Cancelar" data-dismiss="modal"><i
+                                                class="material-icons">
+                                                clear
+                                            </i></button>
+                                        <button type="submit" class="btn btn-principal" title="Confirmar" ><i class="material-icons">
+                                                check
+                                            </i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {{!-- CONFIRMAR --}}
+                        {{!-- CONFIRMAR --}}
                     </form>
                 </div>
             </div>

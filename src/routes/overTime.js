@@ -20,23 +20,26 @@ router.get('/', isLoggedIn, async (req, res) => {
         AND b.activo = false
         AND a.activo = true;`)
         const dataGeneral = await pool.query(`
-        Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo, b.informacion_estado
+        Select a.cedula, a.nombre, a.p_apellido, a.s_apellido, b.motivo, substr(b.fecha, 1, 10) as fecha, b.cantidad_horas, b.id , b.estado, c.nombre_cargo, b.informacion_estado, d.estado as estadoServer
         From empleados a 
         INNER JOIN horas_extra b
         ON a.id = b.empleado_id
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
-        WHERE b.activo = true
-        AND month(b.fecha) = ?
+        INNER JOIN estados d
+        ON d.id = b.estado
+        WHERE month(b.fecha) = ?
         order by b.id desc;`, [date[0].fecha])
         res.render('overTime/admHome', { data, dataGeneral })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query(`
-        SELECT substr(fecha, 1, 10) as fecha, motivo, estado, id, activo, informacion_estado
-        FROM horas_extra
-        WHERE empleado_id = ?
-        and estado != 5
-        order by id desc;`, [req.user.id])
+        SELECT substr(a.fecha, 1, 10) as fecha, a.motivo, a.estado, a.id, a.activo, a.informacion_estado,  b.estado as estadoServer
+        FROM horas_extra a
+        INNER JOIN estados b
+        ON b.id = a.estado
+        WHERE a.empleado_id = ?
+        and a.estado != 5
+        order by a.id desc;`, [req.user.id])
         console.log(data)
         res.render('overTime/userHome', { data })
     } else {
@@ -313,8 +316,8 @@ router.get('/pdf/:year/:month', isLoggedIn, async (req, res) => {
         INNER JOIN tipo_empleados c
         ON a.tipo_empleado = c.id
         WHERE b.activo = true
-        AND year(b.fecha) = 2020
-        AND month(b.fecha) = 03
+        AND year(b.fecha) = ?
+        AND month(b.fecha) = ?
         order by b.id desc;`, [year, month])
         let table0 = {
             headers: ['Nombre', 'Primer apellido', 'Segundo apellido', 'Fecha', 'Motivo', 'Cantidad de horas'],

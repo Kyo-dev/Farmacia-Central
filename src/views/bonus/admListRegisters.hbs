@@ -39,6 +39,7 @@
                                     <th>Fecha de realización</th>
                                     <th>Motivo</th>
                                     <th>Cantidad</th>
+                                    <th>Descargar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,6 +52,10 @@
                                     <td>{{fecha_bono}}</td>
                                     <td>{{motivo}}</td>
                                     <td>{{cantidad}}</td>
+                                    <td><a href="/bonus/admDownload/{{id}}" class="btn btn-block btn-principal" title="Descargar"><i
+                                                class="material-icons">
+                                                get_app
+                                            </i></td>
                                 </tr>
                                 {{/each}}
                             </tbody>

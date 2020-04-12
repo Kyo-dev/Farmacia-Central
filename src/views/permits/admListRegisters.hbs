@@ -2,7 +2,7 @@
     <div class="jumbotron jumbo">
         <h1 class="display-4 text-center">Historial</h1>
         {{#if year}}
-        <p class="lead text-center">Lista de permisos del {{month}} y año {{year}}</p>
+        <p class="lead text-center">Lista de permisos del mes {{month}} y año {{year}}</p>
         {{else}}
         <p class="lead text-center">Lista de permisos en la fecha </p>
         {{/if}}
@@ -36,7 +36,7 @@
                                     <th>Estado</th>
                                     <th>Rol</th>
                                     <th>Solicitado</th>
-                                    <th>Editar</th>
+                                    <th>Revisar</th>
                                     <th>Eliminar</th>
                                 </tr>
                             </thead>
@@ -86,11 +86,11 @@
                                 <tr>
                                     <th>Título</th>
                                     <th>Descripción</th>
-                                    <th>solicitud creada</th>
+                                    <th>Solicitud creada</th>
                                     <th>Estado</th>
                                     <th>Rol</th>
                                     <th>Solicitado por</th>
-                                    <th>Tarea realizada</th>
+                                    <th>Fecha de salida</th>
                                     <th>Duración</th>
                                     <th>Fecha exacta de solicitud</th>
                                     <th>Descargar</th>
@@ -108,7 +108,7 @@
                                     <td>{{timesago fecha_solicitud}}</td>
                                     <td>{{horas}} Horas</td>
                                     <td>{{fecha_salida}}</td>
-                                    <td><a href="/permits/admDownload/{{id}}" class="btn btn-block btn-secondary"><i
+                                    <td><a href="/permits/admDownload/{{id}}" class="btn btn-block btn-principal"><i
                                                 class="material-icons">
                                                 get_app
                                             </i></td>
