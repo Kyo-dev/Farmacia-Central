@@ -10,23 +10,23 @@
             <thead>
                 <tr>
                     <th>Cédula</th>
-                    <th>Apellido</th>
                     <th>Nombre</th>
+                    <th>Apellido</th>
                     <th>Fecha del permiso</th>
                     <th>Estado</th>
                     <th>Fecha de solicitud</th>
                     <th>Motivo</th>
                     <th>Cantidad de horas</th>
                     <th>Revisar</th>
-                    <th>Eliminar</th>
+                    {{!-- <th>Eliminar</th> --}}
                 </tr>
             </thead>
             <tbody>
                 {{#each data}}
                 <tr>
                     <td>{{cedula}}</td>
-                    <td>{{p_apellido}}</td>
                     <td>{{nombre}}</td>
+                    <td>{{p_apellido}}</td>
                     <td>{{fecha_salida}}</td>
                     <td>{{informacion_estado}}</td>
                     <td>{{fecha_solicitud}}</td>
@@ -35,9 +35,9 @@
                     <td><a href="/permits/admCheck/{{id}}" class="btn btn-block btn-principal"><i class="material-icons">
                                             search
                                         </i></a></td>
-                    <td><a href="/permits/admDelete/{{id}}" class="btn btn-block btn-secondary btn-block"><i class="material-icons">
+                    {{!-- <td><a href="/permits/admDelete/{{id}}" class="btn btn-block btn-secondary btn-block"><i class="material-icons">
                                 clear
-                            </i></a></td>
+                            </i></a></td> --}}
                 </tr>
                 {{/each}}
             </tbody>

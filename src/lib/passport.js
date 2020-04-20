@@ -27,15 +27,20 @@ passport.use('local.signup', new LocalStrategy({
     if(newUser.p_apellido.length <= 0) return done(null, false, req.flash('message','Datos incorrectos'))
     if(newUser.s_apellido.length <= 0)  return done(null, false, req.flash('message','Datos incorrectos'))
     newUser.clave = await helpers.encryptingPass(clave)
-    const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
-    newUser.id = result.insertId
-    const days = {
-        empleado_id: newUser.id,
-        cantidad_dias_disponibles: 0
+    try {
+        const result = await pool.query('INSERT INTO empleados SET ?', [newUser])
+        newUser.id = result.insertId
+        const days = {
+            empleado_id: newUser.id,
+            cantidad_dias_disponibles: 0
+        }
+        await pool.query('INSERT INTO dias_disponibles SET ?;', [days])
+        req.flash('success', 'Gracias por registrarte ' + newUser.nombre + '. Por favor completa el resto de la información de tu perfil')
+        return done(null, newUser)
+
+    } catch (error) {
+        done(null, false, req.flash('message', 'Datos incorrectos'))
     }
-    await pool.query('INSERT INTO dias_disponibles SET ?;', [days])
-    req.flash('success', 'Gracias por registrarte ' + newUser.nombre + '. Por favor completa el resto de la información de tu perfil')
-    return done(null, newUser)
 }))
 
 passport.use('local.signin', new LocalStrategy({

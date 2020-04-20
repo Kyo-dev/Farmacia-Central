@@ -6,6 +6,13 @@
         <p class="text-center"><a class="btn icono btn-principal" href="/users/admNewUsers">Hay nuevos empleados
                 disponibles</a></p>
         {{/if}}
+        {{#unless dataAsistencia}}
+        <p class="lead text-center">Marcar asistencia<a href="/users/userAssistance/{{user.id}}"><i
+                    class="material-icons text-danger">clear</i></a></p>
+        {{else}}
+        <p class="lead text-center">Asistencia marcada<i
+                    class="material-icons">done</i></p>
+        {{/unless}}
         <div class="text-center">
             <div class="d-inline-block">
                 <p class="text-left"><a class="btn d-block icono btn-principal" href="/users/admUsersTemp">

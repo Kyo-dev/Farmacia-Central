@@ -64,9 +64,11 @@ BEGIN
 				and empleado_id = _id);
 		end if;
         IF(select sum(dias) from fechas_empleado_temporal
-		where activo = true and empleado_id =_id) <> 0 then
-			set totalTemporal = (SELECT SUM(dias) from fechas_empleado_temporal 
+		where activo = true and empleado_id =_id
+        and year(fecha) = _anio and month(fecha) = _mes) <> 0 then
+			Set totalTemporal = (SELECT SUM(dias) from fechas_empleado_temporal 
 				where empleado_id = _id 
+                and activo = true
                 and year(fecha) = _anio
 				and month(fecha) = _mes); 
 		end if;
@@ -77,7 +79,8 @@ END$$
 
 DELIMITER ;
 
-
+select salarioBrutoEmpleado(8, '04', '2020');
+select salarioBrutoEmpleado(2, '04', '2020');
 -- RENTA
 -- no es necesario ya que este valor es enviado a la administradora desde hacienda.
 -- ya ha sido quitado del resto de funciones
@@ -146,7 +149,9 @@ BEGIN
 	DECLARE bruto int default 0;
     DECLARE hora int default 0;
 	DECLARE total int default 0;
+    DECLARE renta int default 0;
 	set bruto = (select salarioBrutoEmpleado(_id, _mes, _anio));
+	set renta = (select salarioRenta(_id, _mes, _anio));
 	IF(select temporal from empleados where id = _id) <> 0 then
      IF(Select sum(horas) from permisos
 		where activo = true and empleado_id = _id and estado = 2
@@ -210,7 +215,7 @@ BEGIN
     ELSE 
     SET total = bruto;
     END IF;
-    RETURN total;
+    RETURN total - renta;
     
 END$$
 
@@ -383,6 +388,7 @@ BEGIN
 		where activo = true and empleado_id =_id) <> 0 then
 			set totalTemporal = (SELECT SUM(dias) from fechas_empleado_temporal 
 				where empleado_id = _id 
+                and activo = true 
                 and year(fecha) = _anio
 				and month(fecha) = _mes); 
 	end if;
@@ -441,9 +447,10 @@ select * from bonos where empleado_id = 3
 select * from salarios
 
 -- SALARIO SIN REBAJAS
-select salarioBrutoEmpleado(6, '03', '2020');
+select salarioBrutoEmpleado(8, '04', '2020');
+select salarioBrutoEmpleado(2, '04', '2020');
 -- SALARIO CON EXTRAS
-select salarioNetoEmpleado(6, '03', '2020');
+select salarioNetoEmpleado(8, '04', '2020');
 -- AGUINALDO
 select salarioAguinaldo(6, '03', '2020');
 -- PAGO DEL MES 

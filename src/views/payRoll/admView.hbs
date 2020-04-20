@@ -22,6 +22,8 @@
                             <th>Salario por hora</th>
                             <th>Jornada díaria</th>
                             <th>Retenciones</th>
+                            <th>Incapacidades</th>
+                            <th>Renta</th>
                             <th>Salario bruto</th>
                             <th>Salario neto</th>
                             <th>Aguinaldo</th>
@@ -40,6 +42,8 @@
                         <td class="text-right">₡{{salary.salario_hora}}</td>
                         <td class="text-center">{{salary.jornada}} horas</td>
                         <td class="text-right">₡{{tax.aux}}</td>
+                        <td class="text-right">{{inability.aux}} días</td>
+                        <td class="text-right">₡{{salaryR.renta}}</td>
                         <td class="text-right">₡{{salaryB.bruto}}</td>
                         <td class="text-right">₡{{salaryP.pago}}</td>
                         <td class="text-right">₡{{salaryA.aguinaldo}}</td>

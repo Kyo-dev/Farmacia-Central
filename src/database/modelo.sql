@@ -152,15 +152,7 @@ create table asistencia(
     constraint pk_asistencia primary key(empleado_id, fecha)
 );
 
-CREATE TABLE dias_feriados(
-	id int not null,
-    dia date not null,
-    descripcion varchar (50) not null,
-    activo boolean not null,
-    obligado boolean default true not null,
-    constraint fk_feriados_asistencia foreign key (id_asistencia) references asistencia (fecha),
-    constraint pk_dias_feriados primary key(id)
-);
+
 
 create table registro_disciplinario(
 	id int auto_increment,

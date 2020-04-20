@@ -595,8 +595,3 @@ INSERT INTO distrito (codigo_distrito, codigo_canton, nombre_distrito) VALUES
  
  
  
- 
- 
- 
- 
- 

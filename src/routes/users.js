@@ -45,8 +45,9 @@ router.get('/', isLoggedIn, async (req, res) => {
         select aprobado
         from empleados
         where aprobado = 0`)
+        const dataAsistencia = await pool.query('Select asistencia from asistencia where substr(fecha, 1, 10) = CURDATE() and empleado_id = ?;', [req.user.id])
         console.log(data)
-        res.render('users/admHome', { data, dataNew })
+        res.render('users/admHome', { data, dataNew , dataAsistencia: dataAsistencia[0] })
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const data = await pool.query('select id from direccion where empleado_id = ?', [req.user.id])
         const dataProvincia = await pool.query(`SELECT nombre_provincia, codigo_provincia FROM provincia;`)
@@ -126,8 +127,62 @@ router.get('/userHome', isLoggedIn, async (req, res) => {
         ON a.tipo_empleado = c.id
         AND b.estado = 1;
         `)
-        console.log(dataOverTime)
-        res.render('users/admDash', {dataPermits, dataTasks, dataOverTime })
+        const dataAssistance = await pool.query(`
+        Select a.asistencia, substr(a.fecha, 1, 10) as fecha, b.nombre, CURDATE(), b.id, b.p_apellido, b.s_apellido, c.nombre_cargo, a.fecha as fechaCompleta
+        From asistencia a
+        inner join empleados b
+        on a.empleado_id = b.id 
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        where year(a.fecha) = year(CURDATE())
+        and month(a.fecha) = month(CURDATE())
+        and day (a.fecha) = day(CURDATE())
+        and b.activo = true
+        and b.temporal = 1
+        `)
+        const dataGeneralCount = await pool.query(`
+        Select count(a.asistencia) as generalCount
+        From asistencia a
+        inner join empleados b
+        on a.empleado_id = b.id 
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        WHERE YEAR(a.fecha) = YEAR(CURDATE())
+        and month(a.fecha) = month(CURDATE())
+        and day (a.fecha) = day(CURDATE())
+        and b.activo = true
+        and b.temporal = 1
+        `)
+        const dataAssistanceTemp = await pool.query(`
+        Select a.asistencia, substr(a.fecha, 1, 10) as fecha, b.nombre, CURDATE(), b.id, b.p_apellido, b.s_apellido, c.nombre_cargo, a.fecha as fechaCompleta
+        From asistencia a
+        inner join empleados b
+        on a.empleado_id = b.id 
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        where year(a.fecha) = year(CURDATE())
+        and month(a.fecha) = month(CURDATE())
+        and day (a.fecha) = day(CURDATE())
+        and b.activo = true
+        and b.temporal = 0
+        `)
+        const dataGeneralCountTemp = await pool.query(`
+        Select count(a.asistencia) as generalCount
+        From asistencia a
+        inner join empleados b
+        on a.empleado_id = b.id 
+        inner join tipo_empleados c
+        on c.id = b.tipo_empleado
+        WHERE YEAR(a.fecha) = YEAR(CURDATE())
+        and month(a.fecha) = month(CURDATE())
+        and day (a.fecha) = day(CURDATE())
+        and b.activo = true
+        and b.temporal = 0
+        `)
+        const dataCount = await pool.query(`Select COUNT(id) as count  from empleados where temporal = 1 and activo = true`)
+        const dataCountTemp = await pool.query(`Select COUNT(id) as count from empleados where temporal = 0 and activo = true`)
+        console.log(dataCount)
+        res.render('users/admDash', {dataPermits, dataTasks, dataOverTime, dataAssistance, dataAssistanceTemp, dataCount:dataCount[0], dataCountTemp:dataCountTemp[0], dataGeneralCount:dataGeneralCount[0], dataGeneralCountTemp:dataGeneralCountTemp[0]})
     } else {
         res.redirect('/users')
     }
@@ -243,7 +298,7 @@ router.post('/userEditMoreInfo', isLoggedIn, async (req, res) => {
 })
 
 router.get('/userAssistance/:id', isLoggedIn, async (req, res) => {
-    if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
+    if (req.user.activo === 1) {
         const { id } = req.params
         const query = await pool.query(`
         select cantidad_dias_disponibles
@@ -452,7 +507,8 @@ router.get('/admLayOffsList', isLoggedIn, async (req, res) => {
         ON a.id = c.empleado_id
         INNER JOIN tipo_empleados d
         ON a.tipo_empleado = d.id
-        WHERE a.aprobado = 1 and a.tipo_empleado <> 1 and a.activo = 0; 
+        WHERE a.aprobado = 1 and a.tipo_empleado <> 1 and a.activo = 0
+        ORDER BY a.id DESC;
         `) // tipo_empleado <> 1 para no ver la data del adm
         res.render('users/admListLayOff', { data })
     }
@@ -687,6 +743,7 @@ router.post('/admEditUserTemp/:id', isLoggedIn, async(req, res)=>{
         dias: 1,
         empleado_id: id
     }
+    const exist = await pool.query('select substr(fecha,1, 10) as fecha from fechas_empleado_temporal where empleado_id = ? and fecha = ? LIMIT 1;', [id, data.fecha])
     const valid = await pool.query(`
     select activo 
     from fechas_empleado_temporal
@@ -700,8 +757,12 @@ router.post('/admEditUserTemp/:id', isLoggedIn, async(req, res)=>{
         req.flash('message', 'Ingrese un motivo')
         return res.redirect('/users')
     }
-    if(valid[0]){
-        req.flash('message', 'Error, ya has realizado este contrato en la fecha ingresada')
+    // const jsonValid = JSON.stringify(valid[0].activo)
+    console.log('CONSOLA')
+    console.log(exist)
+    if(exist.length > 0){
+        console.log('ENTRA')
+        req.flash('message', 'Error, ya has realizado el contrato en la fecha ingresada')
         return res.redirect('/users')
     } else {
         try {

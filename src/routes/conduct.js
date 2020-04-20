@@ -141,7 +141,7 @@ router.post('/admEditRegister/:id', isLoggedIn, async(req, res) => {
             return res.redirect('/conduct')
         }
         const query = await pool.query('UPDATE registro_disciplinario SET ? WHERE id = ?', [data, id])
-        res.redirect('/conduct')
+        return res.redirect('/conduct')
     }
 })
 

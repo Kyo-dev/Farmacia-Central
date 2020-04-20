@@ -27,7 +27,7 @@
                     <form action="/users/admReHire/{{dataUser.id}}" method="POST">
                         <p>Cargo que desempeñará</p>
                         <div class="form-group">
-                            <input required type="radio" name="tipo_empleado" value="1"> Administrador<br>
+                            {{!-- <input required type="radio" name="tipo_empleado" value="1"> Administrador<br> --}}
                             <input required type="radio" name="tipo_empleado" value="2"> Doctor<br>
                             <input required type="radio" name="tipo_empleado" value="3"> Dependiente<br>
                             <input required type="radio" name="tipo_empleado" value="4"> Mensajero<br>
@@ -43,8 +43,8 @@
                         </div>
                         <p>Tipo de empleado</p>
                         <div class="form-group">
-                            <input required type="radio" name="temporal" value="1"> permanente<br>
-                            <input required type="radio" name="temporal" value="0"> temporal<br>
+                            <input required type="radio" name="temporal" value="1"> Permanente<br>
+                            <input required type="radio" name="temporal" value="0"> Temporal<br>
                         </div>
                         {{!-- CONFIRMAR --}}
                     <button type="button" class="btn btn-principal btn-block" data-toggle="modal"

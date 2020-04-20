@@ -104,14 +104,22 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             INNER JOIN salarios c
             ON a.id = c.empleado_id
             WHERE a.id = ?`, [id])
+        const inability = await pool.query(` Select a.fecha_salida, a.activo, sum(a.cantidad) as aux, a.motivo
+            From incapacidades a
+            WHERE a.empleado_id = ?
+            and activo = true
+            and year(fecha_salida) = ?
+            and month(fecha_salida) = ?;`, [id, year, month])
+            console.log(inability)
         const tax = await pool.query(`Select sum(retencion) as aux from retencion_salarial where empleado_id = ? and activo = true;`, [id])
         const employee = await pool.query(`Select nombre, cedula, p_apellido, s_apellido from empleados where id = ?;`, [id])
         const salaryB = await pool.query (`select salarioBrutoEmpleado(${id}, ${month}, ${year}) as bruto;`)
         const salaryN = await pool.query (`select salarioNetoEmpleado(${id}, ${month}, ${year}) as neto;`)
         const salaryA = await pool.query (`select salarioAguinaldo(${id}, ${month}, ${year}) as aguinaldo;`)
         const salaryP = await pool.query (`select salarioEmpleado(${id}, ${month}, ${year}) as pago;`)
+        const salaryR = await pool.query (`select salarioRenta(${id}, ${month}, ${year}) as renta;`)
             console.log(tax)
-            res.render('payRoll/admView', {month,year,salary: salary[0],salaryB: salaryB[0], salaryN: salaryN[0], salaryA: salaryA[0], salaryP: salaryP[0], employee: employee[0], tax: tax[0], bonus: bonus[0], permits: permits[0], overTime: overTime[0]})
+            res.render('payRoll/admView', {month,year,salary: salary[0],salaryB: salaryB[0], salaryN: salaryN[0], salaryA: salaryA[0], salaryP: salaryP[0],  salaryR:salaryR[0], employee: employee[0], tax: tax[0], bonus: bonus[0], permits: permits[0], overTime: overTime[0], inability: inability[0]})
     } else if (req.user.tipo_empleado !== 1 && req.user.activo === 1) {
         const { payDay } = req.body
         const date = await pool.query('select substr(now(), 1, 10) as fecha;')
@@ -144,14 +152,22 @@ router.post('/admCheck/:id', isLoggedIn, async (req, res) => {
             INNER JOIN salarios c
             ON a.id = c.empleado_id
             WHERE a.id = ?`, [id])
+        const inability = await pool.query(` Select a.fecha_salida, a.activo, sum(a.cantidad) as aux, a.motivo
+            From incapacidades a
+            WHERE a.empleado_id = ?
+            and activo = true
+            and year(fecha_salida) = ?
+            and month(fecha_salida) = ?;`, [id, year, month])
+            console.log(inability)
         const tax = await pool.query(`Select sum(retencion) as aux from retencion_salarial where empleado_id = ? and activo = true;`, [id])
         const employee = await pool.query(`Select nombre, cedula, p_apellido, s_apellido from empleados where id = ?;`, [id])
         const salaryB = await pool.query (`select salarioBrutoEmpleado(${id}, ${month}, ${year}) as bruto;`)
         const salaryN = await pool.query (`select salarioNetoEmpleado(${id}, ${month}, ${year}) as neto;`)
         const salaryA = await pool.query (`select salarioAguinaldo(${id}, ${month}, ${year}) as aguinaldo;`)
         const salaryP = await pool.query (`select salarioEmpleado(${id}, ${month}, ${year}) as pago;`)
+        const salaryR = await pool.query (`select salarioRenta(${id}, ${month}, ${year}) as renta;`)
             console.log(tax)
-            res.render('payRoll/admView', {date: date[0], month,year,salary: salary[0],salaryB: salaryB[0], salaryN: salaryN[0], salaryA: salaryA[0], salaryP: salaryP[0], employee: employee[0], tax: tax[0], bonus: bonus[0], permits: permits[0], overTime: overTime[0]})
+            res.render('payRoll/admView', {date: date[0], month,year,salary: salary[0],salaryB: salaryB[0], salaryN: salaryN[0], salaryA: salaryA[0], salaryP: salaryP[0], salaryR:salaryR[0], employee: employee[0], tax: tax[0], bonus: bonus[0], permits: permits[0], overTime: overTime[0], inability: inability[0]})
     } else {
         const data = await pool.query(`
         select a.nombre, a.p_apellido, a.s_apellido, substr(a.fecha_contrato, 1, 10) as fecha_contrato, b.descripcion, b.url_documento, substr(b.fecha_despido, 1, 10) as fecha_despido

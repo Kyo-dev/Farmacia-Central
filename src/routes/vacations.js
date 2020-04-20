@@ -64,7 +64,7 @@ router.get('/userNewRegister/:id', isLoggedIn, async (req, res) => {
         if (days > 30) {
             out = Math.trunc(days / 30)
         } else {
-            out = 'No hay dias disponibles'
+            out = 'No hay días disponibles'
         }
         // console.log(dataUser)
         res.render('vacations/userNewRegister', { out, dataUser: dataUser[0], date: date[0] })
